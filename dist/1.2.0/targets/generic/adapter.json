@@ -1,0 +1,478 @@
+{
+  "name": "us-overnight-a-stock-mapping",
+  "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+  "version": "1.2.0",
+  "platform": "generic",
+  "skill_root": "us-overnight-a-stock-mapping",
+  "job_to_be_done": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+  "ir_source": "frontmatter-fallback",
+  "ir_schema_version": "none",
+  "semantic_contract": {
+    "name": "us-overnight-a-stock-mapping",
+    "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+    "job_to_be_done": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+    "trigger_description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+    "should_trigger_count": 0,
+    "should_not_trigger_count": 0,
+    "edge_case_count": 0,
+    "workflow_step_count": 0,
+    "decision_point_count": 0,
+    "failure_mode_count": 0,
+    "resource_counts": {
+      "references": 0,
+      "scripts": 0,
+      "assets": 0,
+      "reports": 0
+    },
+    "eval_counts": {
+      "trigger": 0,
+      "output": 0,
+      "adversarial": 0,
+      "baseline": 0
+    },
+    "risk": {},
+    "governance": {},
+    "targets": [
+      "openai"
+    ],
+    "source_files_count": 0
+  },
+  "semantic_parity": {
+    "source": "frontmatter-fallback",
+    "ir_source": "frontmatter-fallback",
+    "name_matches_ir": false,
+    "description_matches_ir": false,
+    "platform_declared_in_ir": false,
+    "platform_declared_in_interface": false,
+    "display_name_present": true,
+    "default_prompt_present": true
+  },
+  "compiler": {
+    "name": "yao-skill-ir-compiler",
+    "schema_version": "1.0",
+    "source": "frontmatter-fallback",
+    "ir_source": "frontmatter-fallback",
+    "ir_schema_version": "none"
+  },
+  "compiled_contract": {
+    "name": "us-overnight-a-stock-mapping",
+    "title": "US Overnight → A股映射雷达",
+    "version": "1.2.0",
+    "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+    "job_to_be_done": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+    "trigger": {
+      "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+      "should_trigger": [],
+      "should_not_trigger": [],
+      "edge_cases": []
+    },
+    "workflow": {
+      "steps": [],
+      "decision_points": [],
+      "failure_modes": []
+    },
+    "resources": {
+      "references": [],
+      "scripts": [],
+      "assets": [],
+      "reports": [],
+      "counts": {
+        "references": 0,
+        "scripts": 0,
+        "assets": 0,
+        "reports": 0
+      }
+    },
+    "eval_plan": {
+      "trigger": [],
+      "output": [],
+      "adversarial": [],
+      "baseline": "",
+      "counts": {
+        "trigger": 0,
+        "output": 0,
+        "adversarial": 0,
+        "baseline": 0
+      }
+    },
+    "risk": {},
+    "governance": {},
+    "runtime": {
+      "activation": {
+        "mode": "implicit"
+      },
+      "execution": {
+        "context": "inline",
+        "shell": "powershell"
+      },
+      "trust": {
+        "source_tier": "local",
+        "remote_inline_execution": "forbid",
+        "remote_metadata_policy": "local package metadata only"
+      },
+      "adapter_targets": [
+        "openai"
+      ],
+      "canonical_format": "agent-skills"
+    },
+    "permissions": {
+      "schema_version": "1.0",
+      "source": "reports\\security_trust_report.json",
+      "source_available": true,
+      "declared_capabilities": [],
+      "review_required": false,
+      "capabilities": {
+        "network": {
+          "required": false,
+          "script_count": 0,
+          "scripts": [],
+          "review_reason": ""
+        },
+        "file_write": {
+          "required": false,
+          "script_count": 0,
+          "scripts": [],
+          "review_reason": ""
+        },
+        "subprocess": {
+          "required": false,
+          "script_count": 0,
+          "scripts": [],
+          "review_reason": ""
+        },
+        "interactive": {
+          "required": false,
+          "script_count": 0,
+          "scripts": [],
+          "review_reason": ""
+        }
+      },
+      "network_policy": {
+        "source": "security/network_policy.json",
+        "covered_scripts": [],
+        "missing_scripts": [],
+        "mismatches": []
+      },
+      "help_smoke": {
+        "enabled": false,
+        "checked_count": 0,
+        "failed_count": 0,
+        "failed_scripts": []
+      },
+      "trust_summary": {
+        "secret_findings": 0,
+        "network_script_count": 0,
+        "file_write_script_count": 0,
+        "subprocess_script_count": 0,
+        "interactive_script_count": 0,
+        "help_smoke_failed_count": 0
+      }
+    },
+    "source_files_count": 0,
+    "target": "generic",
+    "target_permission_contract": {
+      "schema_version": "1.0",
+      "target": "generic",
+      "permission_model": "agent-skills-compatible-metadata",
+      "native_enforcement": false,
+      "representation": "targets/generic/adapter.json::target_permission_contract",
+      "review_required": false,
+      "declared_capabilities": [],
+      "capability_counts": {
+        "network": 0,
+        "file_write": 0,
+        "subprocess": 0,
+        "interactive": 0
+      },
+      "evidence": "reports\\security_trust_report.json",
+      "operator_note": "Generic target exposes permission metadata for downstream clients to enforce or review."
+    },
+    "target_native_contract": {
+      "schema_version": "1.0",
+      "target": "generic",
+      "native_surface": "Agent Skills compatible neutral package",
+      "activation": {
+        "policy": "Use SKILL.md name and description; consumers decide automatic or manual activation.",
+        "trigger_description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+        "manual_activation_supported": true,
+        "automatic_activation_note": "Depends on the target client route/catalog implementation."
+      },
+      "resources": {
+        "strategy": "Preserve references, scripts, assets, evals, reports, and adapter metadata as relative package resources.",
+        "counts": {
+          "references": 0,
+          "scripts": 0,
+          "assets": 0,
+          "reports": 0
+        },
+        "generated_files": [
+          "targets/generic/adapter.json"
+        ]
+      },
+      "scripts": {
+        "strategy": "Expose script and permission metadata for downstream clients or installers to enforce.",
+        "script_count": 0,
+        "help_smoke_failed_count": 0
+      },
+      "permissions": {
+        "enforcement": "consumer-enforced-or-metadata-only",
+        "native_enforcement": false,
+        "declared_capabilities": [],
+        "review_required": false
+      },
+      "review": {
+        "artifacts": [
+          "targets/generic/adapter.json",
+          "reports/review-studio.html"
+        ],
+        "fallback_behavior": "Neutral source is the runtime fallback.",
+        "unsupported_native_features": []
+      },
+      "install_scope": "generic Agent Skills compatible root"
+    },
+    "degradation_strategy": "neutral-source",
+    "target_runtime": {
+      "adapter_mode": "agent-skills-compatible",
+      "generated_files": [
+        "targets/generic/adapter.json"
+      ],
+      "metadata_mapping": {
+        "display_name": "targets/generic/adapter.json::display_name",
+        "default_prompt": "targets/generic/adapter.json::default_prompt",
+        "activation": "targets/generic/adapter.json::activation_mode",
+        "execution": "targets/generic/adapter.json::execution_context",
+        "trust": "targets/generic/adapter.json::trust_level",
+        "permissions": "targets/generic/adapter.json::target_permission_contract",
+        "degradation": "targets/generic/adapter.json::degradation_strategy"
+      },
+      "preserved_semantics": [
+        "trigger",
+        "workflow-counts",
+        "resources",
+        "eval-plan",
+        "risk",
+        "governance",
+        "runtime",
+        "trust",
+        "permissions"
+      ],
+      "native_surface": "Agent Skills compatible neutral package"
+    }
+  },
+  "permission_contract": {
+    "schema_version": "1.0",
+    "source": "reports\\security_trust_report.json",
+    "source_available": true,
+    "declared_capabilities": [],
+    "review_required": false,
+    "capabilities": {
+      "network": {
+        "required": false,
+        "script_count": 0,
+        "scripts": [],
+        "review_reason": ""
+      },
+      "file_write": {
+        "required": false,
+        "script_count": 0,
+        "scripts": [],
+        "review_reason": ""
+      },
+      "subprocess": {
+        "required": false,
+        "script_count": 0,
+        "scripts": [],
+        "review_reason": ""
+      },
+      "interactive": {
+        "required": false,
+        "script_count": 0,
+        "scripts": [],
+        "review_reason": ""
+      }
+    },
+    "network_policy": {
+      "source": "security/network_policy.json",
+      "covered_scripts": [],
+      "missing_scripts": [],
+      "mismatches": []
+    },
+    "help_smoke": {
+      "enabled": false,
+      "checked_count": 0,
+      "failed_count": 0,
+      "failed_scripts": []
+    },
+    "trust_summary": {
+      "secret_findings": 0,
+      "network_script_count": 0,
+      "file_write_script_count": 0,
+      "subprocess_script_count": 0,
+      "interactive_script_count": 0,
+      "help_smoke_failed_count": 0
+    }
+  },
+  "target_permission_contract": {
+    "schema_version": "1.0",
+    "target": "generic",
+    "permission_model": "agent-skills-compatible-metadata",
+    "native_enforcement": false,
+    "representation": "targets/generic/adapter.json::target_permission_contract",
+    "review_required": false,
+    "declared_capabilities": [],
+    "capability_counts": {
+      "network": 0,
+      "file_write": 0,
+      "subprocess": 0,
+      "interactive": 0
+    },
+    "evidence": "reports\\security_trust_report.json",
+    "operator_note": "Generic target exposes permission metadata for downstream clients to enforce or review."
+  },
+  "target_native_contract": {
+    "schema_version": "1.0",
+    "target": "generic",
+    "native_surface": "Agent Skills compatible neutral package",
+    "activation": {
+      "policy": "Use SKILL.md name and description; consumers decide automatic or manual activation.",
+      "trigger_description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+      "manual_activation_supported": true,
+      "automatic_activation_note": "Depends on the target client route/catalog implementation."
+    },
+    "resources": {
+      "strategy": "Preserve references, scripts, assets, evals, reports, and adapter metadata as relative package resources.",
+      "counts": {
+        "references": 0,
+        "scripts": 0,
+        "assets": 0,
+        "reports": 0
+      },
+      "generated_files": [
+        "targets/generic/adapter.json"
+      ]
+    },
+    "scripts": {
+      "strategy": "Expose script and permission metadata for downstream clients or installers to enforce.",
+      "script_count": 0,
+      "help_smoke_failed_count": 0
+    },
+    "permissions": {
+      "enforcement": "consumer-enforced-or-metadata-only",
+      "native_enforcement": false,
+      "declared_capabilities": [],
+      "review_required": false
+    },
+    "review": {
+      "artifacts": [
+        "targets/generic/adapter.json",
+        "reports/review-studio.html"
+      ],
+      "fallback_behavior": "Neutral source is the runtime fallback.",
+      "unsupported_native_features": []
+    },
+    "install_scope": "generic Agent Skills compatible root"
+  },
+  "target_transform": {
+    "target": "generic",
+    "adapter_mode": "agent-skills-compatible",
+    "generated_files": [
+      "targets/generic/adapter.json"
+    ],
+    "metadata_mapping": {
+      "display_name": "targets/generic/adapter.json::display_name",
+      "default_prompt": "targets/generic/adapter.json::default_prompt",
+      "activation": "targets/generic/adapter.json::activation_mode",
+      "execution": "targets/generic/adapter.json::execution_context",
+      "trust": "targets/generic/adapter.json::trust_level",
+      "permissions": "targets/generic/adapter.json::target_permission_contract",
+      "degradation": "targets/generic/adapter.json::degradation_strategy"
+    },
+    "preserved_semantics": [
+      "trigger",
+      "workflow-counts",
+      "resources",
+      "eval-plan",
+      "risk",
+      "governance",
+      "runtime",
+      "trust",
+      "permissions"
+    ],
+    "degradation_strategy": "neutral-source",
+    "permission_representation": "targets/generic/adapter.json::target_permission_contract",
+    "native_surface": "Agent Skills compatible neutral package",
+    "activation_policy": "Use SKILL.md name and description; consumers decide automatic or manual activation.",
+    "resource_strategy": "Preserve references, scripts, assets, evals, reports, and adapter metadata as relative package resources.",
+    "script_strategy": "Expose script and permission metadata for downstream clients or installers to enforce.",
+    "permission_enforcement": "consumer-enforced-or-metadata-only"
+  },
+  "unsupported_features": [],
+  "compiler_warnings": [
+    "Target is not declared in Skill IR or interface metadata: generic",
+    "Skill IR is missing; compiler used frontmatter fallback"
+  ],
+  "display_name": "US Overnight → A股映射雷达",
+  "short_description": "扫描美国及全球隔夜催化，完成归因、A股映射与盘前候选分层",
+  "default_prompt": "使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。",
+  "canonical_metadata": "agents/interface.yaml",
+  "canonical_format": "agent-skills",
+  "adapter_targets": [
+    "openai"
+  ],
+  "activation_mode": "implicit",
+  "activation_paths": [],
+  "execution_context": "inline",
+  "shell": "powershell",
+  "trust_level": "local",
+  "remote_inline_execution": "forbid",
+  "remote_metadata_policy": "local package metadata only",
+  "degradation_strategy": "neutral-source",
+  "portability_profile": {
+    "activation_mode": "implicit",
+    "activation_paths": [],
+    "execution_context": "inline",
+    "shell": "powershell",
+    "source_tier": "local",
+    "remote_inline_execution": "forbid",
+    "remote_metadata_policy": "local package metadata only",
+    "degradation_strategy": "neutral-source"
+  },
+  "install_hint": "Use us-overnight-a-stock-mapping as an Agent Skills compatible package.",
+  "contract": {
+    "required_fields": [
+      "name",
+      "description",
+      "version",
+      "display_name",
+      "short_description",
+      "default_prompt",
+      "job_to_be_done",
+      "ir_source",
+      "ir_schema_version",
+      "semantic_contract",
+      "semantic_parity",
+      "canonical_metadata",
+      "canonical_format",
+      "activation_mode",
+      "execution_context",
+      "shell",
+      "trust_level",
+      "remote_inline_execution",
+      "degradation_strategy",
+      "portability_profile",
+      "permission_contract",
+      "target_permission_contract",
+      "target_native_contract"
+    ],
+    "required_files": [
+      "targets/generic/adapter.json"
+    ],
+    "field_mapping": {
+      "display_name": "adapter.display_name",
+      "short_description": "adapter.short_description",
+      "default_prompt": "adapter.default_prompt",
+      "execution_context": "compatibility.execution.context",
+      "shell": "compatibility.execution.shell"
+    }
+  }
+}

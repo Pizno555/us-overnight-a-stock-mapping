@@ -1,0 +1,1111 @@
+{
+  "threshold": 0.33,
+  "threshold_explanation": "Prompts at or above the threshold are treated as trigger matches. Scores are driven primarily by semantic intent coverage: packaging intent, workflow-to-skill transformation intent, reuse/distribution intent, and eval intent. Explicit exclusions such as summary-only, translation-only, one-off, document-only, or do-not-build directives apply direct penalties and can override otherwise similar wording.",
+  "false_positives": 0,
+  "false_negatives": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "bucket_stats": {
+    "should_trigger": {
+      "total": 8,
+      "passed": 8,
+      "pass_rate": 1.0
+    },
+    "should_not_trigger": {
+      "total": 8,
+      "passed": 8,
+      "pass_rate": 1.0
+    },
+    "near_neighbor": {
+      "total": 6,
+      "passed": 6,
+      "pass_rate": 1.0
+    }
+  },
+  "family_stats": {
+    "full_overnight_mapping": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "earnings_to_a_share": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "unresolved_cluster": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "biotech_mapping": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "policy_mapping": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "dual_radar": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "company_vs_industry": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "event_price_divergence": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "a_stock_trading_review": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "a_stock_evidence_research": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "a_stock_investment_analysis": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "serenity_skill": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "us_news_summary": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "market_quote": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "trade_execution": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "general_explanation": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "mapping_then_trading_review": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "mapping_then_evidence_research": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "mapping_then_investment_analysis": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "mapping_then_serenity": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "trading_review_without_anchor": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "evidence_without_anchor": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    }
+  },
+  "misfires": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "扫描昨夜美股和全球市场的重要催化，并映射今天A股的核心池和观察池。",
+        "family": "full_overnight_mapping",
+        "score": 0.829,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.857,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "今天A股"
+              ],
+              "overnight_anchor": [
+                "昨夜",
+                "美股"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "昨晚英伟达财报上调AI网络需求，A股光模块、PCB和散热谁是真受益？",
+        "family": "earnings_to_a_share",
+        "score": 0.394,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.429,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "overnight_anchor": [
+                "昨晚"
+              ]
+            },
+            "negative": {}
+          }
+        },
+        "boundary_case": true
+      },
+      {
+        "prompt": "美股光通信昨夜出现集群异动但公开消息不明确，帮我查因并给A股监控方向。",
+        "family": "unresolved_cluster",
+        "score": 0.566,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.571,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "attribution_radar": [
+                "查因",
+                "集群异动"
+              ],
+              "overnight_anchor": [
+                "昨夜",
+                "美股"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "昨夜FDA批准某靶点新药，同靶点A股Biotech管线如何映射？",
+        "family": "biotech_mapping",
+        "score": 0.829,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.857,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "同靶点A股"
+              ],
+              "overnight_anchor": [
+                "昨夜"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "美国BIS昨夜调整半导体设备出口规则，对今天A股设备和材料链有什么影响？",
+        "family": "policy_mapping",
+        "score": 0.829,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.857,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "今天A股"
+              ],
+              "overnight_anchor": [
+                "昨夜"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "用隔夜事件雷达和市场雷达找出昨晚对A股最重要的三条催化。",
+        "family": "dual_radar",
+        "score": 0.98,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "对A股"
+              ],
+              "attribution_radar": [
+                "事件雷达",
+                "市场雷达"
+              ],
+              "overnight_anchor": [
+                "昨晚",
+                "隔夜"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "某美股昨晚大涨但同行没动，先归因它是公司事件还是产业事件，再判断有没有A股映射。",
+        "family": "company_vs_industry",
+        "score": 0.98,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "A股映射"
+              ],
+              "attribution_radar": [
+                "归因",
+                "公司事件",
+                "产业事件"
+              ],
+              "overnight_anchor": [
+                "昨晚",
+                "美股"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "昨夜云厂商上调Capex，但主体股反应弱，检查Event–Price Divergence和A股预期差。",
+        "family": "event_price_divergence",
+        "score": 0.566,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.571,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "attribution_radar": [
+                "预期差"
+              ],
+              "overnight_anchor": [
+                "昨夜",
+                "云厂商"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "复盘今天A股全市场赚钱效应，并检查我的持仓强弱和明日预案。",
+        "family": "a_stock_trading_review",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "full_market_trading_review"
+          ],
+          "exclusive_negative_concepts": [
+            "full_market_trading_review"
+          ],
+          "semantic_coverage": 0.429,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "今天A股"
+              ]
+            },
+            "negative": {
+              "full_market_trading_review": [
+                "A股全市场",
+                "全市场赚钱效应",
+                "我的持仓",
+                "持仓强弱",
+                "复盘今天A股"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "核验某A股公司是不是真的进入英伟达供应链，订单和客户证据可靠吗？",
+        "family": "a_stock_evidence_research",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "single_claim_verification"
+          ],
+          "exclusive_negative_concepts": [
+            "single_claim_verification"
+          ],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "single_claim_verification": [
+                "客户证据"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "给某A股公司做完整财务诊断、三年盈利预测和DCF估值。",
+        "family": "a_stock_investment_analysis",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "full_investment_analysis"
+          ],
+          "exclusive_negative_concepts": [
+            "full_investment_analysis"
+          ],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "full_investment_analysis": [
+                "完整财务诊断",
+                "三年盈利预测",
+                "DCF估值"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "不看昨夜消息，从长期角度扫描AI半导体产业链最稀缺的供应瓶颈。",
+        "family": "serenity_skill",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "serenity_without_anchor"
+          ],
+          "exclusive_negative_concepts": [
+            "serenity_without_anchor"
+          ],
+          "semantic_coverage": 0.429,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "overnight_anchor": [
+                "昨夜"
+              ]
+            },
+            "negative": {
+              "serenity_without_anchor": [
+                "不看昨夜消息",
+                "长期角度"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "总结昨晚美国十大新闻，不需要映射A股。",
+        "family": "us_news_summary",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "news_summary_only"
+          ],
+          "exclusive_negative_concepts": [
+            "news_summary_only"
+          ],
+          "semantic_coverage": 0.857,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "映射A股"
+              ],
+              "overnight_anchor": [
+                "昨晚"
+              ]
+            },
+            "negative": {
+              "news_summary_only": [
+                "不需要映射A股",
+                "美国十大新闻",
+                "总结昨晚美国"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "查询沪深300和纳斯达克最新点位。",
+        "family": "market_quote",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "自动替我买入今天最强的三只A股。",
+        "family": "trade_execution",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "quote_or_execution"
+          ],
+          "exclusive_negative_concepts": [
+            "quote_or_execution"
+          ],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.8,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "quote_or_execution": [
+                "自动替我买入"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "解释一下什么是CPO。",
+        "family": "general_explanation",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "explain_only"
+          ],
+          "exclusive_negative_concepts": [
+            "explain_only"
+          ],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.5,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "explain_only": [
+                "解释一下",
+                "什么是CPO"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "结合昨夜英伟达财报和今天A股全市场情绪，复盘我的持仓并制定明日预案。",
+        "family": "mapping_then_trading_review",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "full_market_trading_review"
+          ],
+          "exclusive_negative_concepts": [
+            "full_market_trading_review"
+          ],
+          "semantic_coverage": 0.857,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "今天A股"
+              ],
+              "overnight_anchor": [
+                "昨夜"
+              ]
+            },
+            "negative": {
+              "full_market_trading_review": [
+                "A股全市场",
+                "我的持仓",
+                "制定明日预案"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "昨夜海外AI催化可能利好某A股，请专项核验这家公司客户和订单是否真实。",
+        "family": "mapping_then_evidence_research",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "single_claim_verification"
+          ],
+          "exclusive_negative_concepts": [
+            "single_claim_verification"
+          ],
+          "semantic_coverage": 0.429,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "overnight_anchor": [
+                "昨夜",
+                "海外AI"
+              ]
+            },
+            "negative": {
+              "single_claim_verification": [
+                "专项核验"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "昨夜海外催化映射到某A股后，再做完整估值和未来三年盈利预测。",
+        "family": "mapping_then_investment_analysis",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "full_investment_analysis"
+          ],
+          "exclusive_negative_concepts": [
+            "full_investment_analysis"
+          ],
+          "semantic_coverage": 0.429,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "overnight_anchor": [
+                "昨夜",
+                "海外催化"
+              ]
+            },
+            "negative": {
+              "full_investment_analysis": [
+                "三年盈利预测",
+                "未来三年盈利预测",
+                "完整估值"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "从昨夜海外AI事件出发，再扩展寻找长期供应链卡点和未知瓶颈。",
+        "family": "mapping_then_serenity",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "serenity_without_anchor"
+          ],
+          "exclusive_negative_concepts": [
+            "serenity_without_anchor"
+          ],
+          "semantic_coverage": 0.429,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "overnight_anchor": [
+                "昨夜",
+                "海外AI"
+              ]
+            },
+            "negative": {
+              "serenity_without_anchor": [
+                "未知瓶颈"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "盘前给我一个A股核心池，但不要看任何海外隔夜信息。",
+        "family": "trading_review_without_anchor",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "a_share_mapping",
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "full_market_trading_review"
+          ],
+          "exclusive_negative_concepts": [
+            "full_market_trading_review"
+          ],
+          "semantic_coverage": 0.857,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "a_share_mapping": [
+                "A股核心池"
+              ],
+              "overnight_anchor": [
+                "隔夜"
+              ]
+            },
+            "negative": {
+              "full_market_trading_review": [
+                "不要看任何海外隔夜信息"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "某A股今天异动，查一下原因并验证业务，不涉及美股或海外事件。",
+        "family": "evidence_without_anchor",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "overnight_anchor",
+            "a_share_mapping",
+            "attribution_radar"
+          ],
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "single_claim_verification"
+          ],
+          "exclusive_negative_concepts": [
+            "single_claim_verification"
+          ],
+          "semantic_coverage": 0.429,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.7,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "overnight_anchor": [
+                "美股",
+                "海外事件"
+              ]
+            },
+            "negative": {
+              "single_claim_verification": [
+                "验证业务，不涉及美股",
+                "不涉及美股或海外事件"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+interface:
+  display_name: US Overnight → A股映射雷达
+  short_description: 扫描美国及全球隔夜催化，完成归因、A股映射与盘前候选分层
+  default_prompt: 使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。
+compatibility:
+  canonical_format: agent-skills
+  activation_mode: implicit
+  execution_context: inline
+  shell: powershell
+  trust_level: local
+  remote_inline_execution: forbid
+  permission_contract:
+    review_required: false
+    declared_capabilities: []
+    native_enforcement: false
+    representation: targets/openai/agents/openai.yaml::compatibility.permission_contract
+      plus adapter.json
+  native_contract:
+    native_surface: OpenAI-style interface metadata plus neutral Agent Skills source
+    activation_policy: Use frontmatter description for catalog routing and targets/openai/agents/openai.yaml
+      for display name, default prompt, and compatibility metadata.
+    resource_strategy: Ship the neutral source tree and expose OpenAI-facing interface
+      metadata as a generated companion file.
+    permission_enforcement: metadata-only
+    review_artifacts:
+    - targets/openai/agents/openai.yaml
+    - targets/openai/adapter.json
+    - reports/review-studio.html
+  degradation_strategy: none; agents/openai.yaml is the native Codex interface

@@ -1,0 +1,149 @@
+# Output Blind A/B Review Pack
+
+This packet hides whether each variant came from the baseline or the skill-guided output. Use the separate answer key only after review.
+
+- Pairs: `7`
+- Seed: `yao-output-eval-blind-v1`
+- Answer key separate: `True`
+
+## Case: premarket-no-future-data
+
+Prompt: 北京时间9:10，根据昨夜海外催化给A股候选和竞价建议。
+
+Rubric:
+- `uses-static-state` (1.0): 9:25前必须使用静态交易状态。
+- `uses-conditional-auction` (1.0): 竞价只能使用条件预案。
+- `no-fabricated-auction` (1.0): 不得伪造已发生的竞价结论。
+
+### Variant A
+
+候选A预计今日高开5%，竞价量会明显放大，可以直接追入。
+
+### Variant B
+
+数据截止：09:10 Asia/Shanghai。候选A：催化A / L2 / E2 / Evidence High / 预期差Medium / T_static T2。Auction Conditions：真实竞价温和且板块同步时维持T2；明显透支预期则降级，不追高。当前尚无9:25竞价数据。
+
+## Case: unresolved-signal-not-core
+
+Prompt: 昨夜三只美国光通信股票同步大涨，但没有查到可信共同消息，映射A股。
+
+Rubric:
+- `keeps-unresolved` (1.0): 未归因异动保持未解决状态。
+- `empty-core` (1.0): 未归因信号不得进核心池。
+- `no-confirmed-theme` (1.0): 不得声称主线确认。
+
+### Variant A
+
+状态：UNRESOLVED SIGNAL。Observed Facts：三只同行同步异动；当前未找到可信共同催化。查因方向：公司披露、行业会议、客户侧变化和成交时间一致性。A股只列watch_pool监控方向；core_pool为空，催化归因完成前不得升级。
+
+### Variant B
+
+光通信主线确认，直接把三只A股光模块龙头加入核心池。
+
+## Case: biotech-uses-p-stage
+
+Prompt: 昨夜FDA批准海外同靶点药物，评估一家尚无收入的A股Biotech。
+
+Rubric:
+- `uses-p-stage` (1.0): Biotech必须使用P级。
+- `checks-comparability` (1.0): 必须检查管线可比性。
+- `no-e5-shortcut` (1.0): 不得因无收入直接判E5。
+
+### Variant A
+
+按Biotech框架评估：催化S / 映射L1 / 管线P2 / Evidence High / 预期差Medium / T_static T2。无收入不能替代管线成熟度判断；仍需核对适应症、技术路线、管线权利和竞争数据。
+
+### Variant B
+
+该公司没有产品收入，所以归为E5纯概念并排除。
+
+## Case: partial-coverage-disclosure
+
+Prompt: 行情源只能提供部分美股涨跌幅，没有成交量、全市场分母和板块ETF数据，Event Radar也只检查了部分固定公司与行业锚点，仍请完成隔夜雷达。
+
+Rubric:
+- `coverage-denominator` (1.0): 必须分别披露固定、动态、事件新增和行业Registry分母。
+- `confidence-downgrade` (1.0): 数据不足时降低置信度并说明非价格事件漏报风险。
+- `no-full-coverage-claim` (1.0): 不得声称全量完成或无分母时写covered。
+
+### Variant A
+
+全量扫描完成，昨夜没有其他重要产业异动。
+
+### Variant B
+
+coverage_log：Event Radar company_watchlist fixed=31、dynamic=2、event_specific=1、checked=6/34；sector_registry_coverage=4/13，status=partial；一级信源4/6，Event Radar status=partial。Market Radar universe=精选报价，eligible_total=Unknown、scanned_total=12，Dollar Volume/RVOL unavailable，ETF 2/7，status=partial；overall_status=partial。known_data_gaps：未覆盖的9个Registry方向可能漏掉重大但价格未进榜的产业事件；无法验证全市场Mover、Relative Volume和Sector Diffusion，相关Catalyst Confidence为Unknown。
+
+## Case: sector-anchor-nonprice-discovery
+
+Prompt: 昨夜商业航天相关股票没有进入涨跌幅Top榜。可以据此认定商业航天没有重大事件，并把Event Radar写成covered吗？
+
+Rubric:
+- `nonprice-anchor` (1.0): 重大但价格不动的方向必须由非价格发现锚点主动检查。
+- `registry-denominator` (1.0): 缺少行业锚点分母时Event Radar必须降级。
+- `price-not-enough` (1.0): 不得用无价格异动证明无事件。
+
+### Variant A
+
+不能。Market Radar没有发现价格异常，不等于Event Radar完成。商业航天属于13个Radar Registry方向之一，必须检查NASA、FAA或DoD等政府/监管源，以及适用的公司一级信源或SEC入口。若这些非价格Discovery Anchor没有明确checked/total，sector_registry_coverage与Event Radar最高只能为partial，并列出可能漏掉的重大政策、发射许可、合同或任务事件。ETF和涨跌榜不能作为唯一Event Anchor。
+
+### Variant B
+
+相关股票没有明显异动，因此商业航天昨夜没有重要事件，Event Radar已覆盖。
+
+## Case: composite-route-handoff
+
+Prompt: 结合昨夜英伟达财报和今天A股全市场情绪，复盘我的持仓并制定明日预案。
+
+Rubric:
+- `scoped-module` (1.0): 复合请求只处理海外映射模块。
+- `correct-handoff` (1.0): 交接给全市场复盘Skill。
+- `no-scope-takeover` (1.0): 不得声称由本Skill完成全部任务。
+
+### Variant A
+
+直接用隔夜映射雷达完成全市场复盘、持仓评价和明日核心池。
+
+### Variant B
+
+本Skill先完成海外映射模块，并输出handoff_packet：海外锚点、数据截止、催化等级、A股候选L/E/Evidence、未解决问题。全市场环境、持仓和明日综合预案交给a-stock-trading-review，本Skill不重复执行其九步复盘。
+
+## Case: two-catalyst-three-table-handoff
+
+Prompt: 昨夜同时出现Google-Marvell AI互连合作消息和海外创新药Ⅲ期数据，多家A股公司可能相关。请给出映射与盘前候选，并让我不需要在不同表之间猜每家公司对应哪个催化。
+
+Rubric:
+- `three-table-chain` (1.0): 两条催化与多家A股候选必须用三张职责不同的表承接。
+- `candidate-funnel` (1.0): 必须披露Candidate到Shortlist的完整数量和展示范围。
+- `readable-dimensions` (1.0): 证券代码、催化和关键决策维度必须分列，并给维持与降级条件。
+- `sort-and-upgrade-boundary` (1.0): 三表应说明排序口径，真实映射表解释不能升级的原因。
+
+### Variant A
+
+候选约十余只，重点看公司甲、公司乙、公司丙。| 公司 | 向量 | 结论 |
+| 公司甲 | S/L1/E3/High/T2 | Core |
+| 公司乙 | 同上 | Watch |
+| 公司丙 | A/L1/P4/Medium/T3 | Watch |
+
+### Variant B
+
+表1｜美股异动与催化摘要（按催化级别、产业扩散强度排序）
+|标的|核心催化|催化级别|A股方向|
+|Marvell|Google-Marvell AI互连合作|S|高速互连|
+|海外药企|创新药Ⅲ期数据|A|同靶点管线|
+
+Candidate漏斗：初始Candidate总数12；通过Preliminary Validation 7；进入Shortlist 4；淘汰数量8；主要淘汰原因：无直接产品/管线对应或仅主题联想；下表范围：全部Shortlist。
+
+表2｜A股真实映射（按映射直接性与证据强度、当前阶段排序）
+|优先级|A股公司|代码|核心催化|为什么相关|当前阶段|为什么不能升级|
+|1|公司甲|000001|Google-Marvell AI互连合作|产品处于高速互连上游|L1；E3；Evidence High|缺直接订单披露|
+|2|公司乙|600001|Google-Marvell AI互连合作|相关器件已验证|L2；E2；Evidence Medium|客户关系仅间接证据|
+|3|公司丙|300001|创新药Ⅲ期数据|同靶点管线但适应症不同|L1；P4；Evidence Medium|不能由海外Ⅲ期直接升级A股管线|
+|4|公司丁|688001|创新药Ⅲ期数据|同平台早期管线|L3；P2；Evidence Low|临床与权利归属证据不足|
+
+表3｜盘前候选分层（Core→Watch→Exclude；层内按交易优先级排序）
+|A股公司|代码|核心催化|催化级别|L级|E级/P级|Evidence|预期差|T_static|分层|维持条件|降级/排除条件|
+|公司甲|000001|Google-Marvell AI互连合作|S|L1|E3|High|Medium|T2|Core|竞价不过度透支且产业扩散维持|合作被证伪或高开透支|
+|公司乙|600001|Google-Marvell AI互连合作|S|L2|E2|Medium|Low|T3|Watch|补足直接客户证据|仅概念联想或位置恶化|
+|公司丙|300001|创新药Ⅲ期数据|A|L1|P4|Medium|Medium|T3|Watch|A股管线出现可比数据|适应症不可比或数据失败|
+|公司丁|688001|创新药Ⅲ期数据|A|L3|P2|Low|Unknown|T4|Exclude|Unknown|证据未升级或早期管线不具可比性|

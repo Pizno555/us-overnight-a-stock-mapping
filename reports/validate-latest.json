@@ -1,0 +1,105 @@
+{
+  "ok": true,
+  "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+  "steps": [
+    {
+      "command": "validate_skill.py C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "ok": true,
+      "returncode": 0,
+      "payload": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "command": "lint_skill.py C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "ok": true,
+      "returncode": 0,
+      "payload": {
+        "ok": true,
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "command": "governance_check.py C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "ok": true,
+      "returncode": 0,
+      "payload": {
+        "ok": true,
+        "failures": [],
+        "warnings": [],
+        "details": {
+          "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+          "manifest_present": true,
+          "frontmatter_name": "us-overnight-a-stock-mapping",
+          "manifest_name": "us-overnight-a-stock-mapping",
+          "status": "active",
+          "maturity_tier": "production",
+          "review_cadence": "monthly",
+          "governance_score": 80,
+          "declared_maturity_minimum": 80,
+          "computed_governance_band": "production",
+          "computed_maturity_tier": "production",
+          "score_breakdown": {
+            "metadata_integrity": 20,
+            "ownership_and_review": 20,
+            "boundary_and_eval": 15,
+            "operational_assets": 20,
+            "maintenance_evidence": 5
+          }
+        }
+      }
+    },
+    {
+      "command": "resource_boundary_check.py C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "ok": true,
+      "returncode": 0,
+      "payload": {
+        "ok": true,
+        "failures": [],
+        "warnings": [],
+        "stats": {
+          "context_budget_tier": "production",
+          "context_budget_limit": 1000,
+          "skill_body_tokens": 806,
+          "other_text_tokens": 42921,
+          "estimated_initial_load_tokens": 998,
+          "estimated_total_text_tokens": 43727,
+          "deferred_resource_tokens": 14519,
+          "deferred_resource_warn_threshold": 120000,
+          "deferred_resource_dirs": [
+            {
+              "path": "references",
+              "estimated_tokens": 11199,
+              "file_count": 9
+            },
+            {
+              "path": "evals",
+              "estimated_tokens": 2312,
+              "file_count": 6
+            },
+            {
+              "path": "scripts",
+              "estimated_tokens": 1008,
+              "file_count": 1
+            }
+          ],
+          "large_deferred_resource_dirs": [],
+          "deferred_resource_governance": {
+            "status": "not-required",
+            "large_dir_count": 0,
+            "governed_large_dir_count": 0,
+            "directories": [],
+            "summary": "No large deferred resource directory exceeds the per-dir threshold."
+          },
+          "relevant_file_count": 49,
+          "unused_resource_dirs": [],
+          "quality_signal_points": 115,
+          "quality_density": 115.2
+        }
+      }
+    }
+  ]
+}

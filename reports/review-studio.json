@@ -1,0 +1,3700 @@
+{
+  "schema_version": "2.0",
+  "ok": true,
+  "skill_dir": ".",
+  "summary": {
+    "decision": "review",
+    "world_class_score": 78,
+    "gate_count": 16,
+    "gate_contract_ok": true,
+    "blocker_count": 0,
+    "warning_count": 8,
+    "action_count": 8,
+    "annotation_count": 0,
+    "open_annotation_count": 0,
+    "open_annotation_blocker_count": 0,
+    "open_annotation_warning_count": 0
+  },
+  "gates": [
+    {
+      "key": "intent-canvas",
+      "label": "意图画布",
+      "status": "warn",
+      "detail": "intent confidence 0/100; review current intent frame",
+      "evidence": "reports/intent-confidence.json",
+      "link": "intent-confidence.md",
+      "review_action_id": "review-action-intent-canvas",
+      "review_action_status": "warn",
+      "review_action_title": "意图画布",
+      "review_action_next_step": "收紧真实任务、输入、输出、排除项和成功标准。",
+      "review_action_reason": "低 intent confidence 会让后续 Skill IR、输出评测和 Review Studio 结论建立在模糊意图上。",
+      "review_action_source_ref_count": 2,
+      "review_action_verification_command": "python3 scripts/yao.py intent-confidence ."
+    },
+    {
+      "key": "trigger-lab",
+      "label": "触发实验",
+      "status": "warn",
+      "detail": "route scorecard is missing; run route-scorecard before release review",
+      "evidence": "reports/route_scorecard.json",
+      "link": "route_scorecard.md",
+      "review_action_id": "review-action-trigger-lab",
+      "review_action_status": "warn",
+      "review_action_title": "触发实验",
+      "review_action_next_step": "修正 route scorecard 中的误触发、漏触发或 ambiguous case。",
+      "review_action_reason": "触发错误会让正确 Skill 失活，或让相邻 Skill 被错误调用。",
+      "review_action_source_ref_count": 3,
+      "review_action_verification_command": "python3 scripts/build_confusion_matrix.py"
+    },
+    {
+      "key": "output-lab",
+      "label": "输出实验",
+      "status": "warn",
+      "detail": "7/3 cases; with-skill 100.0; baseline 0.0; file-backed 1; near-neighbor 1; blind A/B 7; review adjudication missing",
+      "evidence": "reports/output_quality_scorecard.json",
+      "link": "output_quality_scorecard.md",
+      "review_action_id": "review-action-output-lab",
+      "review_action_status": "warn",
+      "review_action_title": "输出实验",
+      "review_action_next_step": "补足 output eval 覆盖、execution evidence、blind A/B 和 reviewer adjudication。同步补足盲审声明。",
+      "review_action_reason": "没有输出质量和人工盲评证据时，Skill 只能证明会触发，不能证明输出真的更好且经得起审查。",
+      "review_action_source_ref_count": 6,
+      "review_action_verification_command": "python3 scripts/adjudicate_output_review.py --write-template && python3 scripts/yao.py output-review"
+    },
+    {
+      "key": "context-budget",
+      "label": "上下文",
+      "status": "warn",
+      "detail": "initial load n/a/n/a; deferred n/a/n/a; top deferred none; resource governance unknown; quality density n/a",
+      "evidence": "reports/context_budget.json",
+      "link": "context_budget.md",
+      "review_action_id": "review-action-context-budget",
+      "review_action_status": "warn",
+      "review_action_title": "上下文",
+      "review_action_next_step": "压缩或拆分高成本 deferred resources，保留最小可路由上下文。",
+      "review_action_reason": "初始加载可以安全，但后续 references、scripts、evals 体量过大时，reviewer 仍需要看到维护和读取成本。",
+      "review_action_source_ref_count": 4,
+      "review_action_verification_command": "python3 scripts/render_context_reports.py"
+    },
+    {
+      "key": "runtime-matrix",
+      "label": "运行矩阵",
+      "status": "pass",
+      "detail": "1 / 1 targets pass",
+      "evidence": "reports/conformance_matrix.json",
+      "link": "conformance_matrix.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "trust-report",
+      "label": "信任报告",
+      "status": "pass",
+      "detail": "0 secrets; 1 scripts; 0 network-capable scripts; 0 help smoke failures",
+      "evidence": "reports/security_trust_report.json",
+      "link": "security_trust_report.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "python-compat",
+      "label": "Python 兼容",
+      "status": "pass",
+      "detail": "Python 3.11; 1 files; 0 compatibility issues; 0 syntax; 0 f-string 3.11 hazards",
+      "evidence": "reports/python_compatibility.json",
+      "link": "python_compatibility.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "architecture-maintainability",
+      "label": "架构维护",
+      "status": "pass",
+      "detail": "architecture maintainability report is optional until code surface grows",
+      "evidence": "reports/architecture_maintainability.json",
+      "link": "architecture_maintainability.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "permission-gates",
+      "label": "权限批准",
+      "status": "pass",
+      "detail": "0/0 permissions approved; gaps 0; required none",
+      "evidence": "reports/security_trust_report.json + security/permission_policy.json",
+      "link": "..\\security\\permission_policy.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "permission-runtime",
+      "label": "权限探针",
+      "status": "pass",
+      "detail": "1/1 targets probed; native 0; metadata fallback 1; installer 0; residual risks 1",
+      "evidence": "reports/runtime_permission_probes.json",
+      "link": "runtime_permission_probes.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "skill-atlas",
+      "label": "组合治理",
+      "status": "warn",
+      "detail": "skill atlas is missing; portfolio-level conflicts are unknown",
+      "evidence": "reports/skill_atlas.json",
+      "link": "skill_atlas.html",
+      "review_action_id": "review-action-skill-atlas",
+      "review_action_status": "warn",
+      "review_action_title": "组合治理",
+      "review_action_next_step": "处理 portfolio 里的路由冲突、owner 缺口、stale skill 和重复能力。",
+      "review_action_reason": "单个 Skill 质量很高仍可能在团队 skill library 中被相邻 Skill 冲突削弱。",
+      "review_action_source_ref_count": 3,
+      "review_action_verification_command": "python3 scripts/build_skill_atlas.py --workspace-root ."
+    },
+    {
+      "key": "operations-loop",
+      "label": "运营回路",
+      "status": "warn",
+      "detail": "adoption drift report is missing; real usage impact is unknown",
+      "evidence": "reports/adoption_drift_report.json + reports/skillops/daily + reports/skillops/weekly",
+      "link": "adoption_drift_report.md",
+      "review_action_id": "review-action-operations-loop",
+      "review_action_status": "warn",
+      "review_action_title": "运营回路",
+      "review_action_next_step": "记录 metadata-only 使用事件，或明确当前 release 缺少真实使用信号。",
+      "review_action_reason": "没有运营回路时，reviewer 无法判断采用率、误触发、坏输出和 review overdue 的真实影响。",
+      "review_action_source_ref_count": 2,
+      "review_action_verification_command": "python3 scripts/render_adoption_drift_report.py . --record-event skill_activation --activation-type explicit --outcome accepted"
+    },
+    {
+      "key": "review-waivers",
+      "label": "人工批准",
+      "status": "warn",
+      "detail": "review waiver ledger is missing; warning acceptance is not auditable",
+      "evidence": "reports/review_waivers.json",
+      "link": "review_waivers.md",
+      "review_action_id": "review-action-review-waivers",
+      "review_action_status": "warn",
+      "review_action_title": "人工批准",
+      "review_action_next_step": "对保留的 warning 写入 reviewer、理由、范围和到期时间，或修掉 warning。",
+      "review_action_reason": "warning 可以被接受，但必须可审计、会过期，并且不能掩盖 blocker。",
+      "review_action_source_ref_count": 2,
+      "review_action_verification_command": "python3 scripts/render_review_waivers.py ."
+    },
+    {
+      "key": "world-class-evidence",
+      "label": "世界证据",
+      "status": "pass",
+      "detail": "world-class evidence ledger is optional until governed or public world-class readiness is claimed",
+      "evidence": "reports/world_class_evidence_ledger.json",
+      "link": "world_class_evidence_ledger.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "registry-audit",
+      "label": "注册审计",
+      "status": "pass",
+      "detail": "registry audit is optional until team distribution is required; install pass with 1 adapters; installer permissions 0 enforced / 0 failures",
+      "evidence": "reports/registry_audit.json + reports/install_simulation.json",
+      "link": "registry_audit.md",
+      "review_action_id": "",
+      "review_action_status": "",
+      "review_action_title": "",
+      "review_action_next_step": "",
+      "review_action_reason": "",
+      "review_action_source_ref_count": 0,
+      "review_action_verification_command": ""
+    },
+    {
+      "key": "release-notes",
+      "label": "发布路线",
+      "status": "warn",
+      "detail": "promotion decisions are missing; release notes need reviewer confirmation",
+      "evidence": "reports/promotion_decisions.json + reports/upgrade_check.json + docs/migration-v2.md",
+      "link": "C:\\Users\\simplelove\\.codex\\skills\\yao-meta-skill\\docs\\migration-v2.md",
+      "review_action_id": "review-action-release-notes",
+      "review_action_status": "warn",
+      "review_action_title": "发布路线",
+      "review_action_next_step": "确认 promotion、upgrade diff、breaking changes、migration guide 和 known limitations。",
+      "review_action_reason": "发布说明不完整会让使用者无法判断升级风险和迁移动作。",
+      "review_action_source_ref_count": 3,
+      "review_action_verification_command": "python3 scripts/upgrade_check.py . --previous-package-json registry/examples/yao-meta-skill-1.0.0.json"
+    }
+  ],
+  "gate_contract": {
+    "ok": true,
+    "expected_gate_count": 16,
+    "actual_gate_count": 16,
+    "expected_gate_keys": [
+      "architecture-maintainability",
+      "context-budget",
+      "intent-canvas",
+      "operations-loop",
+      "output-lab",
+      "permission-gates",
+      "permission-runtime",
+      "python-compat",
+      "registry-audit",
+      "release-notes",
+      "review-waivers",
+      "runtime-matrix",
+      "skill-atlas",
+      "trigger-lab",
+      "trust-report",
+      "world-class-evidence"
+    ],
+    "rendered_gate_keys": [
+      "intent-canvas",
+      "trigger-lab",
+      "output-lab",
+      "context-budget",
+      "runtime-matrix",
+      "trust-report",
+      "python-compat",
+      "architecture-maintainability",
+      "permission-gates",
+      "permission-runtime",
+      "skill-atlas",
+      "operations-loop",
+      "review-waivers",
+      "world-class-evidence",
+      "registry-audit",
+      "release-notes"
+    ],
+    "missing_gate_keys": [],
+    "unknown_gate_keys": [],
+    "duplicate_gate_keys": [],
+    "unweighted_gate_keys": []
+  },
+  "blockers": [],
+  "warnings": [
+    {
+      "key": "intent-canvas",
+      "label": "意图画布",
+      "status": "warn",
+      "detail": "intent confidence 0/100; review current intent frame",
+      "evidence": "reports/intent-confidence.json",
+      "link": "intent-confidence.md",
+      "review_action_id": "review-action-intent-canvas",
+      "review_action_status": "warn",
+      "review_action_title": "意图画布",
+      "review_action_next_step": "收紧真实任务、输入、输出、排除项和成功标准。",
+      "review_action_reason": "低 intent confidence 会让后续 Skill IR、输出评测和 Review Studio 结论建立在模糊意图上。",
+      "review_action_source_ref_count": 2,
+      "review_action_verification_command": "python3 scripts/yao.py intent-confidence ."
+    },
+    {
+      "key": "trigger-lab",
+      "label": "触发实验",
+      "status": "warn",
+      "detail": "route scorecard is missing; run route-scorecard before release review",
+      "evidence": "reports/route_scorecard.json",
+      "link": "route_scorecard.md",
+      "review_action_id": "review-action-trigger-lab",
+      "review_action_status": "warn",
+      "review_action_title": "触发实验",
+      "review_action_next_step": "修正 route scorecard 中的误触发、漏触发或 ambiguous case。",
+      "review_action_reason": "触发错误会让正确 Skill 失活，或让相邻 Skill 被错误调用。",
+      "review_action_source_ref_count": 3,
+      "review_action_verification_command": "python3 scripts/build_confusion_matrix.py"
+    },
+    {
+      "key": "output-lab",
+      "label": "输出实验",
+      "status": "warn",
+      "detail": "7/3 cases; with-skill 100.0; baseline 0.0; file-backed 1; near-neighbor 1; blind A/B 7; review adjudication missing",
+      "evidence": "reports/output_quality_scorecard.json",
+      "link": "output_quality_scorecard.md",
+      "review_action_id": "review-action-output-lab",
+      "review_action_status": "warn",
+      "review_action_title": "输出实验",
+      "review_action_next_step": "补足 output eval 覆盖、execution evidence、blind A/B 和 reviewer adjudication。同步补足盲审声明。",
+      "review_action_reason": "没有输出质量和人工盲评证据时，Skill 只能证明会触发，不能证明输出真的更好且经得起审查。",
+      "review_action_source_ref_count": 6,
+      "review_action_verification_command": "python3 scripts/adjudicate_output_review.py --write-template && python3 scripts/yao.py output-review"
+    },
+    {
+      "key": "context-budget",
+      "label": "上下文",
+      "status": "warn",
+      "detail": "initial load n/a/n/a; deferred n/a/n/a; top deferred none; resource governance unknown; quality density n/a",
+      "evidence": "reports/context_budget.json",
+      "link": "context_budget.md",
+      "review_action_id": "review-action-context-budget",
+      "review_action_status": "warn",
+      "review_action_title": "上下文",
+      "review_action_next_step": "压缩或拆分高成本 deferred resources，保留最小可路由上下文。",
+      "review_action_reason": "初始加载可以安全，但后续 references、scripts、evals 体量过大时，reviewer 仍需要看到维护和读取成本。",
+      "review_action_source_ref_count": 4,
+      "review_action_verification_command": "python3 scripts/render_context_reports.py"
+    },
+    {
+      "key": "skill-atlas",
+      "label": "组合治理",
+      "status": "warn",
+      "detail": "skill atlas is missing; portfolio-level conflicts are unknown",
+      "evidence": "reports/skill_atlas.json",
+      "link": "skill_atlas.html",
+      "review_action_id": "review-action-skill-atlas",
+      "review_action_status": "warn",
+      "review_action_title": "组合治理",
+      "review_action_next_step": "处理 portfolio 里的路由冲突、owner 缺口、stale skill 和重复能力。",
+      "review_action_reason": "单个 Skill 质量很高仍可能在团队 skill library 中被相邻 Skill 冲突削弱。",
+      "review_action_source_ref_count": 3,
+      "review_action_verification_command": "python3 scripts/build_skill_atlas.py --workspace-root ."
+    },
+    {
+      "key": "operations-loop",
+      "label": "运营回路",
+      "status": "warn",
+      "detail": "adoption drift report is missing; real usage impact is unknown",
+      "evidence": "reports/adoption_drift_report.json + reports/skillops/daily + reports/skillops/weekly",
+      "link": "adoption_drift_report.md",
+      "review_action_id": "review-action-operations-loop",
+      "review_action_status": "warn",
+      "review_action_title": "运营回路",
+      "review_action_next_step": "记录 metadata-only 使用事件，或明确当前 release 缺少真实使用信号。",
+      "review_action_reason": "没有运营回路时，reviewer 无法判断采用率、误触发、坏输出和 review overdue 的真实影响。",
+      "review_action_source_ref_count": 2,
+      "review_action_verification_command": "python3 scripts/render_adoption_drift_report.py . --record-event skill_activation --activation-type explicit --outcome accepted"
+    },
+    {
+      "key": "review-waivers",
+      "label": "人工批准",
+      "status": "warn",
+      "detail": "review waiver ledger is missing; warning acceptance is not auditable",
+      "evidence": "reports/review_waivers.json",
+      "link": "review_waivers.md",
+      "review_action_id": "review-action-review-waivers",
+      "review_action_status": "warn",
+      "review_action_title": "人工批准",
+      "review_action_next_step": "对保留的 warning 写入 reviewer、理由、范围和到期时间，或修掉 warning。",
+      "review_action_reason": "warning 可以被接受，但必须可审计、会过期，并且不能掩盖 blocker。",
+      "review_action_source_ref_count": 2,
+      "review_action_verification_command": "python3 scripts/render_review_waivers.py ."
+    },
+    {
+      "key": "release-notes",
+      "label": "发布路线",
+      "status": "warn",
+      "detail": "promotion decisions are missing; release notes need reviewer confirmation",
+      "evidence": "reports/promotion_decisions.json + reports/upgrade_check.json + docs/migration-v2.md",
+      "link": "C:\\Users\\simplelove\\.codex\\skills\\yao-meta-skill\\docs\\migration-v2.md",
+      "review_action_id": "review-action-release-notes",
+      "review_action_status": "warn",
+      "review_action_title": "发布路线",
+      "review_action_next_step": "确认 promotion、upgrade diff、breaking changes、migration guide 和 known limitations。",
+      "review_action_reason": "发布说明不完整会让使用者无法判断升级风险和迁移动作。",
+      "review_action_source_ref_count": 3,
+      "review_action_verification_command": "python3 scripts/upgrade_check.py . --previous-package-json registry/examples/yao-meta-skill-1.0.0.json"
+    }
+  ],
+  "review_actions": [
+    {
+      "action_id": "review-action-intent-canvas",
+      "gate_key": "intent-canvas",
+      "title": "意图画布",
+      "label": "意图画布",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "收紧真实任务、输入、输出、排除项和成功标准。",
+      "summary": "收紧真实任务、输入、输出、排除项和成功标准。",
+      "reason": "低 intent confidence 会让后续 Skill IR、输出评测和 Review Studio 结论建立在模糊意图上。",
+      "why": "低 intent confidence 会让后续 Skill IR、输出评测和 Review Studio 结论建立在模糊意图上。",
+      "source_fix": "reports/intent-dialogue.md + reports/intent-confidence.md",
+      "source_refs": [
+        {
+          "path": "reports/intent-dialogue.md",
+          "label": "intent dialogue",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "reports/intent-confidence.md",
+          "label": "intent confidence",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/intent-confidence.json",
+      "evidence_link": "intent-confidence.md",
+      "verification_command": "python3 scripts/yao.py intent-confidence .",
+      "evidence_steps": []
+    },
+    {
+      "action_id": "review-action-trigger-lab",
+      "gate_key": "trigger-lab",
+      "title": "触发实验",
+      "label": "触发实验",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "修正 route scorecard 中的误触发、漏触发或 ambiguous case。",
+      "summary": "修正 route scorecard 中的误触发、漏触发或 ambiguous case。",
+      "reason": "触发错误会让正确 Skill 失活，或让相邻 Skill 被错误调用。",
+      "why": "触发错误会让正确 Skill 失活，或让相邻 Skill 被错误调用。",
+      "source_fix": "SKILL.md frontmatter description + evals/*/trigger_cases.json",
+      "source_refs": [
+        {
+          "path": "SKILL.md",
+          "label": "frontmatter description",
+          "kind": "source",
+          "line": 3,
+          "matched_pattern": "description:",
+          "excerpt": "description: 当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的…",
+          "exists": true,
+          "link": "..\\SKILL.md"
+        },
+        {
+          "path": "evals/trigger_cases.json",
+          "label": "trigger eval cases",
+          "kind": "eval",
+          "line": 13,
+          "matched_pattern": "should_trigger",
+          "excerpt": "\"should_trigger\": [",
+          "exists": true,
+          "link": "..\\evals\\trigger_cases.json"
+        },
+        {
+          "path": "reports/route_scorecard.md",
+          "label": "route scorecard",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/route_scorecard.json",
+      "evidence_link": "route_scorecard.md",
+      "verification_command": "python3 scripts/build_confusion_matrix.py",
+      "evidence_steps": []
+    },
+    {
+      "action_id": "review-action-output-lab",
+      "gate_key": "output-lab",
+      "title": "输出实验",
+      "label": "输出实验",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "补足 output eval 覆盖、execution evidence、blind A/B 和 reviewer adjudication。同步补足盲审声明。",
+      "summary": "补足 output eval 覆盖、execution evidence、blind A/B 和 reviewer adjudication。同步补足盲审声明。",
+      "reason": "没有输出质量和人工盲评证据时，Skill 只能证明会触发，不能证明输出真的更好且经得起审查。",
+      "why": "没有输出质量和人工盲评证据时，Skill 只能证明会触发，不能证明输出真的更好且经得起审查。",
+      "source_fix": "evals/output/cases.jsonl + reports/output_quality_scorecard.md + reports/output_review_kit.html + reports/output_review_adjudication.md + reports/output_review_decisions.json",
+      "source_refs": [
+        {
+          "path": "evals/output/cases.jsonl",
+          "label": "output eval cases",
+          "kind": "eval",
+          "line": 1,
+          "matched_pattern": "\"id\"",
+          "excerpt": "{\"id\":\"premarket-no-future-data\",\"prompt\":\"北京时间9:10，根据昨夜海外催化给A股候选和竞价建议。\",\"baseline_output\":\"候选A预计今日高开5%，竞价量会明显放大，可以直接追入。\",\"with_skill_output\":\"数据截止：09:10 Asia/Shanghai。候选A：催化A / L…",
+          "exists": true,
+          "link": "..\\evals\\output\\cases.jsonl"
+        },
+        {
+          "path": "reports/output_quality_scorecard.md",
+          "label": "output scorecard",
+          "kind": "report",
+          "line": 1,
+          "matched_pattern": "# Output",
+          "excerpt": "# Output Quality Scorecard",
+          "exists": true,
+          "link": "output_quality_scorecard.md"
+        },
+        {
+          "path": "reports/output_execution_runs.md",
+          "label": "output execution runs",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "reports/output_blind_review_pack.md",
+          "label": "blind A/B review pack",
+          "kind": "report",
+          "line": 1,
+          "matched_pattern": "# Output Blind",
+          "excerpt": "# Output Blind A/B Review Pack",
+          "exists": true,
+          "link": "output_blind_review_pack.md"
+        },
+        {
+          "path": "reports/output_review_kit.html",
+          "label": "reviewer cockpit",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "reports/output_review_adjudication.md",
+          "label": "review adjudication",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/output_quality_scorecard.json",
+      "evidence_link": "output_quality_scorecard.md",
+      "verification_command": "python3 scripts/adjudicate_output_review.py --write-template && python3 scripts/yao.py output-review",
+      "evidence_steps": []
+    },
+    {
+      "action_id": "review-action-context-budget",
+      "gate_key": "context-budget",
+      "title": "上下文",
+      "label": "上下文",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "压缩或拆分高成本 deferred resources，保留最小可路由上下文。",
+      "summary": "压缩或拆分高成本 deferred resources，保留最小可路由上下文。",
+      "reason": "初始加载可以安全，但后续 references、scripts、evals 体量过大时，reviewer 仍需要看到维护和读取成本。",
+      "why": "初始加载可以安全，但后续 references、scripts、evals 体量过大时，reviewer 仍需要看到维护和读取成本。",
+      "source_fix": "SKILL.md + references/ + scripts/ + evals/",
+      "source_refs": [
+        {
+          "path": "SKILL.md",
+          "label": "entrypoint",
+          "kind": "source",
+          "line": 1,
+          "matched_pattern": "",
+          "excerpt": "---",
+          "exists": true,
+          "link": "..\\SKILL.md"
+        },
+        {
+          "path": "reports/context_budget.md",
+          "label": "context budget",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "scripts/resource_boundary_check.py",
+          "label": "resource boundary checker",
+          "kind": "source",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "references/skill-engineering-method.md",
+          "label": "skill engineering method",
+          "kind": "method",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/context_budget.json",
+      "evidence_link": "context_budget.md",
+      "verification_command": "python3 scripts/render_context_reports.py",
+      "evidence_steps": []
+    },
+    {
+      "action_id": "review-action-skill-atlas",
+      "gate_key": "skill-atlas",
+      "title": "组合治理",
+      "label": "组合治理",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "处理 portfolio 里的路由冲突、owner 缺口、stale skill 和重复能力。",
+      "summary": "处理 portfolio 里的路由冲突、owner 缺口、stale skill 和重复能力。",
+      "reason": "单个 Skill 质量很高仍可能在团队 skill library 中被相邻 Skill 冲突削弱。",
+      "why": "单个 Skill 质量很高仍可能在团队 skill library 中被相邻 Skill 冲突削弱。",
+      "source_fix": "reports/skill_atlas.html + skill_atlas/catalog.json",
+      "source_refs": [
+        {
+          "path": "skill_atlas/catalog.json",
+          "label": "skill atlas catalog",
+          "kind": "atlas",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "skill_atlas/policy.json",
+          "label": "atlas scope policy",
+          "kind": "policy",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "reports/skill_atlas.html",
+          "label": "skill atlas report",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/skill_atlas.json",
+      "evidence_link": "skill_atlas.html",
+      "verification_command": "python3 scripts/build_skill_atlas.py --workspace-root .",
+      "evidence_steps": []
+    },
+    {
+      "action_id": "review-action-operations-loop",
+      "gate_key": "operations-loop",
+      "title": "运营回路",
+      "label": "运营回路",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "记录 metadata-only 使用事件，或明确当前 release 缺少真实使用信号。",
+      "summary": "记录 metadata-only 使用事件，或明确当前 release 缺少真实使用信号。",
+      "reason": "没有运营回路时，reviewer 无法判断采用率、误触发、坏输出和 review overdue 的真实影响。",
+      "why": "没有运营回路时，reviewer 无法判断采用率、误触发、坏输出和 review overdue 的真实影响。",
+      "source_fix": "reports/adoption_drift_report.md",
+      "source_refs": [
+        {
+          "path": "reports/adoption_drift_report.md",
+          "label": "adoption drift report",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "references/telemetry-drift-method.md",
+          "label": "telemetry method",
+          "kind": "method",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/adoption_drift_report.json + reports/skillops/daily + reports/skillops/weekly",
+      "evidence_link": "adoption_drift_report.md",
+      "verification_command": "python3 scripts/render_adoption_drift_report.py . --record-event skill_activation --activation-type explicit --outcome accepted",
+      "evidence_steps": []
+    },
+    {
+      "action_id": "review-action-review-waivers",
+      "gate_key": "review-waivers",
+      "title": "人工批准",
+      "label": "人工批准",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "对保留的 warning 写入 reviewer、理由、范围和到期时间，或修掉 warning。",
+      "summary": "对保留的 warning 写入 reviewer、理由、范围和到期时间，或修掉 warning。",
+      "reason": "warning 可以被接受，但必须可审计、会过期，并且不能掩盖 blocker。",
+      "why": "warning 可以被接受，但必须可审计、会过期，并且不能掩盖 blocker。",
+      "source_fix": "reports/review_waivers.md",
+      "source_refs": [
+        {
+          "path": "reports/review_waivers.md",
+          "label": "waiver ledger",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "references/review-waiver-method.md",
+          "label": "waiver method",
+          "kind": "method",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/review_waivers.json",
+      "evidence_link": "review_waivers.md",
+      "verification_command": "python3 scripts/render_review_waivers.py .",
+      "evidence_steps": []
+    },
+    {
+      "action_id": "review-action-release-notes",
+      "gate_key": "release-notes",
+      "title": "发布路线",
+      "label": "发布路线",
+      "status": "warn",
+      "priority": "warning",
+      "next_step": "确认 promotion、upgrade diff、breaking changes、migration guide 和 known limitations。",
+      "summary": "确认 promotion、upgrade diff、breaking changes、migration guide 和 known limitations。",
+      "reason": "发布说明不完整会让使用者无法判断升级风险和迁移动作。",
+      "why": "发布说明不完整会让使用者无法判断升级风险和迁移动作。",
+      "source_fix": "reports/upgrade_check.md + docs/migration-v2.md",
+      "source_refs": [
+        {
+          "path": "reports/upgrade_check.md",
+          "label": "upgrade check",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "docs/migration-v2.md",
+          "label": "migration guide",
+          "kind": "docs",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        },
+        {
+          "path": "reports/promotion_decisions.md",
+          "label": "promotion decisions",
+          "kind": "report",
+          "line": null,
+          "matched_pattern": "",
+          "excerpt": "",
+          "exists": false,
+          "link": ""
+        }
+      ],
+      "evidence": "reports/promotion_decisions.json + reports/upgrade_check.json + docs/migration-v2.md",
+      "evidence_link": "C:\\Users\\simplelove\\.codex\\skills\\yao-meta-skill\\docs\\migration-v2.md",
+      "verification_command": "python3 scripts/upgrade_check.py . --previous-package-json registry/examples/yao-meta-skill-1.0.0.json",
+      "evidence_steps": []
+    }
+  ],
+  "evidence_paths": {
+    "skill_overview": "reports/skill-overview.html",
+    "review_viewer": "reports/review-viewer.html",
+    "output_eval": "reports/output_quality_scorecard.md",
+    "output_execution": "reports/output_execution_runs.md",
+    "output_blind_review": "reports/output_blind_review_pack.md",
+    "output_review_kit": "reports/output_review_kit.md",
+    "output_review_kit_html": "reports/output_review_kit.html",
+    "output_review_decisions": "reports/output_review_decisions.json",
+    "output_review_adjudication": "reports/output_review_adjudication.md",
+    "benchmark_reproducibility": "reports/benchmark_reproducibility.md",
+    "skill_os2_coverage": "reports/skill_os2_coverage.md",
+    "runtime_conformance": "reports/conformance_matrix.md",
+    "trust_report": "reports/security_trust_report.md",
+    "python_compatibility": "reports/python_compatibility.md",
+    "architecture_maintainability": "reports/architecture_maintainability.md",
+    "permission_policy": "security/permission_policy.md",
+    "runtime_permissions": "reports/runtime_permission_probes.md",
+    "skill_atlas": "reports/skill_atlas.html",
+    "compiled_targets": "reports/compiled_targets.md",
+    "adoption_drift": "reports/adoption_drift_report.md",
+    "review_waivers": "reports/review_waivers.md",
+    "review_annotations": "reports/review_annotations.md",
+    "adaptation_proposals": "reports/adaptation_proposals.md",
+    "adaptation_approval_ledger": "reports/adaptation_approval_ledger.json",
+    "adaptation_regression": "reports/adaptation_regression_report.md",
+    "world_class_evidence_plan": "reports/world_class_evidence_plan.md",
+    "world_class_evidence_ledger": "reports/world_class_evidence_ledger.md",
+    "world_class_evidence_intake": "reports/world_class_evidence_intake.md",
+    "world_class_evidence_preflight": "reports/world_class_evidence_preflight.md",
+    "world_class_evidence_preflight_html": "reports/world_class_evidence_preflight.html",
+    "world_class_submission_review": "reports/world_class_submission_review.md",
+    "world_class_operator_runbook": "reports/world_class_operator_runbook.md",
+    "world_class_operator_runbook_html": "reports/world_class_operator_runbook.html",
+    "world_class_claim_guard": "reports/world_class_claim_guard.md",
+    "registry_audit": "reports/registry_audit.md",
+    "package_verification": "reports/package_verification.md",
+    "install_simulation": "reports/install_simulation.md",
+    "upgrade_check": "reports/upgrade_check.md",
+    "migration": "docs/migration-v2.md",
+    "skill_ir": "reports\\skill-ir.json"
+  },
+  "data": {
+    "overview": {
+      "skill_summary": {
+        "name": "us-overnight-a-stock-mapping",
+        "title": "US Overnight → A股映射雷达",
+        "display_name": "US Overnight → A股映射雷达",
+        "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+        "maturity": "production",
+        "updated_at": "2026-08-20",
+        "core_value": "把一次性经验沉淀为可复用、可评估、可迁移的 Skill 包体。",
+        "audience": "Skill 作者、复用团队和后续 reviewer。",
+        "deliverables": [
+          "SKILL.md",
+          "agents/interface.yaml",
+          "reports\\skill-ir.json",
+          "reports/compiled_targets.md",
+          "reports/output_quality_scorecard.md",
+          "reports/output_blind_review_pack.md",
+          "reports/output_blind_answer_key.json",
+          "reports/conformance_matrix.md",
+          "reports/security_trust_report.md",
+          "reports/runtime_permission_probes.md",
+          "reports/skill_atlas.html",
+          "reports/registry_audit.md",
+          "reports/package_verification.md",
+          "reports/install_simulation.md",
+          "reports/upgrade_check.md",
+          "reports/adoption_drift_report.md",
+          "reports/review_waivers.md",
+          "reports/review_annotations.md",
+          "reports/review-studio.html",
+          "reports/skill-interpretation.html",
+          "reports/skill-overview.html"
+        ],
+        "flow": [
+          "输入材料",
+          "Skill 包体",
+          "可复用能力"
+        ]
+      },
+      "scorecard": {
+        "completeness_score": {
+          "label": "完整度",
+          "score": 100,
+          "reasons": [
+            "SKILL.md 已存在，是 Skill 的入口。",
+            "README.md 已存在，便于人工阅读。",
+            "agents/interface.yaml 已存在，便于跨平台适配。",
+            "manifest.json 已存在，生命周期信息可追踪。",
+            "reports/ 已存在，生成证据可以随包体迁移。"
+          ]
+        },
+        "trigger_score": {
+          "label": "触发清晰",
+          "score": 85,
+          "reasons": [
+            "frontmatter description 已存在，具备基础路由面。",
+            "description 有足够长度说明任务边界。",
+            "description 已包含使用场景或排除边界信号。",
+            "evals/ 已存在，可承载触发样例或质量检查。",
+            "intent-confidence 证据不足。"
+          ]
+        },
+        "evidence_score": {
+          "label": "证据充分",
+          "score": 30,
+          "reasons": [
+            "已生成 6 / 20 类报告证据。",
+            "skill-ir.json 已存在。",
+            "output_quality_scorecard.json 已存在。",
+            "conformance_matrix.json 已存在。",
+            "证据不足：缺少 compiled_targets.json, intent-dialogue.json, intent-confidence.json。"
+          ]
+        },
+        "maintainability_score": {
+          "label": "可维护性",
+          "score": 80,
+          "reasons": [
+            "SKILL.md 约 1484 个词/字。",
+            "入口文件偏长，建议继续拆到 references/。",
+            "references/ 已承载扩展指导。",
+            "scripts/ 已承载确定性逻辑。",
+            "evals/ 已承载可迁移检查。"
+          ]
+        },
+        "portability_score": {
+          "label": "可迁移性",
+          "score": 100,
+          "reasons": [
+            "agents/interface.yaml 已存在。",
+            "manifest.json 已存在。",
+            "目标平台或 adapter target 已声明。",
+            "入口文件未发现明显私有绝对路径。"
+          ]
+        },
+        "context_cost": {
+          "label": "上下文成本",
+          "score": 42,
+          "reasons": [
+            "入口约 1484 个词/字，references 约 24979 个词/字。",
+            "分数越高代表上下文成本越低。",
+            "上下文成本偏高，建议压缩入口或拆分 references。"
+          ]
+        }
+      },
+      "capability_profile": {
+        "archetype": "production",
+        "task_family": "Skill workflow",
+        "maturity": "production",
+        "trigger_strength": "手动触发 + description 路由",
+        "reuse_scope": "本地复用",
+        "matrix": {
+          "execution_certainty": 72,
+          "knowledge_density": 62
+        }
+      },
+      "principle_model": {
+        "nodes": [
+          {
+            "title": "意图澄清",
+            "body": "先确认真实任务、输入材料和交付结果。"
+          },
+          {
+            "title": "边界路由",
+            "body": "用 frontmatter description 决定是否触发，并写明相邻非目标。"
+          },
+          {
+            "title": "资产分层",
+            "body": "把入口、参考、脚本、评估和报告拆到各自目录，避免 SKILL.md 膨胀。"
+          },
+          {
+            "title": "证据回路",
+            "body": "通过评估、报告和复盘把真实使用反馈变成下一轮改进。"
+          },
+          {
+            "title": "漂移观察",
+            "body": "持续观察触发漂移、输出漂移和治理漂移。"
+          },
+          {
+            "title": "杠杆升级",
+            "body": "优先改边界、触发和一个最小自修复检查。"
+          }
+        ],
+        "layers": [
+          "入口层",
+          "参考层",
+          "脚本层",
+          "评估层",
+          "报告层"
+        ]
+      },
+      "contract_boundary": {
+        "trigger": {
+          "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+          "activation": "implicit",
+          "execution": "inline",
+          "shell": "powershell"
+        },
+        "inputs": [
+          "用户提供的工作流、提示词、文档、记录或散乱笔记",
+          "期望沉淀的复用场景、排除项、约束和质量标准"
+        ],
+        "outputs": [
+          "可路由的 SKILL.md",
+          "agents/interface.yaml 元数据",
+          "必要的 references、scripts、evals、reports 证据",
+          "结构化 Skill 目录，共 8 类关键资产。"
+        ],
+        "should_trigger": [
+          "团队复用前，需要明确触发边界、质量证据和维护责任。",
+          "用户说出类似需求时：使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。",
+          "已有原始资料，但还没有清晰输入、输出和后续迭代路径。"
+        ],
+        "should_not_trigger": [
+          "只需要一次性回答、没有复用价值的临时请求。",
+          "要求直接执行相邻任务，而不是沉淀或使用这个 Skill。",
+          "缺少必要事实且用户不允许澄清的场景。"
+        ],
+        "boundary_cards": [
+          {
+            "label": "Owned",
+            "body": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。"
+          },
+          {
+            "label": "Adjacent",
+            "body": "相邻任务需要先确认是否应转为独立 Skill。"
+          },
+          {
+            "label": "Excluded",
+            "body": "不替代人工事实核查，也不静默扩大职责。"
+          }
+        ]
+      },
+      "quality_review": {
+        "strengths": [
+          "触发面保持精简，并锚定在 frontmatter description。",
+          "已生成 Skill IR，核心语义可先于平台打包被审查和迁移。",
+          "已生成 Output Eval Lab scorecard，可比较 with-skill 与 baseline 输出质量。",
+          "已生成 Runtime Conformance Matrix，可审查目标端消费能力。",
+          "已生成 Security Trust Report，可审查脚本、依赖、secret 和包完整性风险。",
+          "已生成 Install Simulation，可审查 zip 解压、入口加载、接口元数据和 adapter 可读性。"
+        ],
+        "gaps": [
+          "证据充分需要补强：已生成 6 / 20 类报告证据。",
+          "上下文成本需要补强：入口约 1484 个词/字，references 约 24979 个词/字。"
+        ],
+        "recommendations": [
+          "先改触发边界，再扩展工作流。",
+          "只把重复且稳定的步骤沉淀为脚本。",
+          "每次升级后重新生成报告并检查分数原因。"
+        ],
+        "artifact_design": {
+          "design_system": "content-led editorial",
+          "highlights": []
+        },
+        "prompt_quality": {
+          "overall_quality_score": "n/a",
+          "highlights": []
+        },
+        "system_model": {
+          "stability": {},
+          "highlights": []
+        }
+      },
+      "risk_governance": {
+        "risks": [
+          {
+            "name": "误触发风险",
+            "impact": 3,
+            "probability": 2,
+            "signal": "frontmatter description 已存在，具备基础路由面。",
+            "response": "先补证据和边界，再增加包体复杂度。"
+          },
+          {
+            "name": "输出漂移风险",
+            "impact": 2,
+            "probability": 3,
+            "signal": "已生成 6 / 20 类报告证据。",
+            "response": "先补证据和边界，再增加包体复杂度。"
+          },
+          {
+            "name": "证据不足风险",
+            "impact": 3,
+            "probability": 3,
+            "signal": "已生成 6 / 20 类报告证据。",
+            "response": "先补证据和边界，再增加包体复杂度。"
+          },
+          {
+            "name": "包体膨胀风险",
+            "impact": 2,
+            "probability": 2,
+            "signal": "SKILL.md 约 1484 个词/字。",
+            "response": "先补证据和边界，再增加包体复杂度。"
+          },
+          {
+            "name": "跨平台迁移风险",
+            "impact": 3,
+            "probability": 1,
+            "signal": "agents/interface.yaml 已存在。",
+            "response": "先补证据和边界，再增加包体复杂度。"
+          }
+        ],
+        "risk_families": [],
+        "human_judgment_boundary": []
+      },
+      "world_class_readiness": {
+        "ready": false,
+        "decision": "not-generated",
+        "entry_count": 0,
+        "pending_count": 0,
+        "accepted_count": 0,
+        "external_pending_count": 0,
+        "human_pending_count": 0,
+        "source_check_count": 0,
+        "source_pass_count": 0,
+        "conclusion_zh": "未生成 world-class ledger；当前报告不会宣称世界级完成。",
+        "conclusion_en": "No world-class ledger was generated; this report does not claim world-class completion.",
+        "entries": []
+      },
+      "package_assets": {
+        "entries": [
+          {
+            "path": "SKILL.md",
+            "label": "Skill entrypoint",
+            "kind": "file",
+            "file_count": 1
+          },
+          {
+            "path": "README.md",
+            "label": "Human-readable usage guide",
+            "kind": "file",
+            "file_count": 1
+          },
+          {
+            "path": "agents/interface.yaml",
+            "label": "Neutral interface metadata",
+            "kind": "file",
+            "file_count": 1
+          },
+          {
+            "path": "manifest.json",
+            "label": "Lifecycle and portability metadata",
+            "kind": "file",
+            "file_count": 1
+          },
+          {
+            "path": "references",
+            "label": "Extended guidance and reusable notes",
+            "kind": "folder",
+            "file_count": 9
+          },
+          {
+            "path": "scripts",
+            "label": "Deterministic helpers or local tooling",
+            "kind": "folder",
+            "file_count": 1
+          },
+          {
+            "path": "evals",
+            "label": "Trigger and quality checks",
+            "kind": "folder",
+            "file_count": 9
+          },
+          {
+            "path": "reports",
+            "label": "Generated evidence and overview artifacts",
+            "kind": "folder",
+            "file_count": 30
+          }
+        ],
+        "file_count": 53,
+        "folder_count": 4,
+        "distribution": [
+          {
+            "label": "SKILL.md",
+            "value": 1
+          },
+          {
+            "label": "README.md",
+            "value": 1
+          },
+          {
+            "label": "agents/interface.yaml",
+            "value": 1
+          },
+          {
+            "label": "manifest.json",
+            "value": 1
+          },
+          {
+            "label": "references",
+            "value": 9
+          },
+          {
+            "label": "scripts",
+            "value": 1
+          },
+          {
+            "label": "evals",
+            "value": 9
+          },
+          {
+            "label": "reports",
+            "value": 30
+          }
+        ]
+      },
+      "iteration_roadmap": {
+        "items": [
+          {
+            "title": "收紧触发",
+            "why": "先让 Skill 在正确场景被调用，再扩展资产。",
+            "actions": [
+              "增加正例、反例和近邻用例。",
+              "压缩 frontmatter description。"
+            ],
+            "unlocks": "更稳定的路由边界。"
+          }
+        ]
+      },
+      "report_contract": {
+        "schema_version": "2.0",
+        "html_report": "reports/skill-overview.html",
+        "language": "zh-CN",
+        "default_language": "zh-CN",
+        "languages": [
+          "zh-CN",
+          "en"
+        ],
+        "layout": "kami-white-audit-v2",
+        "nav_labels": [
+          "技能概述",
+          "总览指标",
+          "能力画像",
+          "原理结构",
+          "契约边界",
+          "质量评估",
+          "风险治理",
+          "包体资产",
+          "迭代路线"
+        ],
+        "nav_labels_en": [
+          "Overview",
+          "Metrics",
+          "Profile",
+          "Principle",
+          "Contract",
+          "Quality",
+          "Risk",
+          "Assets",
+          "Roadmap"
+        ]
+      },
+      "name": "us-overnight-a-stock-mapping",
+      "title": "US Overnight → A股映射雷达",
+      "display_name": "US Overnight → A股映射雷达",
+      "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+      "logic_steps": [
+        "Understand the request",
+        "Execute the main task",
+        "Validate the result"
+      ],
+      "usage_steps": [
+        "使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。",
+        "Use this skill when the request matches: 当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。"
+      ],
+      "package_map": [
+        {
+          "path": "SKILL.md",
+          "label": "Skill entrypoint",
+          "kind": "file",
+          "file_count": 1
+        },
+        {
+          "path": "README.md",
+          "label": "Human-readable usage guide",
+          "kind": "file",
+          "file_count": 1
+        },
+        {
+          "path": "agents/interface.yaml",
+          "label": "Neutral interface metadata",
+          "kind": "file",
+          "file_count": 1
+        },
+        {
+          "path": "manifest.json",
+          "label": "Lifecycle and portability metadata",
+          "kind": "file",
+          "file_count": 1
+        },
+        {
+          "path": "references",
+          "label": "Extended guidance and reusable notes",
+          "kind": "folder",
+          "file_count": 9
+        },
+        {
+          "path": "scripts",
+          "label": "Deterministic helpers or local tooling",
+          "kind": "folder",
+          "file_count": 1
+        },
+        {
+          "path": "evals",
+          "label": "Trigger and quality checks",
+          "kind": "folder",
+          "file_count": 9
+        },
+        {
+          "path": "reports",
+          "label": "Generated evidence and overview artifacts",
+          "kind": "folder",
+          "file_count": 30
+        }
+      ],
+      "strengths": [
+        "触发面保持精简，并锚定在 frontmatter description。",
+        "已生成 Skill IR，核心语义可先于平台打包被审查和迁移。",
+        "已生成 Output Eval Lab scorecard，可比较 with-skill 与 baseline 输出质量。",
+        "已生成 Runtime Conformance Matrix，可审查目标端消费能力。",
+        "已生成 Security Trust Report，可审查脚本、依赖、secret 和包完整性风险。",
+        "已生成 Install Simulation，可审查 zip 解压、入口加载、接口元数据和 adapter 可读性。"
+      ],
+      "scenarios": [
+        "团队复用前，需要明确触发边界、质量证据和维护责任。",
+        "用户说出类似需求时：使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。",
+        "已有原始资料，但还没有清晰输入、输出和后续迭代路径。"
+      ],
+      "trigger_contract": {
+        "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+        "activation": "implicit",
+        "execution": "inline",
+        "shell": "powershell"
+      },
+      "io_contract": {
+        "inputs": [
+          "用户提供的工作流、提示词、文档、记录或散乱笔记",
+          "期望沉淀的复用场景、排除项、约束和质量标准"
+        ],
+        "outputs": [
+          "可路由的 SKILL.md",
+          "agents/interface.yaml 元数据",
+          "必要的 references、scripts、evals、reports 证据",
+          "结构化 Skill 目录，共 8 类关键资产。"
+        ]
+      },
+      "principles": [
+        {
+          "title": "意图澄清",
+          "body": "先确认真实任务、输入材料和交付结果。"
+        },
+        {
+          "title": "边界路由",
+          "body": "用 frontmatter description 决定是否触发，并写明相邻非目标。"
+        },
+        {
+          "title": "资产分层",
+          "body": "把入口、参考、脚本、评估和报告拆到各自目录，避免 SKILL.md 膨胀。"
+        },
+        {
+          "title": "证据回路",
+          "body": "通过评估、报告和复盘把真实使用反馈变成下一轮改进。"
+        },
+        {
+          "title": "漂移观察",
+          "body": "持续观察触发漂移、输出漂移和治理漂移。"
+        },
+        {
+          "title": "杠杆升级",
+          "body": "优先改边界、触发和一个最小自修复检查。"
+        }
+      ],
+      "roadmap": [
+        {
+          "title": "收紧触发",
+          "why": "先让 Skill 在正确场景被调用，再扩展资产。",
+          "actions": [
+            "增加正例、反例和近邻用例。",
+            "压缩 frontmatter description。"
+          ],
+          "unlocks": "更稳定的路由边界。"
+        }
+      ],
+      "cards": [],
+      "introduction": [
+        "这份报告用于快速理解新生成 Skill 的定位、原理、触发边界和交付内容。",
+        "先确认重复任务、真实输入形态和可交付输出，再决定是否继续加 references、scripts 或 evals。",
+        "如果需求仍然模糊，优先回到 intent dialogue 收紧边界，再扩展包体结构。"
+      ],
+      "benchmark_highlights": [],
+      "skill_ir": {
+        "schema_version": "2.0.0",
+        "source_path": "reports\\skill-ir.json",
+        "target_count": 1,
+        "trigger_samples": 3,
+        "output_eval_cases": 9
+      },
+      "compiled_targets": {
+        "ok": false,
+        "schema_version": "",
+        "summary": {},
+        "targets": [],
+        "failures": [],
+        "warnings": []
+      },
+      "output_quality": {
+        "case_count": 7,
+        "file_backed_case_count": 1,
+        "near_neighbor_case_count": 1,
+        "boundary_case_count": 2,
+        "baseline_pass_rate": 0.0,
+        "with_skill_pass_rate": 100.0,
+        "delta": 100.0,
+        "regression_count": 0,
+        "gate_pass": true,
+        "failure_taxonomy": [],
+        "blind_pair_count": 7
+      },
+      "output_execution": {
+        "ok": false,
+        "summary": {},
+        "runner": {},
+        "failures": []
+      },
+      "output_blind_review": {
+        "summary": {
+          "pair_count": 7,
+          "answer_key_separate": true,
+          "with_skill_hidden_count": 7
+        },
+        "seed": "yao-output-eval-blind-v1",
+        "pair_count": 7,
+        "answer_key_separate": true
+      },
+      "output_review_kit": {
+        "ok": false,
+        "summary": {},
+        "artifacts": {},
+        "failures": []
+      },
+      "output_review_adjudication": {
+        "ok": false,
+        "summary": {},
+        "reviewer": "",
+        "reviewed_at": "",
+        "failures": []
+      },
+      "benchmark_reproducibility": {
+        "ok": false,
+        "summary": {},
+        "commit": "",
+        "missing_artifacts": [],
+        "limitations": []
+      },
+      "runtime_conformance": {
+        "target_count": 1,
+        "pass_count": 1,
+        "fail_count": 0
+      },
+      "runtime_permissions": {
+        "ok": true,
+        "summary": {
+          "target_count": 1,
+          "pass_count": 1,
+          "fail_count": 0,
+          "native_enforcement_count": 0,
+          "metadata_fallback_count": 1,
+          "residual_risk_count": 1,
+          "required_capability_count": 0,
+          "failure_count": 0,
+          "installer_enforcement_source_status": "present",
+          "installer_enforcement_target_count": 1,
+          "installer_enforcement_pass_count": 0,
+          "installer_permission_enforced_count": 0,
+          "installer_permission_failure_count": 0,
+          "installer_permission_capability_count": 0,
+          "world_class_native_evidence_ready": false,
+          "installer_enforcement_ready": false
+        },
+        "expected_capabilities": [],
+        "targets": [
+          {
+            "target": "openai",
+            "status": "pass",
+            "assurance": "metadata-fallback-explicit",
+            "native_enforcement": false,
+            "metadata_fallback_explicit": true,
+            "residual_risks": [
+              "Client-native permission enforcement is not provided by this target; installer or operator must honor metadata."
+            ]
+          }
+        ],
+        "failures": []
+      },
+      "trust_security": {
+        "scanned_files": 24,
+        "script_count": 1,
+        "internal_module_count": 0,
+        "secret_findings": 0,
+        "dependency_files": [
+          "requirements.txt"
+        ],
+        "network_script_count": 0,
+        "network_policy_covered_count": 0,
+        "network_policy_missing_count": 0,
+        "file_write_script_count": 0,
+        "permission_required_count": 0,
+        "permission_approved_count": 0,
+        "permission_missing_count": 0,
+        "permission_invalid_count": 0,
+        "permission_expired_count": 0,
+        "help_smoke_checked_count": 1,
+        "help_smoke_failed_count": 0,
+        "interactive_script_count": 0,
+        "package_hash_scope": "source-contract-without-generated-reports",
+        "package_hash_file_count": 24,
+        "package_sha256": "c5a38ab572eccb979585419e920e2fd9aed784d8298a8ea42697010d790e0f4d"
+      },
+      "skill_atlas": {},
+      "registry_distribution": {
+        "ok": false,
+        "package": {},
+        "failures": [],
+        "warnings": []
+      },
+      "package_verification": {
+        "ok": true,
+        "summary": {
+          "target_count": 1,
+          "adapter_count": 1,
+          "archive_present": true,
+          "archive_sha256": "37277fe88db5c6e29e726b10ac5d3d2681d50a4a9a36b0db7eefbbde617f14f2",
+          "archive_entry_count": 60,
+          "nested_skill_entry_count": 0,
+          "failure_count": 0,
+          "warning_count": 0
+        },
+        "failures": [],
+        "warnings": []
+      },
+      "install_simulation": {
+        "ok": true,
+        "summary": {
+          "archive_present": true,
+          "archive_entry_count": 60,
+          "nested_skill_entry_count": 0,
+          "archive_extracted": true,
+          "entrypoint_loaded": true,
+          "manifest_loaded": true,
+          "interface_loaded": true,
+          "adapter_count": 1,
+          "installer_permission_enforced_count": 0,
+          "installer_permission_failure_count": 0,
+          "permission_target_count": 1,
+          "permission_capability_count": 0,
+          "install_root_is_temp": true,
+          "failure_count": 0,
+          "warning_count": 0
+        },
+        "failures": [],
+        "warnings": []
+      },
+      "upgrade_check": {
+        "ok": false,
+        "summary": {},
+        "upgrade_diff": {},
+        "release_notes": [],
+        "failures": [],
+        "warnings": []
+      },
+      "adoption_drift": {
+        "ok": false,
+        "summary": {},
+        "next_iteration_candidates": [],
+        "privacy_contract": {},
+        "failures": []
+      },
+      "review_waivers": {
+        "ok": false,
+        "summary": {},
+        "policy": {},
+        "failures": [],
+        "warnings": []
+      },
+      "review_annotations": {
+        "ok": false,
+        "summary": {},
+        "annotations": [],
+        "failures": []
+      },
+      "world_class_evidence_plan": {
+        "ok": false,
+        "summary": {},
+        "tasks": [],
+        "source_audit": {}
+      },
+      "world_class_evidence_ledger": {
+        "ok": false,
+        "summary": {},
+        "entries": [],
+        "source_plan": {}
+      },
+      "synthesis_highlights": [],
+      "artifact_design": {
+        "design_system": "content-led editorial",
+        "highlights": []
+      },
+      "prompt_quality": {
+        "overall_quality_score": "n/a",
+        "highlights": []
+      },
+      "system_model": {
+        "stability": {},
+        "highlights": []
+      },
+      "metadata": {
+        "canonical_format": "agent-skills",
+        "targets": [
+          "openai"
+        ],
+        "maturity_tier": "production",
+        "skill_archetype": "production",
+        "updated_at": "2026-08-20"
+      }
+    },
+    "intent_confidence": {},
+    "intent_dialogue": {},
+    "route_scorecard": {},
+    "output_quality": {
+      "ok": true,
+      "cases": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\evals\\output\\cases.jsonl",
+      "summary": {
+        "case_count": 7,
+        "file_backed_case_count": 1,
+        "near_neighbor_case_count": 1,
+        "boundary_case_count": 2,
+        "baseline_pass_rate": 0.0,
+        "with_skill_pass_rate": 100.0,
+        "delta": 100.0,
+        "regression_count": 0,
+        "gate_pass": true,
+        "failure_taxonomy": [],
+        "blind_pair_count": 7
+      },
+      "results": [
+        {
+          "id": "premarket-no-future-data",
+          "prompt": "北京时间9:10，根据昨夜海外催化给A股候选和竞价建议。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "boundary"
+          },
+          "baseline": {
+            "score": 0.0,
+            "passed_count": 0,
+            "failed_count": 3,
+            "checks": [
+              {
+                "id": "uses-static-state",
+                "description": "9:25前必须使用静态交易状态。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": false,
+                "missing": [
+                  "T_static"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "uses-conditional-auction",
+                "description": "竞价只能使用条件预案。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": false,
+                "missing": [
+                  "Auction Conditions"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-fabricated-auction",
+                "description": "不得伪造已发生的竞价结论。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "预计今日高开5%",
+                  "竞价量会明显放大"
+                ]
+              }
+            ],
+            "failed": [
+              {
+                "id": "uses-static-state",
+                "description": "9:25前必须使用静态交易状态。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": false,
+                "missing": [
+                  "T_static"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "uses-conditional-auction",
+                "description": "竞价只能使用条件预案。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": false,
+                "missing": [
+                  "Auction Conditions"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-fabricated-auction",
+                "description": "不得伪造已发生的竞价结论。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "预计今日高开5%",
+                  "竞价量会明显放大"
+                ]
+              }
+            ]
+          },
+          "with_skill": {
+            "score": 100.0,
+            "passed_count": 3,
+            "failed_count": 0,
+            "checks": [
+              {
+                "id": "uses-static-state",
+                "description": "9:25前必须使用静态交易状态。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "uses-conditional-auction",
+                "description": "竞价只能使用条件预案。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-fabricated-auction",
+                "description": "不得伪造已发生的竞价结论。",
+                "weight": 1.0,
+                "failure_type": "future_data",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              }
+            ],
+            "failed": []
+          },
+          "delta": 100.0,
+          "winner": "with_skill",
+          "failure_taxonomy": []
+        },
+        {
+          "id": "unresolved-signal-not-core",
+          "prompt": "昨夜三只美国光通信股票同步大涨，但没有查到可信共同消息，映射A股。",
+          "input_files": [
+            "fixtures/unresolved-signal-input.md"
+          ],
+          "metadata": {
+            "case_type": "boundary"
+          },
+          "baseline": {
+            "score": 0.0,
+            "passed_count": 0,
+            "failed_count": 3,
+            "checks": [
+              {
+                "id": "keeps-unresolved",
+                "description": "未归因异动保持未解决状态。",
+                "weight": 1.0,
+                "failure_type": "forced_attribution",
+                "passed": false,
+                "missing": [
+                  "UNRESOLVED SIGNAL"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "empty-core",
+                "description": "未归因信号不得进核心池。",
+                "weight": 1.0,
+                "failure_type": "pool_gate",
+                "passed": false,
+                "missing": [
+                  "core_pool为空"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-confirmed-theme",
+                "description": "不得声称主线确认。",
+                "weight": 1.0,
+                "failure_type": "forced_attribution",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "主线确认"
+                ]
+              }
+            ],
+            "failed": [
+              {
+                "id": "keeps-unresolved",
+                "description": "未归因异动保持未解决状态。",
+                "weight": 1.0,
+                "failure_type": "forced_attribution",
+                "passed": false,
+                "missing": [
+                  "UNRESOLVED SIGNAL"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "empty-core",
+                "description": "未归因信号不得进核心池。",
+                "weight": 1.0,
+                "failure_type": "pool_gate",
+                "passed": false,
+                "missing": [
+                  "core_pool为空"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-confirmed-theme",
+                "description": "不得声称主线确认。",
+                "weight": 1.0,
+                "failure_type": "forced_attribution",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "主线确认"
+                ]
+              }
+            ]
+          },
+          "with_skill": {
+            "score": 100.0,
+            "passed_count": 3,
+            "failed_count": 0,
+            "checks": [
+              {
+                "id": "keeps-unresolved",
+                "description": "未归因异动保持未解决状态。",
+                "weight": 1.0,
+                "failure_type": "forced_attribution",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "empty-core",
+                "description": "未归因信号不得进核心池。",
+                "weight": 1.0,
+                "failure_type": "pool_gate",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-confirmed-theme",
+                "description": "不得声称主线确认。",
+                "weight": 1.0,
+                "failure_type": "forced_attribution",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              }
+            ],
+            "failed": []
+          },
+          "delta": 100.0,
+          "winner": "with_skill",
+          "failure_taxonomy": []
+        },
+        {
+          "id": "biotech-uses-p-stage",
+          "prompt": "昨夜FDA批准海外同靶点药物，评估一家尚无收入的A股Biotech。",
+          "input_files": [],
+          "metadata": {},
+          "baseline": {
+            "score": 0.0,
+            "passed_count": 0,
+            "failed_count": 3,
+            "checks": [
+              {
+                "id": "uses-p-stage",
+                "description": "Biotech必须使用P级。",
+                "weight": 1.0,
+                "failure_type": "wrong_maturity_model",
+                "passed": false,
+                "missing": [
+                  "管线P2"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "checks-comparability",
+                "description": "必须检查管线可比性。",
+                "weight": 1.0,
+                "failure_type": "missing_biotech_validation",
+                "passed": false,
+                "missing": [
+                  "适应症",
+                  "技术路线",
+                  "管线权利"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-e5-shortcut",
+                "description": "不得因无收入直接判E5。",
+                "weight": 1.0,
+                "failure_type": "wrong_maturity_model",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "E5纯概念"
+                ]
+              }
+            ],
+            "failed": [
+              {
+                "id": "uses-p-stage",
+                "description": "Biotech必须使用P级。",
+                "weight": 1.0,
+                "failure_type": "wrong_maturity_model",
+                "passed": false,
+                "missing": [
+                  "管线P2"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "checks-comparability",
+                "description": "必须检查管线可比性。",
+                "weight": 1.0,
+                "failure_type": "missing_biotech_validation",
+                "passed": false,
+                "missing": [
+                  "适应症",
+                  "技术路线",
+                  "管线权利"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-e5-shortcut",
+                "description": "不得因无收入直接判E5。",
+                "weight": 1.0,
+                "failure_type": "wrong_maturity_model",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "E5纯概念"
+                ]
+              }
+            ]
+          },
+          "with_skill": {
+            "score": 100.0,
+            "passed_count": 3,
+            "failed_count": 0,
+            "checks": [
+              {
+                "id": "uses-p-stage",
+                "description": "Biotech必须使用P级。",
+                "weight": 1.0,
+                "failure_type": "wrong_maturity_model",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "checks-comparability",
+                "description": "必须检查管线可比性。",
+                "weight": 1.0,
+                "failure_type": "missing_biotech_validation",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-e5-shortcut",
+                "description": "不得因无收入直接判E5。",
+                "weight": 1.0,
+                "failure_type": "wrong_maturity_model",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              }
+            ],
+            "failed": []
+          },
+          "delta": 100.0,
+          "winner": "with_skill",
+          "failure_taxonomy": []
+        },
+        {
+          "id": "partial-coverage-disclosure",
+          "prompt": "行情源只能提供部分美股涨跌幅，没有成交量、全市场分母和板块ETF数据，Event Radar也只检查了部分固定公司与行业锚点，仍请完成隔夜雷达。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "coverage_contract"
+          },
+          "baseline": {
+            "score": 0.0,
+            "passed_count": 0,
+            "failed_count": 3,
+            "checks": [
+              {
+                "id": "coverage-denominator",
+                "description": "必须分别披露固定、动态、事件新增和行业Registry分母。",
+                "weight": 1.0,
+                "failure_type": "coverage_gap",
+                "passed": false,
+                "missing": [
+                  "fixed=31",
+                  "dynamic=2",
+                  "event_specific=1",
+                  "checked=6/34",
+                  "sector_registry_coverage=4/13",
+                  "universe=精选报价",
+                  "scanned_total=12",
+                  "ETF 2/7"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "confidence-downgrade",
+                "description": "数据不足时降低置信度并说明非价格事件漏报风险。",
+                "weight": 1.0,
+                "failure_type": "confidence_inflation",
+                "passed": false,
+                "missing": [
+                  "重大但价格未进榜的产业事件",
+                  "Catalyst Confidence为Unknown",
+                  "overall_status=partial"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-full-coverage-claim",
+                "description": "不得声称全量完成或无分母时写covered。",
+                "weight": 1.0,
+                "failure_type": "coverage_overclaim",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "全量扫描完成"
+                ]
+              }
+            ],
+            "failed": [
+              {
+                "id": "coverage-denominator",
+                "description": "必须分别披露固定、动态、事件新增和行业Registry分母。",
+                "weight": 1.0,
+                "failure_type": "coverage_gap",
+                "passed": false,
+                "missing": [
+                  "fixed=31",
+                  "dynamic=2",
+                  "event_specific=1",
+                  "checked=6/34",
+                  "sector_registry_coverage=4/13",
+                  "universe=精选报价",
+                  "scanned_total=12",
+                  "ETF 2/7"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "confidence-downgrade",
+                "description": "数据不足时降低置信度并说明非价格事件漏报风险。",
+                "weight": 1.0,
+                "failure_type": "confidence_inflation",
+                "passed": false,
+                "missing": [
+                  "重大但价格未进榜的产业事件",
+                  "Catalyst Confidence为Unknown",
+                  "overall_status=partial"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-full-coverage-claim",
+                "description": "不得声称全量完成或无分母时写covered。",
+                "weight": 1.0,
+                "failure_type": "coverage_overclaim",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "全量扫描完成"
+                ]
+              }
+            ]
+          },
+          "with_skill": {
+            "score": 100.0,
+            "passed_count": 3,
+            "failed_count": 0,
+            "checks": [
+              {
+                "id": "coverage-denominator",
+                "description": "必须分别披露固定、动态、事件新增和行业Registry分母。",
+                "weight": 1.0,
+                "failure_type": "coverage_gap",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "confidence-downgrade",
+                "description": "数据不足时降低置信度并说明非价格事件漏报风险。",
+                "weight": 1.0,
+                "failure_type": "confidence_inflation",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-full-coverage-claim",
+                "description": "不得声称全量完成或无分母时写covered。",
+                "weight": 1.0,
+                "failure_type": "coverage_overclaim",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              }
+            ],
+            "failed": []
+          },
+          "delta": 100.0,
+          "winner": "with_skill",
+          "failure_taxonomy": []
+        },
+        {
+          "id": "sector-anchor-nonprice-discovery",
+          "prompt": "昨夜商业航天相关股票没有进入涨跌幅Top榜。可以据此认定商业航天没有重大事件，并把Event Radar写成covered吗？",
+          "input_files": [],
+          "metadata": {
+            "case_type": "coverage_contract",
+            "boundary_type": "event_without_price_move"
+          },
+          "baseline": {
+            "score": 0.0,
+            "passed_count": 0,
+            "failed_count": 3,
+            "checks": [
+              {
+                "id": "nonprice-anchor",
+                "description": "重大但价格不动的方向必须由非价格发现锚点主动检查。",
+                "weight": 1.0,
+                "failure_type": "event_discovery_gap",
+                "passed": false,
+                "missing": [
+                  "NASA",
+                  "FAA",
+                  "DoD",
+                  "公司一级信源",
+                  "非价格Discovery Anchor"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "registry-denominator",
+                "description": "缺少行业锚点分母时Event Radar必须降级。",
+                "weight": 1.0,
+                "failure_type": "coverage_overclaim",
+                "passed": false,
+                "missing": [
+                  "sector_registry_coverage",
+                  "Event Radar最高只能为partial",
+                  "checked/total"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "price-not-enough",
+                "description": "不得用无价格异动证明无事件。",
+                "weight": 1.0,
+                "failure_type": "price_only_discovery",
+                "passed": false,
+                "missing": [
+                  "ETF和涨跌榜不能作为唯一Event Anchor"
+                ],
+                "present_forbidden": [
+                  "没有重要事件，Event Radar已覆盖"
+                ]
+              }
+            ],
+            "failed": [
+              {
+                "id": "nonprice-anchor",
+                "description": "重大但价格不动的方向必须由非价格发现锚点主动检查。",
+                "weight": 1.0,
+                "failure_type": "event_discovery_gap",
+                "passed": false,
+                "missing": [
+                  "NASA",
+                  "FAA",
+                  "DoD",
+                  "公司一级信源",
+                  "非价格Discovery Anchor"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "registry-denominator",
+                "description": "缺少行业锚点分母时Event Radar必须降级。",
+                "weight": 1.0,
+                "failure_type": "coverage_overclaim",
+                "passed": false,
+                "missing": [
+                  "sector_registry_coverage",
+                  "Event Radar最高只能为partial",
+                  "checked/total"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "price-not-enough",
+                "description": "不得用无价格异动证明无事件。",
+                "weight": 1.0,
+                "failure_type": "price_only_discovery",
+                "passed": false,
+                "missing": [
+                  "ETF和涨跌榜不能作为唯一Event Anchor"
+                ],
+                "present_forbidden": [
+                  "没有重要事件，Event Radar已覆盖"
+                ]
+              }
+            ]
+          },
+          "with_skill": {
+            "score": 100.0,
+            "passed_count": 3,
+            "failed_count": 0,
+            "checks": [
+              {
+                "id": "nonprice-anchor",
+                "description": "重大但价格不动的方向必须由非价格发现锚点主动检查。",
+                "weight": 1.0,
+                "failure_type": "event_discovery_gap",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "registry-denominator",
+                "description": "缺少行业锚点分母时Event Radar必须降级。",
+                "weight": 1.0,
+                "failure_type": "coverage_overclaim",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "price-not-enough",
+                "description": "不得用无价格异动证明无事件。",
+                "weight": 1.0,
+                "failure_type": "price_only_discovery",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              }
+            ],
+            "failed": []
+          },
+          "delta": 100.0,
+          "winner": "with_skill",
+          "failure_taxonomy": []
+        },
+        {
+          "id": "composite-route-handoff",
+          "prompt": "结合昨夜英伟达财报和今天A股全市场情绪，复盘我的持仓并制定明日预案。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "near_neighbor"
+          },
+          "baseline": {
+            "score": 0.0,
+            "passed_count": 0,
+            "failed_count": 3,
+            "checks": [
+              {
+                "id": "scoped-module",
+                "description": "复合请求只处理海外映射模块。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": false,
+                "missing": [
+                  "海外映射模块",
+                  "handoff_packet"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "correct-handoff",
+                "description": "交接给全市场复盘Skill。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": false,
+                "missing": [
+                  "a-stock-trading-review"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-scope-takeover",
+                "description": "不得声称由本Skill完成全部任务。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "直接用隔夜映射雷达完成全市场复盘"
+                ]
+              }
+            ],
+            "failed": [
+              {
+                "id": "scoped-module",
+                "description": "复合请求只处理海外映射模块。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": false,
+                "missing": [
+                  "海外映射模块",
+                  "handoff_packet"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "correct-handoff",
+                "description": "交接给全市场复盘Skill。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": false,
+                "missing": [
+                  "a-stock-trading-review"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-scope-takeover",
+                "description": "不得声称由本Skill完成全部任务。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": false,
+                "missing": [],
+                "present_forbidden": [
+                  "直接用隔夜映射雷达完成全市场复盘"
+                ]
+              }
+            ]
+          },
+          "with_skill": {
+            "score": 100.0,
+            "passed_count": 3,
+            "failed_count": 0,
+            "checks": [
+              {
+                "id": "scoped-module",
+                "description": "复合请求只处理海外映射模块。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "correct-handoff",
+                "description": "交接给全市场复盘Skill。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "no-scope-takeover",
+                "description": "不得声称由本Skill完成全部任务。",
+                "weight": 1.0,
+                "failure_type": "route_collision",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              }
+            ],
+            "failed": []
+          },
+          "delta": 100.0,
+          "winner": "with_skill",
+          "failure_taxonomy": []
+        },
+        {
+          "id": "two-catalyst-three-table-handoff",
+          "prompt": "昨夜同时出现Google-Marvell AI互连合作消息和海外创新药Ⅲ期数据，多家A股公司可能相关。请给出映射与盘前候选，并让我不需要在不同表之间猜每家公司对应哪个催化。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "real_run_regression",
+            "boundary_type": "multi_catalyst_cross_table_traceability"
+          },
+          "baseline": {
+            "score": 0.0,
+            "passed_count": 0,
+            "failed_count": 4,
+            "checks": [
+              {
+                "id": "three-table-chain",
+                "description": "两条催化与多家A股候选必须用三张职责不同的表承接。",
+                "weight": 1.0,
+                "failure_type": "cross_table_ambiguity",
+                "passed": false,
+                "missing": [
+                  "表1｜美股异动与催化摘要",
+                  "表2｜A股真实映射",
+                  "表3｜盘前候选分层",
+                  "Google-Marvell AI互连合作",
+                  "创新药Ⅲ期数据"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "candidate-funnel",
+                "description": "必须披露Candidate到Shortlist的完整数量和展示范围。",
+                "weight": 1.0,
+                "failure_type": "funnel_scope_ambiguity",
+                "passed": false,
+                "missing": [
+                  "初始Candidate总数12",
+                  "通过Preliminary Validation 7",
+                  "进入Shortlist 4",
+                  "淘汰数量8",
+                  "下表范围：全部Shortlist"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "readable-dimensions",
+                "description": "证券代码、催化和关键决策维度必须分列，并给维持与降级条件。",
+                "weight": 1.0,
+                "failure_type": "compressed_vector_display",
+                "passed": false,
+                "missing": [
+                  "|A股公司|代码|核心催化|催化级别|L级|E级/P级|Evidence|预期差|T_static|分层|维持条件|降级/排除条件|",
+                  "000001",
+                  "600001",
+                  "300001",
+                  "688001"
+                ],
+                "present_forbidden": [
+                  "S/L1/E3/High/T2",
+                  "| 公司乙 | 同上 |"
+                ]
+              },
+              {
+                "id": "sort-and-upgrade-boundary",
+                "description": "三表应说明排序口径，真实映射表解释不能升级的原因。",
+                "weight": 1.0,
+                "failure_type": "table_contract_missing",
+                "passed": false,
+                "missing": [
+                  "按催化级别、产业扩散强度排序",
+                  "按映射直接性与证据强度、当前阶段排序",
+                  "Core→Watch→Exclude；层内按交易优先级排序",
+                  "为什么不能升级"
+                ],
+                "present_forbidden": []
+              }
+            ],
+            "failed": [
+              {
+                "id": "three-table-chain",
+                "description": "两条催化与多家A股候选必须用三张职责不同的表承接。",
+                "weight": 1.0,
+                "failure_type": "cross_table_ambiguity",
+                "passed": false,
+                "missing": [
+                  "表1｜美股异动与催化摘要",
+                  "表2｜A股真实映射",
+                  "表3｜盘前候选分层",
+                  "Google-Marvell AI互连合作",
+                  "创新药Ⅲ期数据"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "candidate-funnel",
+                "description": "必须披露Candidate到Shortlist的完整数量和展示范围。",
+                "weight": 1.0,
+                "failure_type": "funnel_scope_ambiguity",
+                "passed": false,
+                "missing": [
+                  "初始Candidate总数12",
+                  "通过Preliminary Validation 7",
+                  "进入Shortlist 4",
+                  "淘汰数量8",
+                  "下表范围：全部Shortlist"
+                ],
+                "present_forbidden": []
+              },
+              {
+                "id": "readable-dimensions",
+                "description": "证券代码、催化和关键决策维度必须分列，并给维持与降级条件。",
+                "weight": 1.0,
+                "failure_type": "compressed_vector_display",
+                "passed": false,
+                "missing": [
+                  "|A股公司|代码|核心催化|催化级别|L级|E级/P级|Evidence|预期差|T_static|分层|维持条件|降级/排除条件|",
+                  "000001",
+                  "600001",
+                  "300001",
+                  "688001"
+                ],
+                "present_forbidden": [
+                  "S/L1/E3/High/T2",
+                  "| 公司乙 | 同上 |"
+                ]
+              },
+              {
+                "id": "sort-and-upgrade-boundary",
+                "description": "三表应说明排序口径，真实映射表解释不能升级的原因。",
+                "weight": 1.0,
+                "failure_type": "table_contract_missing",
+                "passed": false,
+                "missing": [
+                  "按催化级别、产业扩散强度排序",
+                  "按映射直接性与证据强度、当前阶段排序",
+                  "Core→Watch→Exclude；层内按交易优先级排序",
+                  "为什么不能升级"
+                ],
+                "present_forbidden": []
+              }
+            ]
+          },
+          "with_skill": {
+            "score": 100.0,
+            "passed_count": 4,
+            "failed_count": 0,
+            "checks": [
+              {
+                "id": "three-table-chain",
+                "description": "两条催化与多家A股候选必须用三张职责不同的表承接。",
+                "weight": 1.0,
+                "failure_type": "cross_table_ambiguity",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "candidate-funnel",
+                "description": "必须披露Candidate到Shortlist的完整数量和展示范围。",
+                "weight": 1.0,
+                "failure_type": "funnel_scope_ambiguity",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "readable-dimensions",
+                "description": "证券代码、催化和关键决策维度必须分列，并给维持与降级条件。",
+                "weight": 1.0,
+                "failure_type": "compressed_vector_display",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              },
+              {
+                "id": "sort-and-upgrade-boundary",
+                "description": "三表应说明排序口径，真实映射表解释不能升级的原因。",
+                "weight": 1.0,
+                "failure_type": "table_contract_missing",
+                "passed": true,
+                "missing": [],
+                "present_forbidden": []
+              }
+            ],
+            "failed": []
+          },
+          "delta": 100.0,
+          "winner": "with_skill",
+          "failure_taxonomy": []
+        }
+      ],
+      "failures": [],
+      "blind_review": {
+        "pack": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\output_blind_review_pack.json",
+        "answer_key": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\output_blind_answer_key.json",
+        "pair_count": 7
+      },
+      "artifacts": {
+        "json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\output_quality_scorecard.json",
+        "markdown": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\output_quality_scorecard.md",
+        "blind_review_pack_json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\output_blind_review_pack.json",
+        "blind_review_pack_md": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\output_blind_review_pack.md",
+        "blind_answer_key_json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\output_blind_answer_key.json"
+      }
+    },
+    "output_execution": {},
+    "output_blind_review": {
+      "schema_version": "1.0",
+      "seed": "yao-output-eval-blind-v1",
+      "summary": {
+        "pair_count": 7,
+        "answer_key_separate": true,
+        "with_skill_hidden_count": 7
+      },
+      "pairs": [
+        {
+          "case_id": "premarket-no-future-data",
+          "prompt": "北京时间9:10，根据昨夜海外催化给A股候选和竞价建议。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "boundary"
+          },
+          "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+          "rubric": [
+            {
+              "id": "uses-static-state",
+              "description": "9:25前必须使用静态交易状态。",
+              "weight": 1.0
+            },
+            {
+              "id": "uses-conditional-auction",
+              "description": "竞价只能使用条件预案。",
+              "weight": 1.0
+            },
+            {
+              "id": "no-fabricated-auction",
+              "description": "不得伪造已发生的竞价结论。",
+              "weight": 1.0
+            }
+          ],
+          "variant_a": {
+            "blind_id": "premarket-no-future-data:A",
+            "output": "候选A预计今日高开5%，竞价量会明显放大，可以直接追入。"
+          },
+          "variant_b": {
+            "blind_id": "premarket-no-future-data:B",
+            "output": "数据截止：09:10 Asia/Shanghai。候选A：催化A / L2 / E2 / Evidence High / 预期差Medium / T_static T2。Auction Conditions：真实竞价温和且板块同步时维持T2；明显透支预期则降级，不追高。当前尚无9:25竞价数据。"
+          }
+        },
+        {
+          "case_id": "unresolved-signal-not-core",
+          "prompt": "昨夜三只美国光通信股票同步大涨，但没有查到可信共同消息，映射A股。",
+          "input_files": [
+            "fixtures/unresolved-signal-input.md"
+          ],
+          "metadata": {
+            "case_type": "boundary"
+          },
+          "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+          "rubric": [
+            {
+              "id": "keeps-unresolved",
+              "description": "未归因异动保持未解决状态。",
+              "weight": 1.0
+            },
+            {
+              "id": "empty-core",
+              "description": "未归因信号不得进核心池。",
+              "weight": 1.0
+            },
+            {
+              "id": "no-confirmed-theme",
+              "description": "不得声称主线确认。",
+              "weight": 1.0
+            }
+          ],
+          "variant_a": {
+            "blind_id": "unresolved-signal-not-core:A",
+            "output": "状态：UNRESOLVED SIGNAL。Observed Facts：三只同行同步异动；当前未找到可信共同催化。查因方向：公司披露、行业会议、客户侧变化和成交时间一致性。A股只列watch_pool监控方向；core_pool为空，催化归因完成前不得升级。"
+          },
+          "variant_b": {
+            "blind_id": "unresolved-signal-not-core:B",
+            "output": "光通信主线确认，直接把三只A股光模块龙头加入核心池。"
+          }
+        },
+        {
+          "case_id": "biotech-uses-p-stage",
+          "prompt": "昨夜FDA批准海外同靶点药物，评估一家尚无收入的A股Biotech。",
+          "input_files": [],
+          "metadata": {},
+          "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+          "rubric": [
+            {
+              "id": "uses-p-stage",
+              "description": "Biotech必须使用P级。",
+              "weight": 1.0
+            },
+            {
+              "id": "checks-comparability",
+              "description": "必须检查管线可比性。",
+              "weight": 1.0
+            },
+            {
+              "id": "no-e5-shortcut",
+              "description": "不得因无收入直接判E5。",
+              "weight": 1.0
+            }
+          ],
+          "variant_a": {
+            "blind_id": "biotech-uses-p-stage:A",
+            "output": "按Biotech框架评估：催化S / 映射L1 / 管线P2 / Evidence High / 预期差Medium / T_static T2。无收入不能替代管线成熟度判断；仍需核对适应症、技术路线、管线权利和竞争数据。"
+          },
+          "variant_b": {
+            "blind_id": "biotech-uses-p-stage:B",
+            "output": "该公司没有产品收入，所以归为E5纯概念并排除。"
+          }
+        },
+        {
+          "case_id": "partial-coverage-disclosure",
+          "prompt": "行情源只能提供部分美股涨跌幅，没有成交量、全市场分母和板块ETF数据，Event Radar也只检查了部分固定公司与行业锚点，仍请完成隔夜雷达。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "coverage_contract"
+          },
+          "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+          "rubric": [
+            {
+              "id": "coverage-denominator",
+              "description": "必须分别披露固定、动态、事件新增和行业Registry分母。",
+              "weight": 1.0
+            },
+            {
+              "id": "confidence-downgrade",
+              "description": "数据不足时降低置信度并说明非价格事件漏报风险。",
+              "weight": 1.0
+            },
+            {
+              "id": "no-full-coverage-claim",
+              "description": "不得声称全量完成或无分母时写covered。",
+              "weight": 1.0
+            }
+          ],
+          "variant_a": {
+            "blind_id": "partial-coverage-disclosure:A",
+            "output": "全量扫描完成，昨夜没有其他重要产业异动。"
+          },
+          "variant_b": {
+            "blind_id": "partial-coverage-disclosure:B",
+            "output": "coverage_log：Event Radar company_watchlist fixed=31、dynamic=2、event_specific=1、checked=6/34；sector_registry_coverage=4/13，status=partial；一级信源4/6，Event Radar status=partial。Market Radar universe=精选报价，eligible_total=Unknown、scanned_total=12，Dollar Volume/RVOL unavailable，ETF 2/7，status=partial；overall_status=partial。known_data_gaps：未覆盖的9个Registry方向可能漏掉重大但价格未进榜的产业事件；无法验证全市场Mover、Relative Volume和Sector Diffusion，相关Catalyst Confidence为Unknown。"
+          }
+        },
+        {
+          "case_id": "sector-anchor-nonprice-discovery",
+          "prompt": "昨夜商业航天相关股票没有进入涨跌幅Top榜。可以据此认定商业航天没有重大事件，并把Event Radar写成covered吗？",
+          "input_files": [],
+          "metadata": {
+            "case_type": "coverage_contract",
+            "boundary_type": "event_without_price_move"
+          },
+          "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+          "rubric": [
+            {
+              "id": "nonprice-anchor",
+              "description": "重大但价格不动的方向必须由非价格发现锚点主动检查。",
+              "weight": 1.0
+            },
+            {
+              "id": "registry-denominator",
+              "description": "缺少行业锚点分母时Event Radar必须降级。",
+              "weight": 1.0
+            },
+            {
+              "id": "price-not-enough",
+              "description": "不得用无价格异动证明无事件。",
+              "weight": 1.0
+            }
+          ],
+          "variant_a": {
+            "blind_id": "sector-anchor-nonprice-discovery:A",
+            "output": "不能。Market Radar没有发现价格异常，不等于Event Radar完成。商业航天属于13个Radar Registry方向之一，必须检查NASA、FAA或DoD等政府/监管源，以及适用的公司一级信源或SEC入口。若这些非价格Discovery Anchor没有明确checked/total，sector_registry_coverage与Event Radar最高只能为partial，并列出可能漏掉的重大政策、发射许可、合同或任务事件。ETF和涨跌榜不能作为唯一Event Anchor。"
+          },
+          "variant_b": {
+            "blind_id": "sector-anchor-nonprice-discovery:B",
+            "output": "相关股票没有明显异动，因此商业航天昨夜没有重要事件，Event Radar已覆盖。"
+          }
+        },
+        {
+          "case_id": "composite-route-handoff",
+          "prompt": "结合昨夜英伟达财报和今天A股全市场情绪，复盘我的持仓并制定明日预案。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "near_neighbor"
+          },
+          "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+          "rubric": [
+            {
+              "id": "scoped-module",
+              "description": "复合请求只处理海外映射模块。",
+              "weight": 1.0
+            },
+            {
+              "id": "correct-handoff",
+              "description": "交接给全市场复盘Skill。",
+              "weight": 1.0
+            },
+            {
+              "id": "no-scope-takeover",
+              "description": "不得声称由本Skill完成全部任务。",
+              "weight": 1.0
+            }
+          ],
+          "variant_a": {
+            "blind_id": "composite-route-handoff:A",
+            "output": "直接用隔夜映射雷达完成全市场复盘、持仓评价和明日核心池。"
+          },
+          "variant_b": {
+            "blind_id": "composite-route-handoff:B",
+            "output": "本Skill先完成海外映射模块，并输出handoff_packet：海外锚点、数据截止、催化等级、A股候选L/E/Evidence、未解决问题。全市场环境、持仓和明日综合预案交给a-stock-trading-review，本Skill不重复执行其九步复盘。"
+          }
+        },
+        {
+          "case_id": "two-catalyst-three-table-handoff",
+          "prompt": "昨夜同时出现Google-Marvell AI互连合作消息和海外创新药Ⅲ期数据，多家A股公司可能相关。请给出映射与盘前候选，并让我不需要在不同表之间猜每家公司对应哪个催化。",
+          "input_files": [],
+          "metadata": {
+            "case_type": "real_run_regression",
+            "boundary_type": "multi_catalyst_cross_table_traceability"
+          },
+          "review_instruction": "Pick A or B based only on the rubric. Do not infer which output came from the skill.",
+          "rubric": [
+            {
+              "id": "three-table-chain",
+              "description": "两条催化与多家A股候选必须用三张职责不同的表承接。",
+              "weight": 1.0
+            },
+            {
+              "id": "candidate-funnel",
+              "description": "必须披露Candidate到Shortlist的完整数量和展示范围。",
+              "weight": 1.0
+            },
+            {
+              "id": "readable-dimensions",
+              "description": "证券代码、催化和关键决策维度必须分列，并给维持与降级条件。",
+              "weight": 1.0
+            },
+            {
+              "id": "sort-and-upgrade-boundary",
+              "description": "三表应说明排序口径，真实映射表解释不能升级的原因。",
+              "weight": 1.0
+            }
+          ],
+          "variant_a": {
+            "blind_id": "two-catalyst-three-table-handoff:A",
+            "output": "候选约十余只，重点看公司甲、公司乙、公司丙。| 公司 | 向量 | 结论 |\n| 公司甲 | S/L1/E3/High/T2 | Core |\n| 公司乙 | 同上 | Watch |\n| 公司丙 | A/L1/P4/Medium/T3 | Watch |"
+          },
+          "variant_b": {
+            "blind_id": "two-catalyst-three-table-handoff:B",
+            "output": "表1｜美股异动与催化摘要（按催化级别、产业扩散强度排序）\n|标的|核心催化|催化级别|A股方向|\n|Marvell|Google-Marvell AI互连合作|S|高速互连|\n|海外药企|创新药Ⅲ期数据|A|同靶点管线|\n\nCandidate漏斗：初始Candidate总数12；通过Preliminary Validation 7；进入Shortlist 4；淘汰数量8；主要淘汰原因：无直接产品/管线对应或仅主题联想；下表范围：全部Shortlist。\n\n表2｜A股真实映射（按映射直接性与证据强度、当前阶段排序）\n|优先级|A股公司|代码|核心催化|为什么相关|当前阶段|为什么不能升级|\n|1|公司甲|000001|Google-Marvell AI互连合作|产品处于高速互连上游|L1；E3；Evidence High|缺直接订单披露|\n|2|公司乙|600001|Google-Marvell AI互连合作|相关器件已验证|L2；E2；Evidence Medium|客户关系仅间接证据|\n|3|公司丙|300001|创新药Ⅲ期数据|同靶点管线但适应症不同|L1；P4；Evidence Medium|不能由海外Ⅲ期直接升级A股管线|\n|4|公司丁|688001|创新药Ⅲ期数据|同平台早期管线|L3；P2；Evidence Low|临床与权利归属证据不足|\n\n表3｜盘前候选分层（Core→Watch→Exclude；层内按交易优先级排序）\n|A股公司|代码|核心催化|催化级别|L级|E级/P级|Evidence|预期差|T_static|分层|维持条件|降级/排除条件|\n|公司甲|000001|Google-Marvell AI互连合作|S|L1|E3|High|Medium|T2|Core|竞价不过度透支且产业扩散维持|合作被证伪或高开透支|\n|公司乙|600001|Google-Marvell AI互连合作|S|L2|E2|Medium|Low|T3|Watch|补足直接客户证据|仅概念联想或位置恶化|\n|公司丙|300001|创新药Ⅲ期数据|A|L1|P4|Medium|Medium|T3|Watch|A股管线出现可比数据|适应症不可比或数据失败|\n|公司丁|688001|创新药Ⅲ期数据|A|L3|P2|Low|Unknown|T4|Exclude|Unknown|证据未升级或早期管线不具可比性|"
+          }
+        }
+      ]
+    },
+    "output_review_kit": {},
+    "output_review_adjudication": {},
+    "benchmark_reproducibility": {},
+    "skill_os2_coverage": {},
+    "compiled_targets": {},
+    "conformance": {
+      "ok": true,
+      "skill": "us-overnight-a-stock-mapping",
+      "targets": [
+        {
+          "target": "openai",
+          "status": "pass",
+          "checks": [
+            "SKILL.md exists",
+            "frontmatter name exists",
+            "frontmatter description exists",
+            "description length <= 1024",
+            "name is runtime-safe",
+            "manifest.name exists",
+            "manifest.version exists",
+            "manifest.owner exists",
+            "manifest.status exists",
+            "manifest.maturity_tier exists",
+            "manifest.review_cadence exists",
+            "manifest declares openai",
+            "interface.display_name exists",
+            "interface.short_description exists",
+            "interface.default_prompt exists",
+            "adapter target declares openai",
+            "activation mode exists",
+            "execution context exists",
+            "execution shell exists",
+            "trust source tier exists",
+            "openai degradation note exists",
+            "Skill IR schema_version is 2.0.0",
+            "Skill IR name matches frontmatter",
+            "Skill IR description matches frontmatter",
+            "references resource resolves: references/routing-and-handoffs.md",
+            "references resource resolves: references/data-and-metrics-contract.md",
+            "references resource resolves: references/radar-scan-coverage-contract.md",
+            "references resource resolves: references/radars-and-attribution.md",
+            "references resource resolves: references/a-share-validation.md",
+            "references resource resolves: references/trading-and-pools.md",
+            "references resource resolves: references/output-spec.md",
+            "references resource resolves: references/source-design-v1.0.md",
+            "references resource resolves: references/source-traceability.md",
+            "scripts resource resolves: scripts/compute_indicators.py",
+            "reports resource resolves: reports/output_quality_scorecard.md",
+            "reports resource resolves: reports/output-risk-profile.md"
+          ],
+          "failures": [],
+          "warnings": []
+        }
+      ],
+      "summary": {
+        "target_count": 1,
+        "pass_count": 1,
+        "fail_count": 0
+      },
+      "artifacts": {
+        "json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\conformance_matrix.json",
+        "markdown": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\conformance_matrix.md"
+      }
+    },
+    "runtime_permissions": {
+      "schema_version": "1.0",
+      "ok": true,
+      "skill_dir": ".",
+      "package_dir": "dist\\1.2.1-openai",
+      "expected_capabilities": [],
+      "summary": {
+        "target_count": 1,
+        "pass_count": 1,
+        "fail_count": 0,
+        "native_enforcement_count": 0,
+        "metadata_fallback_count": 1,
+        "residual_risk_count": 1,
+        "required_capability_count": 0,
+        "failure_count": 0,
+        "installer_enforcement_source_status": "present",
+        "installer_enforcement_target_count": 1,
+        "installer_enforcement_pass_count": 0,
+        "installer_permission_enforced_count": 0,
+        "installer_permission_failure_count": 0,
+        "installer_permission_capability_count": 0,
+        "world_class_native_evidence_ready": false,
+        "installer_enforcement_ready": false
+      },
+      "installer_enforcement": {
+        "source": "reports\\install_simulation.json",
+        "source_status": "present",
+        "package_dir_matches": true,
+        "summary": {
+          "installer_permission_enforced_count": 0,
+          "installer_permission_failure_count": 0,
+          "permission_target_count": 1,
+          "permission_capability_count": 0,
+          "failure_count": 0
+        }
+      },
+      "targets": [
+        {
+          "target": "openai",
+          "status": "pass",
+          "adapter": "dist\\1.2.1-openai\\targets\\openai\\adapter.json",
+          "permission_model": "metadata-only",
+          "native_enforcement": false,
+          "metadata_fallback_explicit": true,
+          "installer_enforcement": {
+            "target": "openai",
+            "source_status": "present",
+            "enforced": false,
+            "enforced_capabilities": [],
+            "missing_capabilities": [],
+            "failure_details": []
+          },
+          "assurance": "metadata-fallback-explicit",
+          "declared_capabilities": [],
+          "checks": [
+            {
+              "key": "adapter-present",
+              "passed": true,
+              "detail": "openai adapter.json is readable"
+            },
+            {
+              "key": "permission-contract-present",
+              "passed": true,
+              "detail": "openai adapter includes permission_contract"
+            },
+            {
+              "key": "target-contract-present",
+              "passed": true,
+              "detail": "openai adapter includes target_permission_contract"
+            },
+            {
+              "key": "source-available",
+              "passed": true,
+              "detail": "openai permission_contract links to an available trust report"
+            },
+            {
+              "key": "declared-capabilities-match",
+              "passed": true,
+              "detail": "openai target_permission_contract mirrors expected capabilities"
+            },
+            {
+              "key": "capability-counts-present",
+              "passed": true,
+              "detail": "openai target_permission_contract includes capability_counts"
+            },
+            {
+              "key": "native-enforcement-boolean",
+              "passed": true,
+              "detail": "openai target_permission_contract declares native_enforcement as a boolean"
+            },
+            {
+              "key": "representation-present",
+              "passed": true,
+              "detail": "openai target_permission_contract declares where permission metadata is represented"
+            },
+            {
+              "key": "operator-note-present",
+              "passed": true,
+              "detail": "openai target_permission_contract includes an operator_note"
+            },
+            {
+              "key": "review-required-matches",
+              "passed": true,
+              "detail": "openai review_required matches whether capabilities are required"
+            },
+            {
+              "key": "openai-yaml-present",
+              "passed": true,
+              "detail": "OpenAI permission metadata YAML is readable"
+            },
+            {
+              "key": "openai-yaml-permissions",
+              "passed": true,
+              "detail": "OpenAI YAML permission contract mirrors expected capabilities"
+            },
+            {
+              "key": "openai-yaml-native-flag",
+              "passed": true,
+              "detail": "OpenAI YAML declares native_enforcement as a boolean"
+            }
+          ],
+          "failures": [],
+          "residual_risks": [
+            "Client-native permission enforcement is not provided by this target; installer or operator must honor metadata."
+          ]
+        }
+      ],
+      "failures": [],
+      "artifacts": {
+        "json": "reports\\runtime_permission_probes.json",
+        "markdown": "reports\\runtime_permission_probes.md"
+      }
+    },
+    "trust": {
+      "ok": true,
+      "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "summary": {
+        "scanned_files": 24,
+        "script_count": 1,
+        "internal_module_count": 0,
+        "secret_findings": 0,
+        "dependency_files": [
+          "requirements.txt"
+        ],
+        "network_script_count": 0,
+        "network_policy_covered_count": 0,
+        "network_policy_missing_count": 0,
+        "file_write_script_count": 0,
+        "permission_required_count": 0,
+        "permission_approved_count": 0,
+        "permission_missing_count": 0,
+        "permission_invalid_count": 0,
+        "permission_expired_count": 0,
+        "help_smoke_checked_count": 1,
+        "help_smoke_failed_count": 0,
+        "interactive_script_count": 0,
+        "package_hash_scope": "source-contract-without-generated-reports",
+        "package_hash_file_count": 24,
+        "package_sha256": "c5a38ab572eccb979585419e920e2fd9aed784d8298a8ea42697010d790e0f4d"
+      },
+      "failures": [],
+      "warnings": [],
+      "secrets": [],
+      "scripts": [
+        {
+          "path": "scripts\\compute_indicators.py",
+          "interface": "cli",
+          "interface_declared": true,
+          "interface_reason": "",
+          "has_argparse": true,
+          "has_main_guard": true,
+          "uses_input": false,
+          "uses_network": false,
+          "uses_file_write": false,
+          "uses_subprocess": false,
+          "network_urls": [],
+          "network_hosts": []
+        }
+      ],
+      "dependencies": {
+        "present": [
+          "requirements.txt"
+        ],
+        "pinned": [],
+        "unpinned": []
+      },
+      "network_policy": {
+        "present": false,
+        "path": "security/network_policy.json",
+        "schema_version": "",
+        "network_script_count": 0,
+        "covered_scripts": [],
+        "missing_scripts": [],
+        "mismatches": [],
+        "default_policy": {}
+      },
+      "help_smoke": {
+        "enabled": true,
+        "timeout_seconds": 5.0,
+        "candidate_count": 1,
+        "checked_count": 1,
+        "passed_count": 1,
+        "failed_count": 0,
+        "skipped_count": 0,
+        "failed_scripts": [],
+        "results": [
+          {
+            "path": "scripts\\compute_indicators.py",
+            "command": "python3 scripts\\compute_indicators.py --help",
+            "returncode": 0,
+            "timed_out": false,
+            "passed": true,
+            "has_help_text": true,
+            "stdout_excerpt": "usage: compute_indicators.py [-h] csv_path\n\nCompute MA5/10/20/60, Wilder RSI9, and BIAS20 from date,close CSV.\n\npositional arguments:\n  csv_path    UTF-8 CSV ordered or orderable by ISO date\n\noptions:\n  -h, --help  show this help message an",
+            "stderr_excerpt": ""
+          }
+        ],
+        "skipped": []
+      },
+      "permission_governance": {
+        "present": true,
+        "path": "security/permission_policy.json",
+        "schema_version": "1.0",
+        "reviewed_at": "2026-08-20",
+        "required_capabilities": [],
+        "approved_capabilities": [],
+        "missing_capabilities": [],
+        "invalid_capabilities": [],
+        "expired_capabilities": [],
+        "approval_count": 0,
+        "required_count": 0,
+        "missing_count": 0,
+        "invalid_count": 0,
+        "expired_count": 0,
+        "approvals": []
+      },
+      "trust_metadata": {
+        "source_tier": "local",
+        "remote_inline_execution": "forbid",
+        "remote_metadata_policy": "local package metadata only"
+      },
+      "artifacts": {
+        "json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\security_trust_report.json",
+        "markdown": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\security_trust_report.md"
+      }
+    },
+    "python_compatibility": {
+      "schema_version": "1.0",
+      "ok": true,
+      "generated_at": "2026-08-20",
+      "root": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "summary": {
+        "target_python": "3.11",
+        "file_count": 1,
+        "issue_count": 0,
+        "syntax_error_count": 0,
+        "fstring_311_violation_count": 0,
+        "decision": "pass"
+      },
+      "rules": [
+        {
+          "key": "current-python-syntax",
+          "reason": "Every scanned Python source file must compile under the running interpreter."
+        },
+        {
+          "key": "fstring-expression-backslash",
+          "reason": "Python 3.11 rejects backslashes inside f-string expressions; keep escaping outside the expression."
+        }
+      ],
+      "files": [
+        {
+          "path": "scripts\\compute_indicators.py",
+          "ok": true,
+          "issue_count": 0,
+          "issues": []
+        }
+      ],
+      "issues": [],
+      "artifacts": {
+        "json": "reports/python_compatibility.json",
+        "markdown": "reports/python_compatibility.md"
+      }
+    },
+    "architecture_maintainability": {},
+    "context_budget": {},
+    "promotion": {},
+    "atlas": {},
+    "adoption_drift": {},
+    "daily_skillops": {},
+    "weekly_curator": {},
+    "review_waivers": {},
+    "review_annotations": {},
+    "adaptation_proposals": {},
+    "adaptation_approval_ledger": {},
+    "adaptation_regression": {},
+    "world_class_evidence_ledger": {},
+    "world_class_evidence_intake": {},
+    "world_class_evidence_preflight": {},
+    "world_class_submission_review": {},
+    "world_class_operator_runbook": {},
+    "world_class_claim_guard": {},
+    "registry": {},
+    "package_verification": {
+      "ok": true,
+      "schema_version": "2.0",
+      "generated_at": "2026-08-20",
+      "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "package_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai",
+      "summary": {
+        "target_count": 1,
+        "adapter_count": 1,
+        "archive_present": true,
+        "archive_sha256": "37277fe88db5c6e29e726b10ac5d3d2681d50a4a9a36b0db7eefbbde617f14f2",
+        "archive_entry_count": 60,
+        "nested_skill_entry_count": 0,
+        "failure_count": 0,
+        "warning_count": 0
+      },
+      "checks": [
+        {
+          "id": "package-manifest",
+          "status": "pass",
+          "detail": "Package manifest exists: C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai\\manifest.json"
+        },
+        {
+          "id": "openai-adapter",
+          "status": "pass",
+          "detail": "Adapter exists for target: openai"
+        },
+        {
+          "id": "openai-field-name",
+          "status": "pass",
+          "detail": "openai adapter includes field: name"
+        },
+        {
+          "id": "openai-field-description",
+          "status": "pass",
+          "detail": "openai adapter includes field: description"
+        },
+        {
+          "id": "openai-field-version",
+          "status": "pass",
+          "detail": "openai adapter includes field: version"
+        },
+        {
+          "id": "openai-field-display_name",
+          "status": "pass",
+          "detail": "openai adapter includes field: display_name"
+        },
+        {
+          "id": "openai-field-short_description",
+          "status": "pass",
+          "detail": "openai adapter includes field: short_description"
+        },
+        {
+          "id": "openai-field-default_prompt",
+          "status": "pass",
+          "detail": "openai adapter includes field: default_prompt"
+        },
+        {
+          "id": "openai-field-job_to_be_done",
+          "status": "pass",
+          "detail": "openai adapter includes field: job_to_be_done"
+        },
+        {
+          "id": "openai-field-ir_source",
+          "status": "pass",
+          "detail": "openai adapter includes field: ir_source"
+        },
+        {
+          "id": "openai-field-ir_schema_version",
+          "status": "pass",
+          "detail": "openai adapter includes field: ir_schema_version"
+        },
+        {
+          "id": "openai-field-semantic_contract",
+          "status": "pass",
+          "detail": "openai adapter includes field: semantic_contract"
+        },
+        {
+          "id": "openai-field-semantic_parity",
+          "status": "pass",
+          "detail": "openai adapter includes field: semantic_parity"
+        },
+        {
+          "id": "openai-field-compiler",
+          "status": "pass",
+          "detail": "openai adapter includes field: compiler"
+        },
+        {
+          "id": "openai-field-compiled_contract",
+          "status": "pass",
+          "detail": "openai adapter includes field: compiled_contract"
+        },
+        {
+          "id": "openai-field-permission_contract",
+          "status": "pass",
+          "detail": "openai adapter includes field: permission_contract"
+        },
+        {
+          "id": "openai-field-target_permission_contract",
+          "status": "pass",
+          "detail": "openai adapter includes field: target_permission_contract"
+        },
+        {
+          "id": "openai-field-target_native_contract",
+          "status": "pass",
+          "detail": "openai adapter includes field: target_native_contract"
+        },
+        {
+          "id": "openai-field-target_transform",
+          "status": "pass",
+          "detail": "openai adapter includes field: target_transform"
+        },
+        {
+          "id": "openai-field-canonical_metadata",
+          "status": "pass",
+          "detail": "openai adapter includes field: canonical_metadata"
+        },
+        {
+          "id": "openai-field-canonical_format",
+          "status": "pass",
+          "detail": "openai adapter includes field: canonical_format"
+        },
+        {
+          "id": "openai-field-activation_mode",
+          "status": "pass",
+          "detail": "openai adapter includes field: activation_mode"
+        },
+        {
+          "id": "openai-field-execution_context",
+          "status": "pass",
+          "detail": "openai adapter includes field: execution_context"
+        },
+        {
+          "id": "openai-field-shell",
+          "status": "pass",
+          "detail": "openai adapter includes field: shell"
+        },
+        {
+          "id": "openai-field-trust_level",
+          "status": "pass",
+          "detail": "openai adapter includes field: trust_level"
+        },
+        {
+          "id": "openai-field-remote_inline_execution",
+          "status": "pass",
+          "detail": "openai adapter includes field: remote_inline_execution"
+        },
+        {
+          "id": "openai-field-degradation_strategy",
+          "status": "pass",
+          "detail": "openai adapter includes field: degradation_strategy"
+        },
+        {
+          "id": "openai-field-portability_profile",
+          "status": "pass",
+          "detail": "openai adapter includes field: portability_profile"
+        },
+        {
+          "id": "openai-file-targets/openai/adapter.json",
+          "status": "pass",
+          "detail": "Package contains targets/openai/adapter.json"
+        },
+        {
+          "id": "openai-file-targets/openai/agents/openai.yaml",
+          "status": "pass",
+          "detail": "Package contains targets/openai/agents/openai.yaml"
+        },
+        {
+          "id": "archive-safe-paths",
+          "status": "pass",
+          "detail": "Archive has no absolute or parent-traversal entries"
+        },
+        {
+          "id": "archive-entry-us-overnight-a-stock-mapping/SKILL.md",
+          "status": "pass",
+          "detail": "Archive contains us-overnight-a-stock-mapping/SKILL.md"
+        },
+        {
+          "id": "archive-entry-us-overnight-a-stock-mapping/manifest.json",
+          "status": "pass",
+          "detail": "Archive contains us-overnight-a-stock-mapping/manifest.json"
+        },
+        {
+          "id": "archive-entry-us-overnight-a-stock-mapping/agents/interface.yaml",
+          "status": "pass",
+          "detail": "Archive contains us-overnight-a-stock-mapping/agents/interface.yaml"
+        },
+        {
+          "id": "archive-single-skill-entrypoint",
+          "status": "pass",
+          "detail": "Archive exposes only the root SKILL.md entrypoint"
+        },
+        {
+          "id": "archive-excludes-generated",
+          "status": "pass",
+          "detail": "Archive excludes generated dist/, .previews/, and tests/tmp* contents"
+        },
+        {
+          "id": "registry-ok",
+          "status": "pass",
+          "detail": "Registry audit is OK"
+        },
+        {
+          "id": "registry-name-match",
+          "status": "pass",
+          "detail": "Registry package name matches package manifest"
+        },
+        {
+          "id": "registry-version-match",
+          "status": "pass",
+          "detail": "Registry package version matches package manifest"
+        },
+        {
+          "id": "registry-compat-openai",
+          "status": "pass",
+          "detail": "Registry compatibility is reviewable for target: openai"
+        }
+      ],
+      "failures": [],
+      "warnings": [],
+      "artifacts": {
+        "manifest": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai\\manifest.json",
+        "archive": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai\\us-overnight-a-stock-mapping.zip",
+        "json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\package_verification.json",
+        "markdown": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\package_verification.md"
+      }
+    },
+    "install_simulation": {
+      "ok": true,
+      "schema_version": "2.0",
+      "generated_at": "2026-08-20",
+      "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "package_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai",
+      "install_root": "[temporary-install-root]",
+      "installed_skill_dir": "[temporary-install-root]/us-overnight-a-stock-mapping",
+      "summary": {
+        "archive_present": true,
+        "archive_entry_count": 60,
+        "nested_skill_entry_count": 0,
+        "archive_extracted": true,
+        "entrypoint_loaded": true,
+        "manifest_loaded": true,
+        "interface_loaded": true,
+        "adapter_count": 1,
+        "installer_permission_enforced_count": 0,
+        "installer_permission_failure_count": 0,
+        "permission_target_count": 1,
+        "permission_capability_count": 0,
+        "install_root_is_temp": true,
+        "failure_count": 0,
+        "warning_count": 0
+      },
+      "checks": [
+        {
+          "id": "archive-present",
+          "status": "pass",
+          "detail": "Package archive exists: C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai\\us-overnight-a-stock-mapping.zip"
+        },
+        {
+          "id": "archive-safe-paths",
+          "status": "pass",
+          "detail": "Archive has no absolute or parent-traversal entries"
+        },
+        {
+          "id": "single-skill-entrypoint",
+          "status": "pass",
+          "detail": "Installed package exposes only the root SKILL.md entrypoint"
+        },
+        {
+          "id": "single-top-level",
+          "status": "pass",
+          "detail": "Archive top-level directory is us-overnight-a-stock-mapping"
+        },
+        {
+          "id": "entrypoint-load",
+          "status": "pass",
+          "detail": "Installed SKILL.md frontmatter is readable"
+        },
+        {
+          "id": "entrypoint-name",
+          "status": "pass",
+          "detail": "Installed SKILL.md name matches package directory"
+        },
+        {
+          "id": "entrypoint-description",
+          "status": "pass",
+          "detail": "Installed SKILL.md description is present"
+        },
+        {
+          "id": "manifest-load",
+          "status": "pass",
+          "detail": "Installed manifest.json is readable"
+        },
+        {
+          "id": "manifest-name",
+          "status": "pass",
+          "detail": "Installed manifest name matches package manifest"
+        },
+        {
+          "id": "manifest-version",
+          "status": "pass",
+          "detail": "Installed manifest version matches package manifest"
+        },
+        {
+          "id": "interface-load",
+          "status": "pass",
+          "detail": "Installed agents/interface.yaml is readable"
+        },
+        {
+          "id": "overview-report",
+          "status": "pass",
+          "detail": "Installed overview report is present"
+        },
+        {
+          "id": "review-studio-report",
+          "status": "pass",
+          "detail": "Installed Review Studio report is present"
+        },
+        {
+          "id": "adapter-openai",
+          "status": "pass",
+          "detail": "openai adapter is readable after package install simulation"
+        },
+        {
+          "id": "adapter-openai-name",
+          "status": "pass",
+          "detail": "openai adapter name matches package manifest"
+        },
+        {
+          "id": "permission-policy-load",
+          "status": "pass",
+          "detail": "Installed permission policy is readable"
+        },
+        {
+          "id": "permission-openai-contract",
+          "status": "pass",
+          "detail": "openai adapter exposes target permission contract for installer enforcement"
+        }
+      ],
+      "failures": [],
+      "warnings": [],
+      "artifacts": {
+        "archive": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai\\us-overnight-a-stock-mapping.zip",
+        "package_manifest": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai\\manifest.json",
+        "json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\install_simulation.json",
+        "markdown": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\install_simulation.md"
+      }
+    },
+    "upgrade_check": {},
+    "manifest": {
+      "name": "us-overnight-a-stock-mapping",
+      "version": "1.0.0",
+      "owner": "simplelove",
+      "updated_at": "2026-08-20",
+      "status": "active",
+      "maturity_tier": "production",
+      "lifecycle_stage": "production",
+      "context_budget_tier": "production",
+      "review_cadence": "monthly",
+      "review_due": "2026-09-20",
+      "category": "a-share-research",
+      "complexity_tier": "complex",
+      "target_platforms": [
+        "openai"
+      ],
+      "factory_components": [
+        "references",
+        "scripts",
+        "evals",
+        "reports"
+      ],
+      "input_files": [
+        {
+          "path": "references/source-design-v1.0.md",
+          "label": "file-backed fixture",
+          "original_name": "us-overnight-a-stock-mapping-v1.0.md",
+          "original_sha256": "A8B9389D8AC5648D0EC14039BF83A84354FE8EED72219402850A3D5780061D88"
+        }
+      ],
+      "output_contract": "编号0-17的18模块盘前映射报告，包含coverage_log、Candidate漏斗、核心三表、证据分级、双排序、Core/Watch/Exclude与推翻条件。",
+      "rollback_boundary": "仅回滚本Skill目录内公开发行v1.0.0新增的三表展示契约、Candidate漏斗、Event Radar checked口径及对应评测/报告；不修改其他A股Skills、用户行情数据或Codex全局配置。"
+    },
+    "frontmatter": {
+      "name": "us-overnight-a-stock-mapping",
+      "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+      "metadata": {
+        "version": "1.0.0",
+        "source-spec": "US Overnight → A股映射雷达 Skill v1.0（含源文档末尾所列v1.3修正规则）",
+        "short-description": "隔夜催化归因与A股盘前映射"
+      }
+    },
+    "interface": {
+      "interface": {
+        "display_name": "US Overnight → A股映射雷达",
+        "short_description": "扫描美国及全球隔夜催化，完成归因、A股映射与盘前候选分层",
+        "default_prompt": "使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。"
+      },
+      "compatibility": {
+        "canonical_format": "agent-skills",
+        "adapter_targets": [
+          "openai"
+        ],
+        "activation": {
+          "mode": "implicit"
+        },
+        "execution": {
+          "context": "inline",
+          "shell": "powershell"
+        },
+        "trust": {
+          "source_tier": "local",
+          "remote_inline_execution": "forbid",
+          "remote_metadata_policy": "local package metadata only"
+        },
+        "degradation": {
+          "openai": "none; agents/openai.yaml is the native Codex interface"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "html": "reports\\review-studio.html",
+    "json": "reports\\review-studio.json"
+  }
+}

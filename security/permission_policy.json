@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "reviewed_at": "2026-08-20",
+  "capabilities": {
+    "none": {
+      "decision": "not-required",
+      "reviewer": "simplelove",
+      "scope": "本 Skill 的本地指标脚本不访问网络、不写文件、不启动子进程，也不要求交互权限。",
+      "reason": "保留显式的零权限安装契约，供安装模拟和适配器审计读取。",
+      "evidence": ["reports/security_trust_report.md"]
+    }
+  }
+}

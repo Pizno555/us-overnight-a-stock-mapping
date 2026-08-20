@@ -1,0 +1,84 @@
+{
+  "ok": true,
+  "schema_version": "2.0",
+  "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+  "registry_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\registry",
+  "package": {
+    "schema_version": "2.0",
+    "name": "us-overnight-a-stock-mapping",
+    "version": "1.0.0",
+    "description": "当用户的主问题明确从最新美国或全球隔夜事件、财报、监管变化、行业信号或美股异常价格行为出发，并要求映射A股产业环节或公司时，执行事件雷达与市场雷达、催化归因、A股真实性验证和盘前Core/Watch/Exclude筛选。不要用于A股全市场复盘、持仓复盘或次日综合预案（转a-stock-trading-review），单一A股公司的消息/客户/订单真假核验（转a-stock-evidence-research），完整基本面/盈利预测/估值（转a-stock-investment-analysis），无明确隔夜锚点的产业链瓶颈扫描（转serenity-skill），普通美股新闻摘要、纯行情查询或自动交易。",
+    "targets": [
+      "openai"
+    ],
+    "maturity": "production",
+    "owner": "simplelove",
+    "review_cadence": "monthly",
+    "trust_level": "local",
+    "license": "Copyright (c) 2026 simplelove. All rights reserved.",
+    "checksums": {
+      "package_sha256": "c5a38ab572eccb979585419e920e2fd9aed784d8298a8ea42697010d790e0f4d",
+      "archive_sha256": "e0ddda3ecdbe5c03ddfd9257da3681ff81a3db7734652ef7ad53c4194aa5a8ae"
+    },
+    "compatibility": {
+      "openai": "pass"
+    },
+    "source": {
+      "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
+      "skill_ir": "reports\\skill-ir.json",
+      "ir_schema_version": "2.0.0",
+      "canonical_metadata": "agents/interface.yaml"
+    },
+    "artifacts": {
+      "overview_html": "reports/skill-overview.html",
+      "review_studio_html": "reports/review-studio.html",
+      "trust_report": "reports/security_trust_report.md",
+      "conformance_matrix": "reports/conformance_matrix.md",
+      "compiled_targets": "",
+      "package_verification": "reports/package_verification.md",
+      "install_simulation": "reports/install_simulation.md",
+      "adoption_drift": "",
+      "review_waivers": "",
+      "review_annotations": "",
+      "package_metadata": "registry/packages/us-overnight-a-stock-mapping.json"
+    },
+    "distribution": {
+      "archive_verified": true,
+      "archive_sha256": "e0ddda3ecdbe5c03ddfd9257da3681ff81a3db7734652ef7ad53c4194aa5a8ae",
+      "package_verification": "reports/package_verification.json",
+      "install_simulated": true,
+      "install_simulation": "reports/install_simulation.json"
+    },
+    "generated_at": "2026-08-20"
+  },
+  "index": {
+    "schema_version": "2.0",
+    "generated_at": "2026-08-20",
+    "package_count": 1,
+    "packages": [
+      {
+        "name": "us-overnight-a-stock-mapping",
+        "version": "1.0.0",
+        "maturity": "production",
+        "owner": "simplelove",
+        "targets": [
+          "openai"
+        ],
+        "package_metadata": "registry/packages/us-overnight-a-stock-mapping.json",
+        "package_sha256": "c5a38ab572eccb979585419e920e2fd9aed784d8298a8ea42697010d790e0f4d"
+      }
+    ]
+  },
+  "failures": [],
+  "warnings": [
+    "Recommended registry evidence is missing: reports/compiled_targets.md",
+    "Recommended registry evidence is missing: reports/review_waivers.md",
+    "Recommended registry evidence is missing: reports/review_annotations.md"
+  ],
+  "artifacts": {
+    "index": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\registry\\index.json",
+    "package": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\registry\\packages\\us-overnight-a-stock-mapping.json",
+    "json": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\registry-audit.json",
+    "markdown": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\registry-audit.md"
+  }
+}

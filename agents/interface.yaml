@@ -1,0 +1,19 @@
+interface:
+  display_name: "US Overnight → A股映射雷达"
+  short_description: "扫描美国及全球隔夜催化，完成归因、A股映射与盘前候选分层"
+  default_prompt: "使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。"
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+  activation:
+    mode: "implicit"
+  execution:
+    context: "inline"
+    shell: "powershell"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "local package metadata only"
+  degradation:
+    openai: "none; agents/openai.yaml is the native Codex interface"
