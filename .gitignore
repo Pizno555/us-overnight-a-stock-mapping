@@ -1,0 +1,27 @@
+# Python runtime caches
+__pycache__/
+*.py[cod]
+
+# Build / release artifacts
+/dist/
+
+# Generated evaluation outputs
+/evals/output/
+
+# Generated registry/package metadata
+/registry/
+
+# Generated audit reports: keep only curated human-readable summaries
+/reports/*
+!/reports/output_quality_scorecard.md
+!/reports/output-risk-profile.md
+!/reports/runtime-replay-summary.md
+!/reports/trigger_eval_summary.md
+!/reports/security_trust_report.md
+!/reports/validation-summary.md
+
+# Common local/editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.log

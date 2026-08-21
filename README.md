@@ -405,9 +405,11 @@ SKILL.md                    运行入口与核心约束
 agents/openai.yaml         OpenAI/Codex界面元数据
 references/                路由、数据、雷达、验证、交易和输出规范
 scripts/compute_indicators.py
-evals/                     路由、静态输出和历史回放材料
-reports/                   验证、信任、分发及Review Studio报告
+evals/                     固定回归用例、fixtures与历史回放材料
+reports/                   精简保留的关键验证与信任摘要
+security/                  权限策略
 manifest.json              版本、所有者、发行目标和回滚边界
+skill-ir.json              Skill结构化设计与评测计划
 ```
 
 原始设计以字节一致的 `file-backed fixture` 保存在 [source-design-v1.0.md](references/source-design-v1.0.md)。文件标题为v1.0，正文末尾包含v1.3修正规则；版本关系与条款映射见 [source-traceability.md](references/source-traceability.md)。

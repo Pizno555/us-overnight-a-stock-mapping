@@ -23,8 +23,8 @@
 | 39–44：防漏、防错、禁止项、决策树和最终原则 | `SKILL.md`及各参考文件终检规则 |
 | 工程补强：近邻路由 | `routing-and-handoffs.md`、`evals/trigger_cases.json` |
 | 工程补强：数据与指标口径 | `data-and-metrics-contract.md`、`scripts/compute_indicators.py` |
-| 工程补强：扫描覆盖分母、行业发现锚点与Event/Market计数边界 | `radar-scan-coverage-contract.md`、`evals/output/cases.jsonl` |
-| 工程补强：核心三表与Candidate漏斗展示契约 | `output-spec.md`、`evals/output/cases.jsonl` |
+| 工程补强：扫描覆盖分母、行业发现锚点与Event/Market计数边界 | `radar-scan-coverage-contract.md`、`evals/cases.jsonl` |
+| 工程补强：核心三表与Candidate漏斗展示契约 | `output-spec.md`、`evals/cases.jsonl` |
 | 工程补强：真实历史回放 | `evals/replay/`、`reports/runtime-replay-summary.md` |
 
 ## output contract
