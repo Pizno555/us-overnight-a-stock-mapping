@@ -1,0 +1,523 @@
+{
+  "summary": {
+    "total_cases": 22,
+    "correct_cases": 22,
+    "accuracy": 1.0,
+    "ambiguous_case_count": 0,
+    "margin_warning_threshold": 0.08,
+    "misroute_count": 0,
+    "no_route_accuracy": 1.0
+  },
+  "route_stats": {
+    "us-overnight-a-stock-mapping": {
+      "expected_count": 8,
+      "predicted_count": 8,
+      "correct_count": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "average_margin": 0.874
+    },
+    "no_route": {
+      "expected_count": 14,
+      "predicted_count": 14,
+      "correct_count": 14,
+      "precision": 1.0,
+      "recall": 1.0,
+      "average_margin": null
+    }
+  },
+  "confusion_matrix": {
+    "us-overnight-a-stock-mapping": {
+      "us-overnight-a-stock-mapping": 8,
+      "no_route": 0
+    },
+    "no_route": {
+      "us-overnight-a-stock-mapping": 0,
+      "no_route": 14
+    }
+  },
+  "ambiguous_cases": [],
+  "misroutes": [],
+  "cases": [
+    {
+      "family": "full_overnight_mapping",
+      "prompt": "扫描昨夜美股和全球市场的重要催化，并映射今天A股的核心池和观察池。",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 0.795,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.795,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "earnings_to_a_share",
+      "prompt": "昨晚英伟达财报上调AI网络需求，A股光模块、PCB和散热谁是真受益？",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 0.69,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.69,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "unresolved_cluster",
+      "prompt": "美股光通信昨夜出现集群异动但公开消息不明确，帮我查因并给A股监控方向。",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 0.96,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.96,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "biotech_mapping",
+      "prompt": "昨夜FDA批准某靶点新药，同靶点A股Biotech管线如何映射？",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 0.795,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.795,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "policy_mapping",
+      "prompt": "美国BIS昨夜调整半导体设备出口规则，对今天A股设备和材料链有什么影响？",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 0.795,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.795,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "dual_radar",
+      "prompt": "用隔夜事件雷达和市场雷达找出昨晚对A股最重要的三条催化。",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 1.0,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 1.0,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "company_vs_industry",
+      "prompt": "某美股昨晚大涨但同行没动，先归因它是公司事件还是产业事件，再判断有没有A股映射。",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 1.0,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 1.0,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "event_price_divergence",
+      "prompt": "昨夜云厂商上调Capex，但主体股反应弱，检查Event–Price Divergence和A股预期差。",
+      "expected_route": "us-overnight-a-stock-mapping",
+      "predicted_route": "us-overnight-a-stock-mapping",
+      "correct": true,
+      "margin": 0.96,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.96,
+          "passed_threshold": true,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "attribution_radar",
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "a_stock_trading_review",
+      "prompt": "复盘今天A股全市场赚钱效应，并检查我的持仓强弱和明日预案。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [],
+          "matched_negative_concepts": [
+            "full_market_trading_review"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "a_stock_evidence_research",
+      "prompt": "核验某A股公司是不是真的进入英伟达供应链，订单和客户证据可靠吗？",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [],
+          "matched_negative_concepts": [
+            "single_claim_verification"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "a_stock_investment_analysis",
+      "prompt": "给某A股公司做完整财务诊断、三年盈利预测和DCF估值。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [],
+          "matched_negative_concepts": [
+            "full_investment_analysis"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "serenity_skill",
+      "prompt": "不看昨夜消息，从长期角度扫描AI半导体产业链最稀缺的供应瓶颈。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "serenity_without_anchor"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "us_news_summary",
+      "prompt": "总结昨晚美国十大新闻，不需要映射A股。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "news_summary_only"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "market_quote",
+      "prompt": "查询沪深300和纳斯达克最新点位。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [],
+          "matched_negative_concepts": []
+        }
+      ]
+    },
+    {
+      "family": "trade_execution",
+      "prompt": "自动替我买入今天最强的三只A股。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [],
+          "matched_negative_concepts": [
+            "quote_or_execution"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "general_explanation",
+      "prompt": "解释一下什么是CPO。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [],
+          "matched_negative_concepts": [
+            "explain_only"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "mapping_then_trading_review",
+      "prompt": "结合昨夜英伟达财报和今天A股全市场情绪，复盘我的持仓并制定明日预案。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "full_market_trading_review"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "mapping_then_evidence_research",
+      "prompt": "昨夜海外AI催化可能利好某A股，请专项核验这家公司客户和订单是否真实。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "single_claim_verification"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "mapping_then_investment_analysis",
+      "prompt": "昨夜海外催化映射到某A股后，再做完整估值和未来三年盈利预测。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "full_investment_analysis"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "mapping_then_serenity",
+      "prompt": "从昨夜海外AI事件出发，再扩展寻找长期供应链卡点和未知瓶颈。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "serenity_without_anchor"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "trading_review_without_anchor",
+      "prompt": "盘前给我一个A股核心池，但不要看任何海外隔夜信息。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "full_market_trading_review"
+          ]
+        }
+      ]
+    },
+    {
+      "family": "evidence_without_anchor",
+      "prompt": "某A股今天异动，查一下原因并验证业务，不涉及美股或海外事件。",
+      "expected_route": "no_route",
+      "predicted_route": "no_route",
+      "correct": true,
+      "margin": null,
+      "ambiguous": false,
+      "ranked_routes": [
+        {
+          "name": "us-overnight-a-stock-mapping",
+          "score": 0.0,
+          "passed_threshold": false,
+          "threshold": 0.33,
+          "matched_desired_concepts": [
+            "overnight_anchor"
+          ],
+          "matched_negative_concepts": [
+            "single_claim_verification"
+          ]
+        }
+      ]
+    }
+  ]
+}

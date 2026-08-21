@@ -1,0 +1,232 @@
+{
+  "artifacts": [
+    {
+      "path": "reports/adoption_drift_report.json",
+      "sha256": "6337da0416e27497a0477614836d114462516e05faaf2f27959624aac8cef0c1",
+      "size": 1787
+    },
+    {
+      "path": "reports/adoption_drift_report.md",
+      "sha256": "07923db5a9c67f5de5704bae3d1c0b441ca4d74344a84089b86af1ce5ff54789",
+      "size": 1111
+    },
+    {
+      "path": "reports/architecture_maintainability.json",
+      "sha256": "9ba653776da184667ceb9a59adcc6de355be401b71172418ba160035c91678ea",
+      "size": 1239
+    },
+    {
+      "path": "reports/architecture_maintainability.md",
+      "sha256": "efe1b795fbae1b5c150db6382feb1bbf9c43e5136a731352ffdacfa3ea46dee1",
+      "size": 1185
+    },
+    {
+      "path": "reports/compiled_targets.json",
+      "sha256": "7ce9fb4343117f79aa7b68d947dc83ff37eab3d224fca0eb5d521ff349b760e1",
+      "size": 23250
+    },
+    {
+      "path": "reports/compiled_targets.md",
+      "sha256": "0165482ce75fa61b50b46d298bb3e71086223485aeb4bd75df7569d3b21374bc",
+      "size": 1289
+    },
+    {
+      "path": "reports/conformance_matrix.json",
+      "sha256": "9e8a2e48082f4de52506b9a81a4e88833da87bdd7596cda02b84bd4619733c1b",
+      "size": 2416
+    },
+    {
+      "path": "reports/conformance_matrix.md",
+      "sha256": "f3612f140c7376224749fccb9dec1b6a026e86399d771e368ba11fad1e420395",
+      "size": 378
+    },
+    {
+      "path": "reports/context_budget.json",
+      "sha256": "a71ea53c388c3b5c9e172b96648ade71084f684746346fd2f9f82e12340a6819",
+      "size": 1189
+    },
+    {
+      "path": "reports/context_budget.md",
+      "sha256": "be48d64b722c0dd3692baf0b0656d05aeb545e7f5e12aada149b71d5eea98ef8",
+      "size": 203
+    },
+    {
+      "path": "reports/install_simulation.json",
+      "sha256": "52d0aa3ce176aa464554fdd14009c6b7f00383cdb5fd96cf69a098d2933c6696",
+      "size": 4025
+    },
+    {
+      "path": "reports/install_simulation.md",
+      "sha256": "1ed9638ad42dd921ebb4546662c244af1156b88be63ca3e12fce314ac53d761a",
+      "size": 2025
+    },
+    {
+      "path": "reports/intent-confidence.json",
+      "sha256": "0298aba65373ff16f8d063d44c5ca2b36546deb61d446f41b4e146396644e2b9",
+      "size": 3764
+    },
+    {
+      "path": "reports/intent-confidence.md",
+      "sha256": "7641edd1610190f0ad4ed9215c232b48cbd74aa364a385ef0b2df46d6c05bce9",
+      "size": 1443
+    },
+    {
+      "path": "reports/intent-context.json",
+      "sha256": "6f691aa9cdc18bb0854828390f22340dc268af088e24ebdc51a0023a929087b9",
+      "size": 2252
+    },
+    {
+      "path": "reports/output-risk-profile.json",
+      "sha256": "f79028e9e72616b0ff9a932d9ffcbaf136f404b60a8e4a9f23890f27dc959ca0",
+      "size": 4699
+    },
+    {
+      "path": "reports/output-risk-profile.md",
+      "sha256": "b4f2e02f8d84fb8c6f9ce084b671210fafebfd2ef266bfe37b518387a72464d5",
+      "size": 2250
+    },
+    {
+      "path": "reports/output_blind_answer_key.json",
+      "sha256": "c3614bc26b71b34594b29bf499bc1c3626a74c9f2bc44a8b9fe4ebc0f4c02070",
+      "size": 2219
+    },
+    {
+      "path": "reports/output_blind_review_pack.json",
+      "sha256": "305fd51870aa15c168faa5da137eba6d824415b26055baa86f28880da23417b8",
+      "size": 13353
+    },
+    {
+      "path": "reports/output_blind_review_pack.md",
+      "sha256": "469b9e1f841c7ae15b3c2db21e7a1d7aaa0e06d2ad433b03fa365205bf58fc08",
+      "size": 8364
+    },
+    {
+      "path": "reports/output_quality_scorecard.json",
+      "sha256": "a5b1760321df88e71f2acc945a64c1b1f42afdae51b3361e22d1bab438c6ee42",
+      "size": 33437
+    },
+    {
+      "path": "reports/output_quality_scorecard.md",
+      "sha256": "acc8f59cf3a45789c9b979a4a6d79049c9bdc6d8d6ddeabe2084abb9a1209840",
+      "size": 1501
+    },
+    {
+      "path": "reports/python_compatibility.json",
+      "sha256": "a3739c4ef084481f73d754c26fb2881617b675ffebe3fdfc85ceece318d40124",
+      "size": 984
+    },
+    {
+      "path": "reports/python_compatibility.md",
+      "sha256": "fc84917c05be4d40d979942766008cc7df43834df62ce66648bc3b8d2cce2210",
+      "size": 472
+    },
+    {
+      "path": "reports/review-studio.html",
+      "sha256": "6ba387f0c5848733fb7f5e481c39b9fa62a4fdd9e89dbe93f7cd2a569b43da92",
+      "size": 58319
+    },
+    {
+      "path": "reports/review_annotations.json",
+      "sha256": "641a5de70343e5263d25ffb9d57b7496bd8df3abdae9af12bc38243ac691693b",
+      "size": 646
+    },
+    {
+      "path": "reports/review_annotations.md",
+      "sha256": "2a0f5df0a8b2093aa6785265ac649c67cc3a79726e43fa8398081a5657d1d3ab",
+      "size": 549
+    },
+    {
+      "path": "reports/review_annotations_input.json",
+      "sha256": "8302bf7d3bd5d70b7f3351833d634fc31d17479e7bbfb419cb3f38759c7281eb",
+      "size": 450
+    },
+    {
+      "path": "reports/review_waivers.json",
+      "sha256": "7d145c0db2733a680ac92b91d8f24f25c8a5a3584ae586cf55e0dd21fd573896",
+      "size": 3374
+    },
+    {
+      "path": "reports/review_waivers.md",
+      "sha256": "451eeddc00d9f0e29e725bcb4c92c7c3978bc2960ca4ff283414f980161d6d0b",
+      "size": 2265
+    },
+    {
+      "path": "reports/route_scorecard.json",
+      "sha256": "bfea34fb1c03f686e5cccf645712bc79045f7f00aca80363a9063e93a0a96cd8",
+      "size": 15877
+    },
+    {
+      "path": "reports/route_scorecard.md",
+      "sha256": "eac51570a07dcbc92ae1d31910a91c4055ca874752ea842a83a78f7a62b0afd5",
+      "size": 657
+    },
+    {
+      "path": "reports/runtime-replay-summary.md",
+      "sha256": "744f748d500d0e2007721a336ced2362176c2ecd167921be9d7fd15ef98e0de5",
+      "size": 1716
+    },
+    {
+      "path": "reports/runtime_permission_probes.json",
+      "sha256": "ee61cbce69f1035b2ec70a6f883e337d90820471eec3bac8d3422e6b905055ba",
+      "size": 4485
+    },
+    {
+      "path": "reports/runtime_permission_probes.md",
+      "sha256": "3083f5c450ed23d27bca945a70f4a26878d62e49863c1d1537f25f5be1e28ba1",
+      "size": 1484
+    },
+    {
+      "path": "reports/security_trust_report.json",
+      "sha256": "59b312adbaf7094546cd9f5d6d566b4e1b9af3f441bb07456e1d295f7d43ca25",
+      "size": 3512
+    },
+    {
+      "path": "reports/security_trust_report.md",
+      "sha256": "4f0195d48fa1b89a19056527400dabfe081421f421703635c0995bb9765ce433",
+      "size": 1614
+    },
+    {
+      "path": "reports/skill-interpretation.html",
+      "sha256": "9fe592a633514a8ba4fce64f2836d167830f1d4b7f5a17b5508c54c0605efef6",
+      "size": 73640
+    },
+    {
+      "path": "reports/skill-ir.json",
+      "sha256": "f5a9ba2f4e9dd226d5bb594c2e3d322c3f9a060ec27c7e60e5723392ffcc7103",
+      "size": 6275
+    },
+    {
+      "path": "reports/skill-overview.html",
+      "sha256": "2bb933665ccb14c1e5753f17c9fc2ec57629c67bfae4e9385f9104047a61d756",
+      "size": 73558
+    },
+    {
+      "path": "reports/skill_atlas.html",
+      "sha256": "e8941f7ce1f7a08ddec35ebe191acb97bb4497e68de2735161210deecb087f31",
+      "size": 2939
+    },
+    {
+      "path": "reports/skill_atlas.json",
+      "sha256": "6becde40989ab7d369e31b71258e8daee33d20213ae852cb7990d3fa57b8fb81",
+      "size": 7271
+    },
+    {
+      "path": "reports/skill_os2_audit.json",
+      "sha256": "8fc91710015ddd8269b76278c6d17fbd76060e0b0537cb97feb9392962786753",
+      "size": 16240
+    },
+    {
+      "path": "reports/skill_os2_audit.md",
+      "sha256": "cdea606836f27b4c7f340985656f085f3f08fa6229954467583822f63c2dac54",
+      "size": 7512
+    },
+    {
+      "path": "reports/trigger_eval_summary.md",
+      "sha256": "bd93a969b83749f22bb58fd57000c0e6c5a3020358ae7b4e09644d123a3f7f1a",
+      "size": 703
+    }
+  ],
+  "run_id": "portable-package",
+  "schema_version": "1.0",
+  "skill_name": "us-overnight-a-stock-mapping"
+}

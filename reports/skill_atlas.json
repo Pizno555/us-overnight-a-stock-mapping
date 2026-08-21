@@ -1,0 +1,184 @@
+{
+  "ok": true,
+  "workspace_root": "E:\\Project\\codex\\dist\\install-simulation\\simulate-us-overnight-a-stock-mapping",
+  "summary": {
+    "skill_count": 1,
+    "actionable_skill_count": 1,
+    "route_collision_count": 0,
+    "actionable_route_collision_count": 0,
+    "owner_gap_count": 0,
+    "actionable_owner_gap_count": 0,
+    "stale_count": 0,
+    "actionable_stale_count": 0,
+    "shared_resource_count": 0,
+    "no_route_opportunity_count": 0,
+    "telemetry_report_count": 1,
+    "drift_signal_count": 1,
+    "actionable_drift_signal_count": 1,
+    "non_actionable_issue_count": 0
+  },
+  "scope_policy": {
+    "present": false,
+    "path": "skill_atlas\\policy.json",
+    "rules": []
+  },
+  "catalog": {
+    "workspace_root": "E:\\Project\\codex\\dist\\install-simulation\\simulate-us-overnight-a-stock-mapping",
+    "generated_at": "2026-08-21",
+    "skills": [
+      {
+        "name": "us-overnight-a-stock-mapping",
+        "path": "us-overnight-a-stock-mapping",
+        "description": "当主问题同时包含最新美国或全球隔夜事件、财报、监管、产业信号或美股异常行为，以及A股产业或公司映射需求时，执行双雷达、催化归因、真实性验证和盘前Core/Watch/Exclude筛选。不用于无海外锚点的A股复盘或持仓预案（a-stock-trading-review）、单一A股消息核验（a-stock-evidence-research）、完整基本面或估值（a-stock-investment-analysis）、长期瓶颈扫描（serenity-skill）、普通新闻摘要、纯行情或自动交易。",
+        "owner": "simplelove",
+        "version": "1.0.0",
+        "status": "active",
+        "maturity": "production",
+        "updated_at": "2026-08-21",
+        "review_cadence": "monthly",
+        "targets": [
+          "openai"
+        ],
+        "resources": [
+          "scripts/compute_indicators.py",
+          "references/a-share-validation.md",
+          "references/data-and-metrics-contract.md",
+          "references/output-spec.md",
+          "references/radar-scan-coverage-contract.md",
+          "references/radars-and-attribution.md",
+          "references/routing-and-handoffs.md",
+          "references/source-design-v1.0.md",
+          "references/source-traceability.md",
+          "references/trading-and-pools.md"
+        ],
+        "token_set": [
+          "a-stock-evidence-research",
+          "a-stock-investment-analysis",
+          "a-stock-trading-review",
+          "exclude筛选",
+          "serenity-skill",
+          "watch",
+          "不用于无海外锚点的a股复盘或持仓预案",
+          "产业信号或美股异常行为",
+          "以及a股产业或公司映射需求时",
+          "催化归因",
+          "单一a股消息核验",
+          "完整基本面或估值",
+          "当主问题同时包含最新美国或全球隔夜事件",
+          "执行双雷达",
+          "普通新闻摘要",
+          "监管",
+          "真实性验证和盘前core",
+          "纯行情或自动交易",
+          "财报",
+          "长期瓶颈扫描"
+        ],
+        "atlas_scope": "release",
+        "actionable": true,
+        "scope_reason": "default release-actionable skill",
+        "telemetry": {
+          "report_present": true,
+          "report": "us-overnight-a-stock-mapping\\reports\\adoption_drift_report.json",
+          "risk_band": "no-data",
+          "event_count": 0,
+          "adoption_sample_count": 0,
+          "adoption_rate": 0,
+          "candidate_count": 1
+        }
+      }
+    ],
+    "summary": {
+      "skill_count": 1,
+      "actionable_skill_count": 1,
+      "route_collision_count": 0,
+      "actionable_route_collision_count": 0,
+      "owner_gap_count": 0,
+      "actionable_owner_gap_count": 0,
+      "stale_count": 0,
+      "actionable_stale_count": 0,
+      "shared_resource_count": 0,
+      "no_route_opportunity_count": 0,
+      "telemetry_report_count": 1,
+      "drift_signal_count": 1,
+      "actionable_drift_signal_count": 1,
+      "non_actionable_issue_count": 0
+    }
+  },
+  "route_collisions": [],
+  "actionable_route_collisions": [],
+  "dependency_graph": {
+    "nodes": [
+      {
+        "name": "us-overnight-a-stock-mapping",
+        "path": "us-overnight-a-stock-mapping"
+      }
+    ],
+    "shared_resources": []
+  },
+  "stale_skills": [],
+  "actionable_stale_skills": [],
+  "owner_review_gaps": [],
+  "actionable_owner_review_gaps": [],
+  "drift_signals": [
+    {
+      "name": "us-overnight-a-stock-mapping",
+      "path": "us-overnight-a-stock-mapping",
+      "source": "us-overnight-a-stock-mapping\\reports\\adoption_drift_report.json",
+      "risk_band": "no-data",
+      "signal_types": [
+        "no telemetry"
+      ],
+      "recommendation": "Start with a small metadata-only sample before using telemetry for release decisions.",
+      "actionable": true,
+      "scope": "release",
+      "summary": {
+        "event_count": 0,
+        "adoption_sample_count": 0,
+        "adoption_rate": 0,
+        "missed_trigger_count": 0,
+        "wrong_trigger_count": 0,
+        "bad_output_count": 0,
+        "missing_resource_count": 0,
+        "script_error_count": 0,
+        "review_overdue_count": 0
+      }
+    }
+  ],
+  "actionable_drift_signals": [
+    {
+      "name": "us-overnight-a-stock-mapping",
+      "path": "us-overnight-a-stock-mapping",
+      "source": "us-overnight-a-stock-mapping\\reports\\adoption_drift_report.json",
+      "risk_band": "no-data",
+      "signal_types": [
+        "no telemetry"
+      ],
+      "recommendation": "Start with a small metadata-only sample before using telemetry for release decisions.",
+      "actionable": true,
+      "scope": "release",
+      "summary": {
+        "event_count": 0,
+        "adoption_sample_count": 0,
+        "adoption_rate": 0,
+        "missed_trigger_count": 0,
+        "wrong_trigger_count": 0,
+        "bad_output_count": 0,
+        "missing_resource_count": 0,
+        "script_error_count": 0,
+        "review_overdue_count": 0
+      }
+    }
+  ],
+  "no_route_opportunities": [],
+  "artifacts": {
+    "catalog": "E:\\Project\\codex\\skill-atlas\\us-overnight-a-stock-mapping-release\\catalog.json",
+    "route_overlap_matrix": "E:\\Project\\codex\\skill-atlas\\us-overnight-a-stock-mapping-release\\route_overlap_matrix.csv",
+    "dependency_graph": "E:\\Project\\codex\\skill-atlas\\us-overnight-a-stock-mapping-release\\dependency_graph.json",
+    "stale_skills": "E:\\Project\\codex\\skill-atlas\\us-overnight-a-stock-mapping-release\\stale_skills.json",
+    "owner_review_gaps": "E:\\Project\\codex\\skill-atlas\\us-overnight-a-stock-mapping-release\\owner_review_gaps.json",
+    "drift_signals": "E:\\Project\\codex\\skill-atlas\\us-overnight-a-stock-mapping-release\\drift_signals.json",
+    "no_route_opportunities": "E:\\Project\\codex\\skill-atlas\\us-overnight-a-stock-mapping-release\\no_route_opportunities.json",
+    "report_json": "C:\\Users\\ZARD\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\skill_atlas.json",
+    "report_html": "C:\\Users\\ZARD\\.codex\\skills\\us-overnight-a-stock-mapping\\reports\\skill_atlas.html"
+  }
+}

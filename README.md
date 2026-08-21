@@ -392,11 +392,13 @@ Auction Conditions
 - 静态输出对照7例：现有断言中Skill输出通过率100%、基线0%；这是recorded fixture断言评测，不是独立模型或实盘收益证明。
 - 5个真实历史事件的交互式模型回放来自公开发行前的本地开发版本；本次只收紧输出与覆盖口径，没有把旧回放冒充重跑。
 - 指标脚本已通过65日样例、Python编译和帮助接口检查。
-- OpenAI目标包验证和临时目录安装模拟通过；Review Studio当前为 `review`、阻塞项0。
+- OpenAI运行入口、适配器字段、压缩包路径安全和零权限契约可验证；`reports/skill-overview.html/json` 与 `reports/review-studio.html/json` 均为本次正式发行产物，并已通过安装后可读性检查。
 
-当前仍缺少：独立provider-runner日志、精确模型/token记录、人工盲审裁决、完整全市场扫描分母，以及长期漏报率、错映射率和交易价值记录。因此本 Skill不能声称已经证明实盘有效，也不能把静态测试写成真实投资表现。
+最新 `reports/review-studio.json` 的发行结论为 `review`：86/100、0 blocker、5 warning。声明的成熟度仍为 Production，但在人工盲审、真实使用遥测和发布确认补齐前，不宣称全部 Production gate 已通过。
 
-详见 [validation-summary.md](reports/validation-summary.md) 和 [runtime-replay-summary.md](reports/runtime-replay-summary.md)。
+当前仍缺少：独立provider-runner日志、精确模型/token记录、人工盲审裁决、真实使用遥测、完整全市场扫描分母，以及长期漏报率、错映射率和交易价值记录；发布说明仍待reviewer确认。因此本 Skill不能声称已经证明实盘有效，也不能把静态测试写成真实投资表现。
+
+详见 [runtime-replay-summary.md](reports/runtime-replay-summary.md)。
 
 ## 文件结构
 
@@ -409,7 +411,7 @@ evals/                     固定回归用例、fixtures与历史回放材料
 reports/                   精简保留的关键验证与信任摘要
 security/                  权限策略
 manifest.json              版本、所有者、发行目标和回滚边界
-skill-ir.json              Skill结构化设计与评测计划
+reports/skill-ir.json      Skill结构化设计与评测计划
 ```
 
 原始设计以字节一致的 `file-backed fixture` 保存在 [source-design-v1.0.md](references/source-design-v1.0.md)。文件标题为v1.0，正文末尾包含v1.3修正规则；版本关系与条款映射见 [source-traceability.md](references/source-traceability.md)。

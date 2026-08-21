@@ -1,6 +1,6 @@
 # Trigger Evaluation Summary
 
-评测日期：2026-08-20
+评测日期：2026-08-21
 
 评测配置：`evals/semantic_config.json`；阈值 `0.33`。
 

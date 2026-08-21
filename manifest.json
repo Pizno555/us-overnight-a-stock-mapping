@@ -2,7 +2,7 @@
   "name": "us-overnight-a-stock-mapping",
   "version": "1.0.0",
   "owner": "simplelove",
-  "updated_at": "2026-08-20",
+  "updated_at": "2026-08-21",
   "status": "active",
   "maturity_tier": "production",
   "lifecycle_stage": "production",
@@ -14,6 +14,7 @@
   "target_platforms": [
     "openai"
   ],
+  "skill_ir_source": "reports/skill-ir.json",
   "factory_components": [
     "references",
     "scripts",
