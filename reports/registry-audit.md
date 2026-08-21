@@ -7,7 +7,7 @@
 - Owner: `simplelove`
 - License: `Copyright (c) 2026 simplelove. All rights reserved.`
 - Package SHA256: `c5a38ab572eccb979585419e920e2fd9aed784d8298a8ea42697010d790e0f4d`
-- Archive SHA256: `e0ddda3ecdbe5c03ddfd9257da3681ff81a3db7734652ef7ad53c4194aa5a8ae`
+- Archive SHA256: `d05c36fd95d78f3d8763a9d8a4e77d25233db310dd19cd521b3f08a218b4e80a`
 - Install simulated: `True`
 
 ## Compatibility

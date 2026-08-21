@@ -1,7 +1,7 @@
 {
   "ok": true,
   "schema_version": "2.0",
-  "generated_at": "2026-08-20",
+  "generated_at": "2026-08-21",
   "skill_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping",
   "package_dir": "C:\\Users\\simplelove\\.codex\\skills\\us-overnight-a-stock-mapping\\dist\\1.0.0-openai",
   "install_root": "[temporary-install-root]",

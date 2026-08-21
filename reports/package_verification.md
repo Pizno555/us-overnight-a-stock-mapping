@@ -4,7 +4,7 @@
 - Package directory: `C:\Users\simplelove\.codex\skills\us-overnight-a-stock-mapping\dist\1.0.0-openai`
 - Targets: `1 / 1` adapters present
 - Archive present: `True`
-- Archive SHA256: `e0ddda3ecdbe5c03ddfd9257da3681ff81a3db7734652ef7ad53c4194aa5a8ae`
+- Archive SHA256: `d05c36fd95d78f3d8763a9d8a4e77d25233db310dd19cd521b3f08a218b4e80a`
 - Nested SKILL.md entries: `0`
 - Failures: `0`
 - Warnings: `0`
