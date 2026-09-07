@@ -1,8 +1,0 @@
-{
-  "artifact_index": "reports/artifact-index.json",
-  "artifact_index_sha256": "ac9d28c132ae76f8d2923139f5be415d351907196ec750dbcc521e94431244c8",
-  "mode": "portable",
-  "run_id": "portable-package",
-  "schema_version": "1.0",
-  "skill_name": "us-overnight-a-stock-mapping"
-}

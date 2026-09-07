@@ -1,207 +1,379 @@
 # US Overnight → A股映射雷达
 
-版本：v1.0.0  
-发行目标：OpenAI / Codex  
+版本：v1.1.2  
 用途：研究支持与条件化盘前预案，不代替投资决策，不自动下单。
 
 ## 这个 Skill 做什么
 
-本 Skill 从最新美国或全球隔夜事件、财报、监管变化、产业信号以及美股异常价格行为出发，先发现并归因海外催化，再映射到A股真实产业环节和公司，最终形成证据化的 `Core / Watch / Exclude` 候选分层。
+本 Skill 用于把**最新美国或全球隔夜市场真正交易的主线**映射到下一 A 股交易日。
 
-它同时运行两套互补雷达：
+它不是简单做“海外新闻摘要”，也不是“找最容易取得一级证据的海外事件”。真正目标是：
 
-- `Event Radar`：主动发现重大事件，即使相关股票没有明显上涨也保留。
-- `Market Radar`：从全市场价格、成交和板块扩散中发现资金正在交易但新闻雷达可能尚未捕捉的对象。
+```text
+昨夜市场到底在交易什么
+→ 为什么
+→ 对应A股哪些真实产业环节
+→ 哪些公司最直接、最能兑现
+→ A股上一交易日已经Price-in多少
+→ 今天先看谁，什么条件下才执行
+```
 
-雷达结果分为 `A∩B`、`A-B`、`B-A` 和双空。未找到可信原因的异动保留为 `UNRESOLVED SIGNAL`，在完成归因前不得进入 `core_pool`。
+核心原则：
+
+> **先判断市场正在交易什么，再判断A股谁真正受益，再判断A股有没有预期差，最后才判断今天能不能交易。**
+
+---
+
+## 双雷达：同时看“发生了什么”和“资金在交易什么”
+
+本 Skill 同时运行两套互补雷达。
+
+### Event Radar：从事件出发
+
+主动寻找可能改变产业、公司经营或市场预期的新增信息，例如：
+
+- 公司财报、指引、电话会、订单、产品路线和资本开支；
+- 监管、政策、审批、禁限措施；
+- 行业价格、供需、库存、交期、缺货、扩产；
+- 客户需求、认证、量产、技术路线变化；
+- 重大临床、监管和商业化节点。
+
+即使相关股票暂时没有明显上涨，也不能因为“价格没反应”直接忽略。
+
+Event Radar还维护一个**独立 Material Event Ledger**：高材料性事件无论是否已经被某个Theme引用，都保留独立登记。每条事件标记`Role`、`Linked Themes`和`Causal Status`，用于区分真正Theme Driver、跨主题Driver候选、纯事件和宏观背景；事件账本不会因为一级证据更好拿就抢占Theme Rank，也不会把“可能影响多个Theme”写成已经证明的共同催化。
+
+### Market Radar：从价格出发
+
+先看资金行为，再寻找解释。重点发现：
+
+- 个股、板块、ETF 的异常涨跌；
+- Dollar Volume、Relative Volume、Abnormal Return 等异常；
+- 同行、上下游、产业代理的同步行为；
+- 盘前、盘后与常规交易时段的显著扩散。
+
+即使暂时没有找到明确新闻，也不能因为“没有当天公告”就停止研究。
+
+### 两套雷达如何配合
+
+| 情形 | 含义 | 处理 |
+|---|---|---|
+| 事件强 + 价格确认 | 事件与市场行为互相支持 | 优先形成高置信 Driver |
+| 事件强 + 价格弱/反向 | Event–Price Divergence | 研究是否已 Price-in、是否有反证或传导转移 |
+| 价格强 + 事件不明 | Strong Cluster / Unresolved Trigger | 继续查供需、价格、订单、Capex、扩散和替代解释 |
+| 两边都弱 | 缺少足够研究价值 | 降低优先级 |
+
+重要：
+
+> **Strong Cluster ≠ Stop Signal。**  
+> 强价格集群但缺少单一公告，应该触发深挖，而不是直接写 `Unresolved` 后停止。
+
+---
 
 ## 什么时候使用
 
-只有请求同时满足以下条件时才应由本 Skill 主导：
+只有请求同时满足以下条件时，才应由本 Skill 主导：
 
-1. 存在明确的最新海外隔夜锚点，例如美国或全球市场事件、财报、监管变化、产业信号、个股/板块/ETF异动，或者用户明确要求扫描昨夜/隔夜。
-2. 目标是把该锚点映射到A股产业环节、公司、预期差或盘前候选池。
+1. 存在明确的最新海外/隔夜锚点，例如美国或全球市场事件、财报、监管变化、产业信号、个股/板块/ETF 异常行为，或用户明确要求扫描昨夜/隔夜；
+2. 目标是把这些海外变化映射到 A 股产业环节、公司、预期差或盘前候选。
 
 典型请求：
 
 ```text
-使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。
+使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，找出真正被资金交易的主线，并映射到A股盘前候选。
 ```
 
 ```text
-昨夜英伟达财报上调AI网络需求，A股光模块、PCB和散热方向中谁是真受益？
+昨夜英伟达财报上调AI网络需求，A股光模块、PCB、散热里谁是真受益？
 ```
 
 ```text
-美股光通信昨夜出现集群异动但公开消息不明确，查因并给出A股监控方向。
+美股光通信昨夜出现集群异动，但公开消息不明确，继续查因并给出A股方向。
 ```
+
+```text
+昨夜存储、设备、光互连都有异动，拆分真正的Market Themes，再判断A股上一交易日有没有预期差。
+```
+
+---
 
 ## 不适用范围
 
 本 Skill 不负责：
 
-- 没有海外隔夜锚点的A股全市场复盘、持仓复盘或次日综合预案；这类任务属于 `a-stock-trading-review`。
-- 单一A股公司的客户、订单、技术、产能或传闻专项核验；这类任务属于 `a-stock-evidence-research`。
-- 完整公司研究、盈利预测、估值和长期投资分析；这类任务属于 `a-stock-investment-analysis`。
-- 没有明确隔夜事件的长期产业链瓶颈扫描；这类任务属于 `serenity-skill`。
-- 普通美股新闻摘要或翻译、纯行情查询、无条件荐股、自动交易和自动下单。
-- 后台定时扫描、持续监控、数据库维护或自动抓取。Skill本身不内置行情数据库、付费数据源、爬虫或交易接口。
+- 没有海外隔夜锚点的 A 股全市场复盘、持仓复盘或次日综合预案；
+- 单一 A 股公司的客户、订单、技术、产能或传闻专项核验；
+- 完整公司研究、盈利预测、估值和长期投资分析；
+- 没有明确隔夜触发的长期产业链瓶颈扫描；
+- 普通美股新闻摘要、纯行情查询、翻译；
+- 无条件荐股、自动交易或自动下单；
+- 后台定时抓取、数据库维护或自动监控。
 
-复合请求只先完成海外催化映射，再通过 `handoff_packet` 把已确认事实、候选、证据缺口和后续任务交给相邻 Skill；不会用本 Skill 越权替代完整复盘、专项核验或估值。
+复合任务中，本 Skill 只负责“海外隔夜 → A股映射”这一段，不需要额外生成正式 handoff 协议。
+
+---
 
 ## 数据与时间要求
 
-- 报告主时区为 `Asia/Shanghai`，同时记录美国东部时间对应的UTC偏移。
-- 默认隔夜窗口从上一个A股交易日15:00（北京时间）开始，到报告明确的数据截止时间结束。
-- 美国休市、周末或长假必须单独说明，不能伪造常规时段行情，也不能把多日事件混写为“昨夜”。
-- 任务依赖当日信息，执行环境需要具备联网检索及适用的行情数据能力。
-- 来源优先级为：公司/监管/交易所/政府/法定文件 → 市场数据与行业组织 → 权威媒体 → 聚合行情或二级研究 → 市场讨论线索。
-- 市场讨论只提供线索，不能作为事实证据。来源冲突未解决时输出 `Unknown`。
-- 9:25前不得使用尚未形成的A股竞价或盘中数据；9:25后使用真实竞价数据时必须标注时间戳。
+- 主时区统一为 `Asia/Shanghai`，同时记录对应美国东部时间和 UTC 偏移；
+- 默认隔夜窗口从上一个 A 股交易日 15:00（北京时间）开始，到报告明确的数据截止时间结束；
+- Market Radar 以最近一个已完成的美国常规交易时段为主体，同时纳入窗口内重要盘前/盘后异动；
+- 美国休市、周末或长假必须明确说明，不能伪造常规时段行情，也不能把多日事件混写成“昨夜”；
+- 报告截止后的信息不能回写成此前已经知道的事实；
+- 9:25 前不得使用尚未形成的 A 股竞价或盘中数据；9:25 后只有取得真实数据并标注时间戳时才能更新 Auction 判断；
+- 来源冲突未解决时输出 `Unknown`，不能选择最符合叙事的数据。
+
+来源优先级：
+
+```text
+公司 / 监管 / 交易所 / 政府 / 正式电话会或法定文件
+→ 市场数据 / 行业组织 / 专业价格与产业数据
+→ 权威媒体事实报道
+→ 聚合行情 / 二级研究
+→ 市场讨论与社交媒体线索
+```
+
+市场讨论只作线索，不作事实证据。
 
 详细口径见 [data-and-metrics-contract.md](references/data-and-metrics-contract.md)。
 
-## 可审计扫描覆盖
+---
 
-完整运行必须输出 `coverage_log`。没有明确的 `universe`、`total` 和 `checked` 时，覆盖状态最高只能是 `partial`。
+## 搜索充分性，而不是形式化“全覆盖”
 
-### Event Radar
+本 Skill 不再要求为了形式完整，机械完成固定 31 家公司、13 个行业方向或所有 Top20 榜单后才允许输出结论。
 
-公司扫描分母拆为：
+目标是：
 
-- 固定31家公司；
-- `dynamic_watchlist`：运行前已知的重点Biotech、财报日历、重大会议和政策窗口主体；
-- `event_specific_additions`：扫描过程中发现的新主体。
+> **达到足以支持主要 Market Themes 和 Drivers 的搜索充分性。**
 
-三者按公司或法定主体去重后形成 `active_watchlist`，分别记录分母、实际检查数、一级信源检查数和失败项。
+完整盘前研究至少应具备：
 
-Event Radar还覆盖13个Radar Registry方向：AI硬件、光通信、半导体、存储、PCB/CCL、先进封装、机器人、创新药、生物科技、新能源、有色、电力设备和商业航天。每个方向必须检查至少一个可审计的非价格型 `Discovery Anchor`，例如公司一级信源、政府/监管源、行业协会、正式大会或事件日历。ETF、行情源和涨跌榜只能辅助，不能作为某方向唯一的Event Anchor。
+1. 一次宽市场异常扫描；
+2. 一次独立重大事件/产业变化扫描，兼顾已排期高影响事件和扫描中新出现的高材料性事件；
+3. 对每个 Top Theme 做同行、上下游、ETF/行业扩散验证；
+4. 对每个 Top Theme 追至少一种适配的一级/官方或高质量产业来源；
+5. 检查高材料性 Event Radar 事件是否完成独立账本登记与Event↔Theme关联；即使已在Theme正文引用也不能因“避免重复”而消失；
+6. 明确会影响结论的关键数据缺口。
 
-只有公司Watchlist、13个行业方向及关键事件来源层均达到覆盖条件时，Event Radar才能标记 `covered`。
+使用：
 
-### Market Radar
+- `sufficient`：关键检查完成，缺失项不太可能改变主要 Theme 判断；
+- `partial`：缺失可能导致漏掉 Theme 或改变 Driver 置信度；
+- `unavailable`：关键市场或事件数据不可取得。
 
-数据源支持时，默认市场宇宙为NYSE、Nasdaq和NYSE American上市的普通股及ADR，并排除OTC、权证、权利、units、优先股、封闭式基金和ETF；ETF单独扫描。
+`partial` 不等于报告无效，但必须降低相应结论置信度，并说明可能漏掉什么。
 
-完整Market Radar至少检查：
+---
 
-- 涨幅Top 20；
-- 跌幅Top 20；
-- Dollar Volume Top 20；
-- Relative Volume Top 20；
-- 盘前/盘后显著异动；
-- `SPY、QQQ、IWM、SOXX、SMH、XBI、IBB` 及当夜相关行业ETF；
-- 公司行动、极低流动性和数据异常隔离项。
-
-如果数据供应方无法覆盖默认宇宙，必须写出实际支持的Universe并降级，不能沿用“全量扫描”表述。
-
-完整规则及13行业默认锚点见 [radar-scan-coverage-contract.md](references/radar-scan-coverage-contract.md)。
-
-## 分析流程
-
-执行顺序如下：
+## 完整研究流程
 
 ```text
-双雷达发现
-→ 交叉分类与催化归因
-→ 公司事件/产业事件判断
-→ S/A/B/C催化评级
-→ 产品、技术、靶点或平台拆解
-→ A股 Candidate初筛
-→ Shortlist
-→ 10步Deep Validation
-→ L级 + E级或P级 + Evidence
-→ 同行比较、反证和推翻条件
-→ 预期差 + T_static + Auction Conditions
-→ 产业/管线价值排序 + 当日交易排序
-→ Core / Watch / Exclude
+① Broad Overnight Scan
+事件 + 市场价格/成交异常 + 行业/ETF扩散
+↓
+② Cluster Decomposition
+把宽泛大类拆成经济机制不同的子集群
+↓
+③ Market Theme / Driver
+为每个重要集群形成具体Driver Hypothesis
+↓
+④ Driver Validation
+Supporting Evidence + Counter Evidence + Alternative Explanations
+↓
+④b Event–Theme Join
+高材料性Event记录Role/Linked Themes/Causal Status；Theme反查其Event/Trend/Repricing依据
+↓
+⑤ Theme Ranking
+先排昨夜市场主线的重要性
+↓
+⑥ A-share Economic Chain Expansion
+先拆经济机制不同的主要节点，再逐节点寻找Candidate
+↓
+⑥b Economic Chain Coverage Gate + Omission Challenge
+先给节点状态，再从物理/技术必需依赖与经济价值流/Capex两条独立路径反推遗漏节点，补齐后才允许收敛
+↓
+⑦ Preliminary Validation → Shortlist → 10步Deep Validation
+↓
+⑧ L + E/P + Evidence + 同行PK + 反证/推翻条件
+↓
+⑨ A-share Prior Pricing
+研究上一A股交易日板块与个股如何定价该Theme
+↓
+⑩ Expectation Gap
+海外Driver × 海外价格 × A股既有定价 × 当前新增信息
+↓
+⑪ Fundamental Ranking / Trading Ranking
+产业价值与今日风险收益分开
+↓
+⑫ Core / Watch / Exclude
+↓
+⑬ T_static → Auction Conditions
+最后决定今天是否执行
 ```
 
-强事件但价格反应弱时使用 `Event–Price Divergence`：分别输出 Observed Facts、Hypotheses、Evidence 和 Confidence。无法确认原因时写“原因未确定”，不能强行解释为“已经Price-in”或“市场没看懂”。
+宏观只作为风险背景，不能替代产业 Driver。
+
+### 两个新的防漏门
+
+- **Event–Theme Join**：事件和Theme是多对多关系。重大事件已经出现在Theme分析里，不代表可以从事件层消失；但“能解释多个Theme”也不代表已证明共同催化，必须标因果强弱。
+- **Omission Challenge**：Economic Chain Coverage不能只检查模型自己列出的节点。宣布覆盖完成前，要从“物理/技术必需依赖”和“经济价值/Capex流”两条路径独立重建一次产业链；复杂技术系统还要至少用一份架构/BOM/标准/工艺类可靠资料校验，发现遗漏节点就补搜Candidate。
+
+---
+
+## Cluster Decomposition：不能把不同机制压成一个大类
+
+发现宽泛集群后，必须判断是否包含经济机制不同的子集群。
+
+错误：
+
+```text
+半导体上涨
+```
+
+更合理的拆法可能是：
+
+```text
+存储价格 / 供需重新定价
+光互连需求 / 网络升级
+前道设备 Capex / 出货
+```
+
+拆分依据包括：
+
+- 产品；
+- 客户；
+- 需求来源；
+- 供给约束；
+- 技术路线；
+- 受益环节；
+- 价格发生时间；
+- ETF / 同行扩散。
+
+只有共同 Driver 足以解释主要成员时才允许合并；不能因为都属于“AI”或“半导体”就压成一个 Theme。
+
+---
+
+## Market Theme 与 Market Driver
+
+### Theme 是第一等研究对象
+
+Theme 回答：
+
+> **昨夜资金共同交易的具体产业机制是什么？**
+
+例如“DRAM/NAND 景气重新定价”是 Theme；“半导体上涨”通常太宽泛。
+
+`Theme Ranking` 在 A 股个股验证之前完成。
+
+后续 A 股 Evidence 只能决定某只公司是否是真受益、是否能进入 Core，不能把一个次要事件因为一级证据更容易获取，就反向改写成昨夜第一主线。
+
+### Catalyst 与 Market Driver 分开
+
+`Catalyst` 是离散新增事件，例如财报、订单、批准、政策、正式涨价。
+
+`Market Driver` 是市场正在交易的主要原因，可以是：
+
+| Driver Type | 含义 |
+|---|---|
+| `Discrete Catalyst` | 由明确新增硬事件驱动 |
+| `Industry Trend/Repricing` | 供需、价格、订单、Capex、库存、需求等共同推动重新定价 |
+| `Continuation` | 既有硬信息继续扩散或延迟定价 |
+| `Mixed` | 多个因素共同作用 |
+| `Unresolved` | 完成必要研究后仍无法形成可信主导解释 |
+
+没有单一当日公告，不等于没有可信 Driver。
+
+非离散事件 Theme 的 `Catalyst Grade` 可以写 `N/A`，不得为了填表强行套 S/A/B/C。
+
+### Driver 研究退出条件
+
+对于 Strong Cluster，真正的完成条件不是“查过四类东西”，而是至少形成：
+
+```text
+Driver Hypothesis
++ Supporting Evidence
++ Counter Evidence
++ Alternative Explanations
++ Why this cluster moves together
+```
+
+只有三种合法结束状态：
+
+- `Credible Driver`：具体 Driver 足以解释主要成员和扩散结构；
+- `Unresolved - researched`：必要检查完成，但多个解释仍势均力敌；
+- `Unknown - insufficiently checked`：必要检查尚未完成。
+
+“行业景气不错”“AI需求强”“市场情绪好”等泛化表述，不算研究完成。
+
+详细规则见 [discovery-and-driver.md](references/discovery-and-driver.md)。
+
+---
 
 ## 等级、指标与状态速查字典
 
-这一节用于解释报告中的缩写和评级。评级是不同维度的事实标签，不是可以相加的分数：催化强，不代表A股映射真实；映射真实，不代表业务已经兑现；业务成熟，也不代表当前交易位置合适。关键缺陷不能由其他维度补偿。
+评级是不同维度的事实标签，不是可以相加的分数。
 
-### 一眼看懂各等级方向
+> 催化强，不代表 A 股映射真实；  
+> 映射真实，不代表业务已经兑现；  
+> 业务成熟，也不代表当前交易位置适合。
 
-| 维度 | 由强/直接/成熟/适宜到弱/间接/早期/高风险 |
+关键缺陷不能被其他维度补偿。
+
+### 一眼看懂各维度
+
+| 维度 | 从强/直接/成熟/适宜到弱/间接/早期/高风险 |
 |---|---|
 | 催化等级 | `S → A → B → C` |
 | A股映射 | `L1 → L2 → L3 → L4` |
 | 商业化成熟度 | `E1 → E2 → E3 → E4 → E5` |
 | Biotech管线成熟度 | `P1 → P2 → P3 → P4 → P5` |
-| 证据或置信度 | `High → Medium → Low → Unknown` |
+| Evidence / Confidence | `High → Medium → Low → Unknown` |
 | 静态交易位置 | `T1 → T2 → T3 → T4 → T5` |
 
-其中，`E/P`数字越小表示越成熟，`T`数字越小表示盘前静态风险收益越合适；这些方向容易被误读。
-
-### 雷达交叉状态
-
-| 状态 | 含义 | 处理方式 |
-|---|---|---|
-| `A∩B` | Event Radar发现重大事件，Market Radar也观察到价格或成交响应 | 优先归因、判断公司事件或产业事件并评级 |
-| `A-B` | 有重大事件，但价格反应弱或方向相反 | 进入Event–Price Divergence，不直接解释为已Price-in |
-| `B-A` | 有异常价格行为，但尚无可信事件解释 | 标记`UNRESOLVED SIGNAL`，归因前不得进入Core |
-| 双空 | 没有重要事件，也没有值得研究的异常行为 | 忽略 |
-
-### 扫描覆盖状态
-
-| 状态 | 含义 |
-|---|---|
-| `covered` | 已按报告声明的Universe和分母完成契约要求的检查；不代表整个互联网绝对无遗漏 |
-| `partial` | 只完成部分检查，或关键Universe、分母、数据榜单、一级信源或行业锚点不完整 |
-| `unavailable` | 所需数据或入口不可取得 |
-| `not_applicable` | 对当前任务确实不适用，必须说明原因，不能用来掩盖漏扫 |
-
-`overall_status`不得高于Event Radar和Market Radar中较弱的一项。覆盖不足时必须披露可能漏掉什么，并降低受影响结论的置信度。
-
-### 宏观风险等级
-
-宏观风险是对盘前风险偏好的定性背景判断，不是催化等级，也没有固定机械阈值。
-
-| 等级 | 阅读方式 |
-|---|---|
-| `Low` | 没有显著宏观扰动，宏观环境未明显妨碍产业催化传导 |
-| `Medium` | 利率、美元、流动性、地缘或指数环境存在扰动，需要降低交易进攻性或加强竞价确认 |
-| `High` | 广泛风险厌恶、流动性冲击或重大宏观事件可能主导当日定价，产业催化也可能被系统性风险压制 |
-
-宏观信息进入`macro_risk_pool`修正风险偏好，不能替代产业催化或直接证明某只A股受益。
+注意：`E/P` 数字越小表示越成熟，`T` 数字越小表示盘前静态风险收益越合适。
 
 ### 催化等级 S/A/B/C
 
+只用于**离散 Catalyst 本身的重要性**。
+
 | 等级 | 含义 | 常见例子 |
 |---|---|---|
-| `S` | 产业级硬催化，可能改变路线、需求、供给或盈利预期 | 正式批准、III期关键成功、超大订单、龙头严重超预期、Capex大幅上调、重大短缺或实质政策变化 |
-| `A` | 高价值产业信号，传导路径较明确 | 明确产品路线、需求大增、量产、大客户验证、行业价格显著上涨、多家公司上调预期 |
-| `B` | 一般催化，价值或验证程度有限 | 行业会议、中小订单、一般管理层表态、单家券商观点、未完全验证的变化 |
+| `S` | 产业级硬催化，可能明显改变路线、需求、供给或盈利预期 | 正式批准、III期关键成功、超大订单、龙头严重超预期、Capex大幅上调、重大短缺或政策变化 |
+| `A` | 高价值产业信号，传导路径较明确 | 明确产品路线、需求大增、量产、大客户验证、价格显著上涨、多家公司上调预期 |
+| `B` | 一般催化，价值或验证程度有限 | 行业会议、中小订单、一般管理层表态、单家研究观点 |
 | `C` | 弱催化或噪声 | 单独评级、社媒传闻、无来源截图、无原因小盘暴涨、单一KOL观点 |
 
-催化等级只回答“事件本身有多重要”。`Company-specific`表示并购、自身药物数据、诉讼等公司事件，通常跨市场映射较弱；`Industry-wide`表示技术路线、需求、价格、短缺、政策或龙头Capex变化，通常更有产业映射价值。`宏观`、`公司事件`、`产业事件`、`新增`、`延续`应作为独立性质说明，不应写成`A/宏观`、`C/延续`等混合等级。
+对于 `Industry Trend/Repricing`、`Continuation` 等没有单一离散事件的 Theme，可以写 `N/A`。
 
-### Catalyst Confidence
+### Driver Confidence
 
-Catalyst Confidence回答“这个事件是否真的解释了海外异动”，不回答“A股公司是否真的受益”。
+回答：
+
+> **当前 Driver 是否真的能解释海外市场异动？**
 
 | 等级 | 含义 |
 |---|---|
-| `High` | 一级信源明确，发布时间与异动吻合，同行或ETF扩散支持，替代解释较弱 |
-| `Medium` | 主要证据相互支持，但扩散、时间对应或替代解释仍有缺口 |
-| `Low` | 主要依赖二级来源，时间或扩散关系较弱，存在较强替代解释 |
-| `Unknown` | 无法可靠归因；不得进入核心映射 |
+| `High` | 多源证据、时间关系和扩散结构高度一致，替代解释较弱 |
+| `Medium` | 主要证据相互支持，但时间、扩散或替代解释仍有缺口 |
+| `Low` | 证据链较弱，存在明显替代解释 |
+| `Unknown` | 无法可靠判断 |
+
+Driver Confidence 与 A 股公司的 `Evidence` 是两个不同概念。
 
 ### A股映射等级 L1–L4
 
 | 等级 | 含义 |
 |---|---|
-| `L1` | 直接生产事件对应产品，或拥有真正可比的靶点、平台或管线 |
-| `L2` | 核心上游，事件持续将明确增加其需求 |
+| `L1` | 直接生产对应产品，或拥有真正可比的靶点、平台或管线 |
+| `L2` | 核心上游/下游，Driver 持续会明确改变其需求或盈利 |
 | `L3` | 间接受益、弹性有限或传导链较长 |
-| `L4` | 只有技术名词、研发规划、战略表述或市场联想；不得进入Core |
+| `L4` | 只有技术名词、规划、研发项目或市场联想 |
+
+`L4` 不得进入 Core。
 
 ### 商业化成熟度 E1–E5
 
-`E`用于已有产品、材料、设备、器件、服务等商业化产业，不用于创新药临床阶段。
+`E` 只描述已有产品、材料、设备、器件、服务等商业化产业的业务兑现阶段，不用于创新药临床阶段。
 
 | 等级 | 含义 |
 |---|---|
@@ -209,116 +381,84 @@ Catalyst Confidence回答“这个事件是否真的解释了海外异动”，�
 | `E2` | 订单、产能或收入快速增长 |
 | `E3` | 已有客户验证、小批量或量产节点临近 |
 | `E4` | 有真实业务基础，但尚无明确订单或规模兑现 |
-| `E5` | 纯概念或未证实；不得以“业绩受益”名义进入Core |
+| `E5` | 纯概念或未证实 |
 
-### Biotech管线成熟度 P1–P5
+### Biotech 管线成熟度 P1–P5
 
-`P`只描述创新药/Biotech的管线成熟度，不代表临床成功概率、股价机会或证据强弱。
+`P` 只描述创新药 / Biotech 管线成熟度，不代表临床成功概率、股价机会或证据强弱。
 
 | 等级 | 含义 |
 |---|---|
 | `P1` | 已获监管批准或已经商业化 |
-| `P2` | 注册阶段、III期关键成功，或NDA/BLA已提交、受理、进入关键审评 |
-| `P3` | III期进行中、II期较强PoC，或已进入明确关键性临床阶段 |
+| `P2` | 注册阶段、III期关键成功，或 NDA/BLA 已提交/受理/进入关键审评 |
+| `P3` | III期进行中、II期较强 PoC，或进入明确关键性临床阶段 |
 | `P4` | IND获批、I期/I–II期，或只有初步人体安全性/有效性数据 |
-| `P5` | 动物或临床前阶段、尚未人体临床、仅平台或早期布局 |
+| `P5` | 动物/临床前阶段、尚未人体临床、仅平台或早期布局 |
 
-海外药物达到P1/P2，不会自动提升A股公司的P级；必须分别核对靶点、技术路线、适应症、管线阶段、临床数据、监管路径和权利归属。
+**语义锁死：商业产业只用 E；Biotech 只用 P；技术/价格位置只用 `T_static`。**
 
 ### Evidence
 
-Evidence回答“A股映射、业务关系或管线关系得到多强的证据支持”。业务本身真实，不等于本次海外催化与该公司的映射证据为High。
+Evidence 回答：
+
+> **A股映射、业务关系或管线关系得到多强的证据支持？**
 
 | 等级 | 含义 |
 |---|---|
 | `High` | 公司、监管、客户/订单、临床注册或权威技术证据充分 |
-| `Medium` | 多个独立来源形成相互印证的证据链 |
-| `Low` | 只有单一间接线索、单一调研或证据链不完整 |
+| `Medium` | 多个独立来源形成相互印证 |
+| `Low` | 单一间接线索或证据链不完整 |
 | `Unknown` | 无法验证 |
 
-### 预期差
+业务本身真实，不等于“本次海外 Driver → 该 A 股公司”的 Evidence 自动为 High。
 
-预期差回答“当前市场价格与已经验证的产业或管线信息之间还有多大差距”，不是事件强度，也不是简单看股票有没有上涨。
+---
 
-| 等级 | 阅读方式 |
-|---|---|
-| `High` | 新信息重要且证据较强，市场尚未充分识别或定价 |
-| `Medium` | 市场已有部分反映，但兑现路径、覆盖范围或持续性仍存在分歧 |
-| `Low` | 信息已广为人知、价格已有充分反应，或新增信息对盈利/管线影响有限 |
-| `Unknown` | 缺少可靠价格、市场预期或证据，无法判断 |
+## A股产业链映射与 Candidate 漏斗
 
-“没涨”不能自动判为High，“已经上涨”也不能单独证明完全Price-in。
+每个重要 Theme 先拆真实经济链，再找股票：
 
-### T_static：盘前静态交易位置
+```text
+Market Theme / Driver
+→ 核心产品 / 技术 / 靶点 / 平台
+→ 需求 / 价格 / 供给变化
+→ 直接受益环节
+→ 核心上游 / 下游
+→ 设备 / 材料 / 设计 / 制造 / 模组 / 分销等适用环节
+→ A股 Candidate
+```
 
-`T_static`只使用集合竞价结束前已经存在的数据，回答“逻辑成立以后，当前静态位置是否适合等待盘前确认”。它不证明产业、客户、订单或管线真实性。
+不设置固定 Candidate 数量：
 
-| 等级 | 含义 |
-|---|---|
-| `T1` | 静态位置较优，逻辑成立且风险收益较理想 |
-| `T2` | 静态可参与，位置尚可，但仍需竞价或开盘确认 |
-| `T3` | 静态等待，位置、情绪或确认度不足 |
-| `T4` | 静态高风险，明显过热、加速、偏离均线或波动过大；不得推出“今天适合买” |
-| `T5` | 静态不参与，结构破坏或风险收益明显不合适 |
-| `Unknown` | 缺少合格历史行情或指标输入，不能用定性印象冒充T等级 |
+- 真正相关公司少就少；
+- 相关产业环节多则充分展开；
+- 不允许只挑一只“代表股”代替完整经济链；
+- 不允许为了凑数量加入弱映射。
 
-### 技术指标
+Candidate阶段还有一个明确退出条件：**主要经济节点已经处理完，而不是“已经找到几只熟悉的股票”。** 对每个重要节点至少做一次A股搜索，并标记为`covered / no-valid-A-share / not-applicable / needs-check`。只有继续搜索只会增加同质或L3/L4弱映射时，才进入Preliminary Validation。
 
-技术指标原则上使用至少60个有效交易日、口径一致的前复权或总回报收盘序列，由 [compute_indicators.py](scripts/compute_indicators.py)确定性计算。缺少合格输入时输出`Unknown`，不由模型心算。
+价格型 Driver 必须做双向传导。例如 DRAM/NAND 涨价，对模组/分销公司同时检查：
 
-| 指标 | 定义 | 用途与限制 |
-|---|---|---|
-| `MA5/10/20/60` | 最近5、10、20、60个有效交易日收盘价的算术平均 | 判断趋势和相对位置；不能证明产业逻辑 |
-| `RSI9` | Wilder方法的9期相对强弱指标 | 辅助判断短期强弱和过热；不足10个有效收盘价为Unknown |
-| `BIAS20` | `(最新收盘价 ÷ MA20 - 1) × 100%` | 衡量相对20日均线的偏离程度 |
+- 售价上涨；
+- 库存收益；
+- 采购成本；
+- 营运资金；
+- 终端需求压力。
 
-### 市场与成交指标
-
-| 指标 | 定义 |
-|---|---|
-| `Dollar Volume` | 优先使用逐笔或分时`sum(price × volume)`；只有日线时可使用成交量×VWAP，缺VWAP时可用收盘价代理但必须标记`proxy` |
-| `Relative Volume` | 已完成常规时段成交量 ÷ 前20个完整常规时段成交量中位数；盘中比较必须使用相同经过时长 |
-| `Abnormal Return` | 个股同一时段收益率减去预先声明的行业ETF或最接近同行篮子收益率 |
-| `Sector Diffusion` | 样本内与催化方向一致且异常收益绝对值达到1个百分点的公司数 ÷ 有效样本数；样本少于5只时只做定性判断 |
-
-这些指标的数据源、时点、币种、复权状态和样本池必须可追溯；没有可靠数据时使用`Unknown`。
-
-### Candidate漏斗
+### Candidate 漏斗
 
 | 阶段 | 含义 |
 |---|---|
-| `Candidate` | 根据海外事件和产业链拆解得到的初始A股候选，强调高召回，不代表真实受益 |
-| `Preliminary Validation` | 快速检查产品/管线、产业位置、基础证据和一眼可推翻的反证 |
-| `Shortlist` | 通过初筛、值得执行完整10步验证的集合；不等于Core Pool |
-| `Deep Validation` | 只对Shortlist执行公司、监管、客户订单、技术、产业、财务、同行、反证、研究媒体和市场讨论十步验证 |
+| `Candidate` | 根据 Theme 和产业链拆解得到的高召回初始候选，不代表真实受益 |
+| `Preliminary Validation` | 快速检查产品/管线、产业位置、基础证据和明显反证 |
+| `Shortlist` | 通过初筛，值得执行完整 10 步验证的集合，不等于 Core |
+| `Deep Validation` | 对 Shortlist 执行完整证据验证、同行比较、反证和推翻条件 |
 
-报告应披露初始Candidate、通过初筛、进入Shortlist和淘汰数量。通常“累计淘汰数量＝初始Candidate总数－Shortlist数量”；如果另行披露各阶段淘汰，必须分别标明阶段，避免漏斗数字互相矛盾。
+---
 
-### Core / Watch / Exclude
+## A股 10 步 Deep Validation
 
-| 分层 | 含义 |
-|---|---|
-| `Core` | 0–5只，允许为空；催化、映射、成熟度、Evidence、兑现、反证和T_static共同满足核心门槛 |
-| `Watch` | 逻辑存在，但证据、兑现节点、预期差、归因或交易位置尚不满足Core；必须写明升级条件和降级条件 |
-| `Exclude` | 映射错误、产品不匹配、业务被证伪、路线相反、核心证据失效或公司独立事件没有合理A股映射 |
-| `UNRESOLVED SIGNAL` | 异动尚未完成归因，只能监控；它不等于Exclude，也不得进入Core |
-
-常见非补偿式门槛：`L4`不能进入Core；`E5`不能以业绩受益名义进入Core；`Evidence Low/Unknown`不能作为高确定性核心映射；`T4/T5`即使产业价值高，也不能推出“今天适合买”；P5通常只作早期观察。
-
-### Auction Conditions
-
-Auction Conditions不是对竞价结果的预测，而是条件式预案：出现哪些竞价、板块同步、承接或价格透支状态时维持、升级、降级或取消候选。9:25前不得使用尚未形成的今日竞价数据；9:25后只有取得真实数据并标注时间戳时才能更新。
-
-## A股映射与验证
-
-产业映射使用：
-
-- `L1`：直接生产对应产品，或拥有真正可比的靶点、平台或管线。
-- `L2`：明确受益的核心上游。
-- `L3`：间接受益或传导链较长。
-- `L4`：仅技术名词、研发规划或市场联想。
-
-全部Candidate先做快速初筛，只对Shortlist执行完整10步验证：
+严格按照以下顺序：
 
 1. 公司官方披露
 2. 交易所和监管资料
@@ -331,90 +471,402 @@ Auction Conditions不是对竞价结果的预测，而是条件式预案：出�
 9. 研究和媒体
 10. 市场讨论
 
-商业化产业使用 `E1–E5` 描述业务兑现阶段；创新药/Biotech使用 `P1–P5` 描述管线成熟度。Evidence独立标记为 `High / Medium / Low / Unknown`。P级不是成功概率，Evidence也不能被产品或管线成熟度替代。
+原则：
+
+> **先硬证据、再交叉验证、最后看观点。市场讨论只作线索。**
+
+每个进入 Core 或高优先 Watch 的候选，都必须给出可操作的推翻条件。
 
 详细规则见 [a-share-validation.md](references/a-share-validation.md)。
 
-## 交易定位与候选池
+---
 
-Skill分别输出产业/管线价值排序和当日交易排序，不使用单一综合分。每个候选采用多维向量：
+## A-share Prior Pricing：预期差的必经步骤
+
+海外 Theme 映射到 A 股后，不能直接判断“利好 / 低估 / 有预期差”。
+
+必须先研究 A 股上一交易日以及近期如何定价该 Theme。
+
+### Theme-level Pricing
+
+至少回答：
+
+- 对应 A 股板块上一交易日涨跌与相对大盘强弱；
+- 最近 5/10/20 日是否已经明显提前交易；
+- 当前是领涨、抗跌、补跌、拥挤释放还是结构破坏；
+- 海外最新信息相对 A 股收盘新增了什么；
+- 海外与 A 股方向不一致时，更可能是时间差、估值/拥挤、资金结构、基本面差异还是海外短线技术因素。
+
+### Candidate-level Pricing
+
+比较 Theme 内主要候选：
+
+- 谁最强 / 最抗跌；
+- 谁跌得多但基本面没有破坏；
+- 谁已经提前大涨或偏离过大；
+- 谁的相对强弱与基本面纯度一致或背离；
+- 哪些位置提供赔率，哪些位置只提供胜率，哪些处在中间状态不值得交易。
+
+数据不足写 `Unknown`，不能用“没涨”直接推导 High 预期差。
+
+---
+
+## Expectation Gap
+
+预期差回答：
+
+> **已经验证的产业信息，与 A 股现有价格之间还剩多少未被交易？**
+
+采用乘积式思考，而不是线性打分：
 
 ```text
-催化S/A/B/C
-映射L1-L4
-成熟度E1-E5或P1-P5
-Evidence
-预期差
-T_static T1-T5
-Auction Conditions
+已验证的海外Driver
+× 海外价格 / 扩散确认
+× A股上一交易日与近期定价
+× A股公司真实受益与兑现
+× 新信息尚未Price-in的程度
 ```
 
-`T_static` 只使用盘前已经存在的数据。MA5/10/20/60、Wilder RSI9和BIAS20可由 [compute_indicators.py](scripts/compute_indicators.py) 按统一复权口径计算；技术指标只用于执行位置，不能证明产业逻辑、客户、订单或管线真实性。
+| 等级 | 阅读方式 |
+|---|---|
+| `High` | Driver重要且证据较强，A股此前定价明显不足，且没有决定性反证 |
+| `Medium` | 市场已有部分反映，但兑现路径、持续性或覆盖范围仍存在分歧 |
+| `Low` | 信息已广为人知、价格已充分反映，或盈利/管线传导有限 |
+| `Unknown` | 缺少可靠价格、市场预期或证据 |
 
-- `core_pool`：0–5只，允许为空；L4、E5、Evidence Low/Unknown和T4/T5等关键缺陷不能被其他维度补偿。
-- `watch_pool`：逻辑存在但证据、节点、归因、预期差或股价位置尚不满足核心门槛，必须说明暂不进入核心池的决定性原因。
-- `exclude`：映射错误、产品不匹配、业务被证伪、路线相反、核心证据失效或公司独立事件没有合理A股映射。
+“没涨”不能自动判为 High，“已经上涨”也不能单独证明完全 Price-in。
 
-竞价部分只提供条件式预案，不预测尚未发生的竞价；具体规则见 [trading-and-pools.md](references/trading-and-pools.md)。
+---
 
-## 输出内容
+## 三种排序：不能混成一个总分
 
-完整盘前报告包含编号0–17的18个模块：
+### 1. Theme Ranking
 
-0. 宏观与流动性背景
-1. 隔夜最重要结论
-2. 美股异动与催化摘要
-3. 隔夜重大事件榜
-4. Unresolved Signals
-5. Event–Price Divergence
-6. 产业链映射
-7. A股Candidate初筛
-8. Shortlist深度验证
-9. A股真实映射
-10. 真映射 vs 蹭概念
-11. 产业/管线价值排序
-12. 交易排序
-13. Auction Conditions
-14. Core Pool
-15. Watch Pool
-16. Exclude
-17. 风险与推翻条件
+回答：
 
-报告同时包含生成时间、数据截止、时区、美国交易日、价格来源、复权方式、公司行动检查、`coverage_log` 和 `known_data_gaps`。窄请求可以只输出相关模块，但不能跳过它所依赖的归因和验证步骤。
+> **昨夜市场什么最重要？**
 
-完整模板见 [output-spec.md](references/output-spec.md)。
+在 Discovery 阶段固定。后续某只 A 股的 Evidence 更高，不能反向改写 Theme Rank。
 
-## 当前验证状态与证据边界
+### 2. Fundamental Ranking
 
-截至2026-08-21，公开发行版v1.0.0已有：
+在每个 Theme 内回答：
 
-- 路由测试22例：should-trigger 8/8、should-not-trigger 8/8、near-neighbor 6/6；该结果来自现有测试集，不代表长期真实误触发率。
-- 静态输出对照7例：现有断言中Skill输出通过率100%、基线0%；这是recorded fixture断言评测，不是独立模型或实盘收益证明。
-- 5个真实历史事件的交互式模型回放来自公开发行前的本地开发版本；本次只收紧输出与覆盖口径，没有把旧回放冒充重跑。
-- 指标脚本已通过65日样例、Python编译和帮助接口检查。
-- OpenAI运行入口、适配器字段、压缩包路径安全和零权限契约可验证；`reports/skill-overview.html/json` 与 `reports/review-studio.html/json` 均为本次正式发行产物，并已通过安装后可读性检查。
+> **Driver 持续时，谁的产业/管线价值最直接？**
 
-最新 `reports/review-studio.json` 的发行结论为 `review`：86/100、0 blocker、5 warning。声明的成熟度仍为 Production，但在人工盲审、真实使用遥测和发布确认补齐前，不宣称全部 Production gate 已通过。
+参考：
 
-当前仍缺少：独立provider-runner日志、精确模型/token记录、人工盲审裁决、真实使用遥测、完整全市场扫描分母，以及长期漏报率、错映射率和交易价值记录；发布说明仍待reviewer确认。因此本 Skill不能声称已经证明实盘有效，也不能把静态测试写成真实投资表现。
+- L；
+- E/P；
+- Evidence；
+- 盈利或管线弹性；
+- 同行优势；
+- 反证和推翻条件。
 
-详见 [runtime-replay-summary.md](reports/runtime-replay-summary.md)。
+### 3. Trading Ranking
+
+允许跨 Theme 排序，回答：
+
+> **今天谁的风险收益最好？**
+
+参考：
+
+- Theme Rank；
+- Expectation Gap；
+- T_static；
+- 近期涨幅与位置；
+- 宏观风险；
+- 板块联动。
+
+如果较低 Theme Rank 的股票在 Trading Ranking 更靠前，必须说明原因，例如 A 股尚未 Price-in、位置更优，或最高 Theme 已过度拥挤。
+
+**禁止使用单一 100 分总分替代三套排序。**
+
+---
+
+## T_static：盘前静态交易位置
+
+`T_static` 只使用集合竞价结束前已经存在的数据，回答：
+
+> **逻辑已经成立以后，当前静态位置是否值得等待执行确认？**
+
+| 等级 | 含义 |
+|---|---|
+| `T1` | 静态位置较优，风险收益较理想 |
+| `T2` | 位置尚可，需要竞价/开盘确认 |
+| `T3` | 等待，位置或确认度不足 |
+| `T4` | 过热、加速、偏离大或波动高；不能推出“今天适合买” |
+| `T5` | 结构破坏或风险收益明显不合适 |
+| `Unknown` | 缺少合格行情或指标输入 |
+
+技术指标原则上使用至少 60 个有效交易日、口径一致的历史序列，由 [compute_indicators.py](scripts/compute_indicators.py) 确定性计算。
+
+### 技术指标
+
+| 指标 | 定义 | 用途 |
+|---|---|---|
+| `MA5/10/20/60` | 最近 N 个有效交易日收盘价算术平均 | 趋势和相对位置 |
+| `RSI9` | Wilder 方法的 9 期 RSI | 辅助判断短期强弱与过热 |
+| `BIAS20` | `(最新收盘价 ÷ MA20 - 1) × 100%` | 衡量相对 MA20 的偏离 |
+
+技术指标只用于执行位置，不能证明产业逻辑、客户、订单或管线真实性。
+
+---
+
+## Core / Watch / Exclude
+
+### Core
+
+`0–5` 只，允许为空，不凑数。
+
+常见非补偿式门槛：
+
+- Theme / Driver 已形成可信解释；
+- `Unresolved - researched` / `Unknown - insufficiently checked` 不得进入 Core；
+- L1/L2；
+- 商业产业 E1/E2 优先，少数高置信 E3；Biotech P1/P2 优先，P3 视数据；
+- Evidence High，或实际满足非常强的多源证据链；
+- Evidence Low/Unknown 不得作为高确定性 Core；
+- 同行、反证、推翻条件已完成；
+- T_static 不是 T4/T5。
+
+对于没有离散 Catalyst、但属于 `Industry Trend/Repricing` 或 `Continuation` 的 Theme，只要 Driver Confidence 高、产业证据链扎实、扩散结构吻合，并且 A 股映射/兑现满足上述门槛，也可以进入 Core；不能因为 `Catalyst Grade=N/A` 机械排除。
+
+### Watch
+
+逻辑存在，但证据、兑现节点、预期差或交易位置暂时不足。
+
+Core 为空但存在重要 Theme 时，Watch 仍必须明确前 `3–5` 个最高优先级观察对象及排序依据，不新增第四个正式 Pool。
+
+### Exclude
+
+包括：
+
+- 映射错误；
+- 蹭概念；
+- 业务被证伪；
+- 路线相反；
+- 公司独立事件没有合理 A 股传导；
+- 决定性反证成立。
+
+---
+
+## Auction Conditions
+
+Auction 只决定：
+
+> **今天是否执行。**
+
+它不决定某只股票是否具备 Core 研究资格。
+
+正确层级：
+
+```text
+Core / Watch / Exclude
+↓
+T_static
+↓
+Auction Conditions
+↓
+今日执行 / 不执行
+```
+
+9:25 前只写条件式预案；9:25 后有真实竞价数据才更新，并标注时间戳。
+
+生成均线条件前，必须检查当前价格状态：
+
+- 当前已经低于某均线：只能写“重新收复并站稳”作为升级/维持条件；
+- 当前高于某均线：才可以写“跌破且无法收回”作为降级条件；
+- 数据 Unknown：不用该指标编阈值。
+
+真实 9:25 竞价**不得**成为 Core 的必要资格门槛。
+
+详细规则见 [pricing-and-decision.md](references/pricing-and-decision.md)。
+
+---
+
+## 完整输出结构
+
+完整盘前报告只要求 6 个模块。
+
+### 1. 昨夜最重要 Market Themes + Material Events
+
+先给Top Themes主表，至少包含：
+
+- Theme Rank；
+- 市场集群；
+- Driver；
+- Driver Type；
+- Catalyst Grade（适用时）；
+- Driver Confidence；
+- 为什么重要；
+- A 股潜在方向。
+
+宏观风险背景放在表前 1–3 句话，只写会影响映射交易的显著变化。
+
+主表后通常保留3–5条`Material Events`。高材料性事件即使已经作为Theme Driver或Supporting因素在正文引用，也仍可在这里保留一行做交叉索引；同时收纳没有形成Top Theme的重大事件。High Materiality且Linked Themes非空的事件不得仅因名额限制被删，必要时可超过5条。字段包括Role、Linked Themes和Causal Status，明确区分“confirmed / supporting / possible / none”。这不是重复新闻榜，而是防止跨主题重大事件被Theme正文吞掉，也防止把可能关系写成确定因果。
+
+### 2. Driver 证据与反证
+
+对 Top Themes 写：
+
+- Supporting Evidence；
+- Counter Evidence；
+- Alternative Explanations；
+- 为什么该 Driver 能或不能解释这个集群；
+- Unresolved / Unknown 状态（如适用）。
+
+### 3. A股产业链与真实映射
+
+按 Theme 分组展示 Candidate 漏斗和 Shortlist。每个Top Theme先用一行`Economic Chain Coverage`说明主要经济节点的覆盖状态，防止Candidate过早收缩。
+
+至少包含：
+
+- 公司 / 代码；
+- Theme Rank；
+- L；
+- E/P；
+- Evidence；
+- 为什么相关；
+- 关键缺口 / 反证。
+
+### 4. A股上一交易日定价与 Expectation Gap
+
+先写 Theme-level Pricing，再写主要 Candidate 的相对强弱、提前定价程度、拥挤/补跌/抗跌状态，并给出 Expectation Gap 及理由。
+
+国内信息必须显式标注为“国内补充催化”或“混合驱动”，不能静默提升海外 Theme 等级。
+
+### 5. Fundamental Ranking 与 Trading Ranking
+
+先按 Theme 给产业/管线价值排序，再给跨 Theme 的今日交易排序。
+
+如果两者顺序不同，明确解释原因。
+
+### 6. 今日决策
+
+汇总：
+
+- 公司 / 代码；
+- Theme Rank；
+- Driver；
+- L；
+- E/P；
+- Evidence；
+- Expectation Gap；
+- T_static；
+- Core / Watch / Exclude；
+- 维持条件；
+- 降级 / 排除条件。
+
+随后简短列：
+
+- Core `0–5`；
+- Watch 前 `3–5`；
+- 最大风险与 Theme / 个股推翻条件；
+- Auction Conditions（9:25 前为条件式）。
+
+研究过程可以复杂，但最终输出不需要为了审计感重复填 18 个模块。
+
+---
 
 ## 文件结构
 
 ```text
-SKILL.md                    运行入口与核心约束
-agents/openai.yaml         OpenAI/Codex界面元数据
-references/                路由、数据、雷达、验证、交易和输出规范
-scripts/compute_indicators.py
-evals/                     固定回归用例、fixtures与历史回放材料
-reports/                   精简保留的关键验证与信任摘要
-security/                  权限策略
-manifest.json              版本、所有者、发行目标和回滚边界
-reports/skill-ir.json      Skill结构化设计与评测计划
+us-overnight-a-stock-mapping/
+├── SKILL.md
+├── README.md
+├── agents/
+│   └── openai.yaml
+├── references/
+│   ├── discovery-and-driver.md
+│   ├── a-share-validation.md
+│   ├── pricing-and-decision.md
+│   └── data-and-metrics-contract.md
+├── scripts/
+│   └── compute_indicators.py
+└── evals/
+    ├── cases.jsonl
+    ├── trigger_cases.json
+    ├── validate_skill.py
+    └── fixtures/
+        ├── golden-case-theme-driver-regression.md
+        ├── unresolved-signal-input.md
+        └── indicator-test.csv
 ```
 
-原始设计以字节一致的 `file-backed fixture` 保存在 [source-design-v1.0.md](references/source-design-v1.0.md)。文件标题为v1.0，正文末尾包含v1.3修正规则；版本关系与条款映射见 [source-traceability.md](references/source-traceability.md)。
+### 四个 Reference 分别负责什么
+
+| 文件 | 作用 |
+|---|---|
+| `discovery-and-driver.md` | 双雷达、市场集群、子集群拆分、Theme/Driver、搜索充分性、归因退出条件 |
+| `a-share-validation.md` | A股产业链展开、Candidate→Shortlist、10步验证、L/E/P/Evidence、同行与反证 |
+| `pricing-and-decision.md` | A股上一交易日定价、Expectation Gap、三种排序、三池、T_static、Auction、6模块输出 |
+| `data-and-metrics-contract.md` | 时间窗口、数据源、缺口降级、价格/成交、MA/RSI/BIAS 等确定性口径 |
+
+---
+
+## 修改后如何验收
+
+修改 Skill 后至少运行：
+
+```bash
+python evals/validate_skill.py
+```
+
+该脚本检查：
+
+- Skill 引用文件是否存在；
+- 已删除旧合同是否仍有悬空引用；
+- Golden / 边界 fixtures 能否通过静态断言；
+- 是否重新出现单一总分；
+- 是否出现 E/P/T_static 混用；
+- 是否再次把 Core 资格和 Auction 层级混淆；
+- 指标脚本能否在 fixture 上运行。
+
+`evals/cases.jsonl` 保留行为级回归，用于 Codex / 客户端进行真实 model-run。
+
+Golden Case 的目的不是把某个日期或历史答案硬编码进 Skill，而是用一个真实历史截面验证通用能力，例如：
+
+```text
+强价格集群是否被发现
+→ 是否正确拆子Theme
+→ 是否继续查Driver
+→ 是否按重要经济节点充分展开A股Candidate，而不是找到几只龙头就停
+→ Event Radar高材料性非Theme事件是否仍能保留
+→ 是否保持Theme优先级
+→ 是否检查A股上一交易日定价
+→ 是否形成Expectation Gap
+→ 是否守住Core门槛
+```
+
+---
+
+## 当前验证边界
+
+- `evals/trigger_cases.json`：保存路由正例、反例和近邻任务；
+- `evals/cases.jsonl`：保存关键行为断言和真实 model-run 用例；
+- `evals/fixtures/`：保存指标、边界和 Golden Case 输入。Golden Case 使用历史市场截面验证通用能力，日期记录在 fixture 正文/元数据中，不作为通用规则。
+
+这些材料用于回归与防漂移，不代表已经证明实盘收益，也不代表取得长期漏报率、错映射率或独立 provider-runner 统计。
+
+---
+
+## 最重要的设计纪律
+
+1. **Discovery 高召回，Validation 高精度。**
+2. **Strong Unresolved 不是停止信号，而是深挖触发器。**
+3. **Theme 是第一等研究对象，先排主线，再在主线内部选股。**
+4. **没有单一当天公告，不等于没有可信 Market Driver。**
+5. **A股上一交易日定价是 Expectation Gap 的必经步骤。**
+6. **Theme Ranking、Fundamental Ranking、Trading Ranking 不能混为一个总分。**
+7. **商业产业用 E，Biotech 用 P，交易位置用 T_static。**
+8. **Core/Watch/Exclude 是研究分层，Auction 是执行层。**
+9. **可以 Core 为空，但不能漏掉真正的 Market Themes 和高优先 Watch。**
+10. **所有重要方向都要主动寻找反证和推翻条件。**
+11. **Candidate生成以经济节点覆盖为退出条件，不以股票数量或熟悉度为退出条件。**
+12. **Event Radar独立于Theme Ranking保留高材料性事件，但不让新闻榜反客为主。**
+
+---
 
 ## 许可
 

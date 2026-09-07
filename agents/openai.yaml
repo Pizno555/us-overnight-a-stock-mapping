@@ -1,4 +1,4 @@
 interface:
   display_name: "US Overnight → A股映射雷达"
-  short_description: "扫描美国及全球隔夜催化，完成归因、A股映射与盘前候选分层"
-  default_prompt: "使用 $us-overnight-a-stock-mapping 扫描昨夜海外事件与异动，完成催化归因、A股映射和盘前候选分层。"
+  short_description: "识别隔夜真实市场主线、A股预期差与盘前候选"
+  default_prompt: "使用 $us-overnight-a-stock-mapping 扫描昨夜海外市场，先识别并排序真正的Market Themes与Drivers，再完成A股产业链验证、上一交易日定价、预期差和Core/Watch/Exclude分层。"

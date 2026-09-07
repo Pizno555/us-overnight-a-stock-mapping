@@ -1,75 +1,177 @@
 ---
 name: us-overnight-a-stock-mapping
-description: 当主问题同时包含最新美国或全球隔夜事件、财报、监管、产业信号或美股异常行为，以及A股产业或公司映射需求时，执行双雷达、催化归因、真实性验证和盘前Core/Watch/Exclude筛选。不用于无海外锚点的A股复盘或持仓预案（a-stock-trading-review）、单一A股消息核验（a-stock-evidence-research）、完整基本面或估值（a-stock-investment-analysis）、长期瓶颈扫描（serenity-skill）、普通新闻摘要、纯行情或自动交易。
+description: 当用户要把最新美国或全球隔夜市场的事件、财报、监管、产业变化或异常价格集群映射到下一A股交易日时，先识别昨夜真正被资金交易的Market Themes和Drivers，再展开A股产业链、验证公司真实性、研究A股上一交易日定价与预期差，最终给出Core/Watch/Exclude和条件式执行预案。无明确海外隔夜锚点的A股复盘、单一消息核验、完整估值或长期产业扫描不由本Skill主导。
 metadata:
-  version: "1.0.0"
-  short-description: "隔夜催化归因与A股盘前映射"
+  version: "1.1.2"
+  short-description: "隔夜市场主线 → A股预期差与盘前决策"
 ---
 
 # US Overnight → A股映射雷达
 
-## 路由与启动
+## 任务目标
 
-只主导“海外隔夜事件/异动 → 归因 → A股映射 → 条件候选池”。先执行 [routing-and-handoffs.md](references/routing-and-handoffs.md)；无明确海外锚点时不触发。复合请求仅做海外映射，其余交接。
-
-开始前标明报告时间、时区、数据截止、隔夜窗口及A股交易日；节假日/跨周末须说明。9:25前禁用尚未形成的今日竞价或盘中数据；9:25后使用真实竞价须标时间戳。必须检索最新资料，技术问题优先一级/官方来源，结论附近给出可追溯出处。扫描前读取 [data-and-metrics-contract.md](references/data-and-metrics-contract.md)；实时数据缺失须披露并降级为 `partial`/`Unknown`，不得以估算冒充观察值，也不自动交易。
-
-## 强制执行链
-
-按以下顺序执行，不得跳过归因直接找A股：
+始终围绕这一条主线工作：
 
 ```text
-Event Radar + Market Radar
-→ A∩B / A-B / B-A / 双空分类
-→ 催化归因与可信度
-→ 公司事件 / 产业事件
-→ S/A/B/C催化评级
-→ 产品、技术、靶点或平台拆解
-→ A股 Candidate
-→ Preliminary Validation
-→ Shortlist
-→ 10步 Deep Validation
-→ L级 + E级或P级 + Evidence
-→ 同行比较 + 反证 + 推翻条件
-→ 预期差 + T_static + Auction Conditions
-→ 产业/管线价值排序 + 交易排序
-→ core_pool / watch_pool / exclude
+昨夜市场到底在交易什么
+→ 为什么
+→ 哪些A股产业环节真正受益
+→ 谁的业务/管线最真实、兑现最好
+→ A股上一交易日已经Price-in多少
+→ 今天先看谁、什么条件下才执行
 ```
 
-宏观仅进入 `macro_risk_pool`，修正风险偏好，不替代产业催化。
+不要把任务退化成“谁最容易找到一级证据就优先研究谁”，也不要为了完成扫描、填满模板或获得更高证据等级而覆盖掉真正的市场主线。
+
+## 启动边界
+
+仅在同时满足以下条件时主导：
+
+1. 有明确的最新海外/隔夜锚点：事件、财报、监管变化、产业信号、个股/板块/ETF异常行为，或用户明确要求扫描昨夜/隔夜；
+2. 用户要求映射A股产业链、公司、预期差或盘前候选。
+
+没有海外锚点的A股全市场复盘、持仓预案、单一消息真假、完整基本面/估值或长期瓶颈扫描，交给相邻Skill。本Skill在复合任务中只完成海外→A股映射部分，不需要额外生成正式handoff协议。
+
+开始前写明：报告生成时间、`Asia/Shanghai`数据截止、最近完成的美国常规交易日、价格数据来源与关键数据缺口。9:25前不得使用尚未形成的A股竞价或盘中数据。
+
+## 强制研究链
+
+```text
+① Broad Overnight Scan
+事件 + 市场价格/成交异常 + 行业/ETF扩散
+↓
+② Cluster Decomposition
+把宽泛大类拆成经济机制不同的子集群
+↓
+③ Market Theme / Driver
+为每个重要集群形成具体Driver Hypothesis
+↓
+④ Driver Validation
+Supporting Evidence + Counter Evidence + Alternative Explanations
+↓
+④b Event–Theme Join
+高材料性Event独立登记Role/Linked Themes；Theme反查其Event/Trend/Repricing依据，允许多对多但不强行因果
+↓
+⑤ Theme Ranking
+先排昨夜市场主线的重要性，不以A股个股Evidence反向改写
+↓
+⑥ A-share Economic Chain Expansion
+先列出经济机制不同的主要受益/受损节点，再为每个重要节点找Candidate；不能找到2–5只显眼股票就提前停止
+↓
+⑥b Economic Chain Coverage Gate + Omission Challenge
+先给节点状态，再从“物理/技术必需依赖”和“经济价值流/Capex”两条独立路径反推是否漏节点；补齐后才进入初筛
+↓
+⑦ Preliminary Validation → Shortlist → 10步Deep Validation
+↓
+⑧ L + E/P + Evidence + 同行PK + 反证/推翻条件
+↓
+⑨ A-share Prior Pricing
+研究上一A股交易日板块与个股如何定价该Theme
+↓
+⑩ Expectation Gap
+海外Driver × 海外价格 × A股既有定价 × 当前新增信息
+↓
+⑪ Fundamental Ranking / Trading Ranking
+产业价值与今日风险收益分开
+↓
+⑫ Core / Watch / Exclude
+↓
+⑬ T_static → Auction Conditions
+最后决定今天是否执行
+```
+
+宏观只作为风险背景，不能替代产业Driver。
+
+## 关键概念
+
+### Market Theme优先于个股
+
+Theme是“昨夜资金共同交易的具体产业机制”，例如“DRAM/NAND景气重新定价”，而不是宽泛的“半导体上涨”。
+
+- Theme Ranking在A股个股验证之前完成。
+- 后续Evidence只能影响某只A股是否是真受益、是否能进入Core，不能把一个次要单事件因为证据更好而改写成昨夜第一主线。
+- 最终Trading Ranking可以因A股预期差和位置让次级Theme中的个股获得更高交易优先级，但必须保留Theme Rank并说明为什么交易排序不同于市场主线排序。
+
+### Event Radar独立保留重大事件，并与Theme交叉索引
+
+Event Radar不是Theme Ranking的附庸。重大公司/监管/产业事件即使没有形成独立价格集群，也不能因为“已在Theme正文引用”或“没进Top Theme”而消失。
+
+- 对已验证且足以改变公司经营、行业供需、监管路径或关键技术路线的高材料性事件，保留到独立`Material Events`账本。
+- 每条Material Event标记`Role`：`Theme Driver`、`Cross-theme Driver Candidate`、`Event-only`或`Macro Context`，并列出`Linked Themes`与因果状态（confirmed / supporting / possible / none）。
+- Event与Theme允许多对多：同一重大事件可以在账本中独立出现，同时在一个或多个Theme的Driver分析中被引用；这是交叉索引，不是无效重复。
+- `Cross-theme Driver Candidate`只表示存在合理传导假设，不等于已证明共同催化；若缺乏价格时序、产业扩散或硬数据支持，不得写成confirmed common catalyst。
+- 这些事件不因一级证据更容易取得就自动升级为Market Theme；Market Theme仍必须由价格/成交/产业扩散和Driver解释支持。
+- 事件若只有公司自身影响且没有合理A股传导，可以保留事实，但A股映射写“弱/无直接映射”。
+- 正常情况下只保留最重要的3–5条；但High Materiality且与Top Theme存在Linked Themes的事件不得因“名额已满”而删除，必要时可超过5条。避免恢复成新闻摘要。
+
+### Catalyst与Market Driver分开
+
+`Catalyst`是离散新增事件，如财报、订单、批准、政策、正式涨价；使用S/A/B/C。
+
+`Market Driver`是市场正在交易的主要原因，可以是：
+
+- Discrete Catalyst：由新增硬事件驱动；
+- Industry Trend / Repricing：供需、价格、订单、Capex、库存、需求等多项事实共同推动重新定价；
+- Continuation：已有硬信息继续扩散或延迟定价；
+- Mixed：多个因素共同作用；
+- Unresolved：完成必要研究后仍无法形成可信主导解释。
+
+没有单一当日公告，不等于没有可信Driver。非离散事件Theme的`催化等级`可写`N/A`，不得强行套S/A/B/C。
+
+### Strong Cluster不是停止信号
+
+多个经济关系紧密的同行/上下游/ETF同步异常时，必须继续查：公司新增事件、行业供需/价格/订单/Capex、扩散结构、至少两种替代解释。
+
+真正的退出条件不是“查过四类东西”，而是：
+
+- 已形成一个足够具体、能解释主要成员与扩散结构的Driver Hypothesis；
+- 已列出支持证据、反证和替代解释；
+- 或者在完成上述研究后仍无法形成主导解释，才写`Unresolved - researched`。
+
+未完成必要研究写`Unknown - insufficiently checked`。两者都不得进入Core，但仍需展开真实A股产业链Candidate。
+
+### Candidate展开必须达到经济链充分性
+
+Candidate生成的退出条件不是“已经找到几只熟悉的股票”，也不是“我自己列出的节点都打了状态”，而是**重要经济节点经过遗漏反查后已经被处理**。对每个Top Theme：
+
+1. 先按Driver列出会产生不同收入/成本/订单/资本开支传导的主要节点；
+2. 每个重要节点至少完成一次A股候选搜索，并落为`covered`、`no-valid-A-share`、`not-applicable`或`needs-check`；
+3. 在宣布覆盖完成前必须执行一次`Omission Challenge`，用两条彼此独立的路径重新推导产业链：
+   - **物理/技术必需依赖**：Driver要真正发生，哪些核心器件、接口/控制器、材料、设备、制造/测试环节是不可缺的？复杂技术系统不能只凭模型记忆，至少查一份产品架构/BOM/标准/技术路线类可靠资料；拿不到则标`needs-check`。
+   - **经济价值流/Capex**：谁因量、价、份额、库存、毛利或资本开支变化真正获得/损失经济价值？
+4. 将两次反推与初始节点表比较；发现新的重要节点就补搜Candidate并重新给状态。不能因为“初始节点全部covered”就自动通过。
+5. 只有遗漏反查不再产生新的重要经济节点，且继续搜索只会增加同质L3/L4弱映射时，才允许结束Candidate Generation。
+
+禁止用“一只代表股”替代整个环节，也禁止因为已有2–5只强候选就停止。淘汰应该发生在Preliminary Validation，而不是发生在Candidate生成之前。
 
 ## 必读参考
 
-完整雷达读取：
+按任务需要读取以下4个参考：
 
-1. [routing-and-handoffs.md](references/routing-and-handoffs.md)：触发、边界与交接。
-2. [data-and-metrics-contract.md](references/data-and-metrics-contract.md)：窗口、降级与指标口径。
-3. [radar-scan-coverage-contract.md](references/radar-scan-coverage-contract.md)：Universe、分母、Top榜与覆盖判定。
-4. [radars-and-attribution.md](references/radars-and-attribution.md)：双雷达、交叉分类、背离与归因。
-5. [a-share-validation.md](references/a-share-validation.md)：映射、初筛、10步深验与L/E/P/Evidence。
-6. [trading-and-pools.md](references/trading-and-pools.md)：非补偿门槛、预期差、T_static、竞价与三类池。
-7. [output-spec.md](references/output-spec.md)：0–17共18个模块、摘要及产业链模板。
+1. [discovery-and-driver.md](references/discovery-and-driver.md)：双雷达、集群拆分、Driver、搜索充分性与归因退出条件。
+2. [a-share-validation.md](references/a-share-validation.md)：A股产业链展开、Candidate/Shortlist、10步验证、L/E/P/Evidence。
+3. [pricing-and-decision.md](references/pricing-and-decision.md)：A股上一交易日定价、预期差、两套排序、三池、T_static与Auction。
+4. [data-and-metrics-contract.md](references/data-and-metrics-contract.md)：时间、行情、数据降级、MA/RSI/BIAS等确定性口径。
 
-窄模块仍须读取上游参考；交易排序前必须完成归因和A股验证。
+确定性指标优先使用 [compute_indicators.py](scripts/compute_indicators.py)。输入不足写`Unknown`。
 
-确定性指标优先使用 [compute_indicators.py](scripts/compute_indicators.py)；输入不合格时输出 `Unknown`，不得心算或替换口径。
+## 不可破坏的纪律
 
-## 最低研究纪律
+- Discovery高召回，Validation高精度。
+- Event Radar必须独立保留高材料性事件；已被Theme引用也不等于可以从事件账本消失，跨Theme关联必须标注因果强弱。
+- Candidate生成必须完成重要经济节点覆盖与Omission Challenge后才允许收敛；“给自己列出的节点全部打勾”不等于覆盖完整，淘汰放在Preliminary Validation。
+- 先排Theme，再在Theme内部选股；禁止把所有跨主题股票放入单一线性总分。
+- 商业化公司使用E1–E5；Biotech使用P1–P5；技术位置只使用T_static，三者不得混用。
+- 每个重要方向主动找反证和推翻条件。
+- A股上一交易日定价是Expectation Gap的必经步骤，不能只凭“海外上涨+A股没涨”判High。
+- Core/Watch/Exclude是研究分层；T_static和Auction是执行层。没有真实9:25竞价不能成为Core资格门槛。
+- Evidence Low/Unknown、L4、未归因Driver、决定性反证未解决者不得进入Core。
+- 可以Core为空，但不能漏掉真正的市场主线；Core为空时Watch仍按今日观察优先级给出前3–5个对象。
+- 技术指标不证明产业、客户、订单或管线真实性。
+- 国内信息只能标注为“国内补充催化”或“混合驱动”，不能静默提升海外Theme等级。
 
-- Event Radar与Market Radar必须同时运行，并报告Universe、分母、实际扫描量；Watchlist与13方向Discovery Anchor未达覆盖契约时最高为 `partial`。
-- 雷达追求High Recall，验证追求High Precision；媒体用于发现/交叉验证，市场讨论仅作线索。
-- 异动至少检查时间对应、同行/ETF扩散、一级信源和替代解释；`UNRESOLVED SIGNAL` 归因前不得进 `core_pool`。
-- 按参考执行背离、Candidate→Preliminary Validation→Shortlist、10步深验及L/E/P/Evidence分离；假设和间接证据不得冒充事实。
-- 每个核心方向都要主动找反证并给出可操作的推翻条件。
-- 产业/管线价值排序与当日交易排序必须分开。
-- 不使用单一总分；输出多维决策向量，未知维度写 `Unknown`。
-- `core_pool` 0–5只，采用非补偿门槛，允许为空、禁止凑数；技术指标只定执行位置，不证明业务逻辑。
-- 核心结果必须按 [output-spec.md](references/output-spec.md) 的三表契约分别展示海外催化、A股真实映射和盘前候选分层；不得把催化、L/E/P/Evidence、预期差和T_static压成单个编码列。
+## 输出
 
-## 完成标准
+完整结果按 [pricing-and-decision.md](references/pricing-and-decision.md) 的6模块输出；模块1保留一个很短的`Material Events`事件表，对高材料性事件做Role/Linked Themes交叉索引。研究过程可以复杂，用户看到的报告必须先回答主线、Driver、A股映射、预期差和今日决策，不为格式完整感重复同一结论。
 
-完整结果按 [output-spec.md](references/output-spec.md) 覆盖18个模块；证据不足时保留 `Unknown`、空池或未归因状态，不为完整感编造确定性。
-
-源设计、版本解释、`input_files`、`output contract` 与 `rollback boundary` 见 [source-traceability.md](references/source-traceability.md)。
-
-回归与回放见 `evals/`；静态fixture、交互回放和provider runner证据必须分开计量，升级后重跑。
+回归与Golden Cases位于`evals/`。修改Skill后至少执行静态验收、边界回归和2026-09-07 Golden Case；Golden Case验证能力，不把“存储/光通信/设备”硬编码成日常答案。
