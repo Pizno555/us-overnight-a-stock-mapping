@@ -9,45 +9,47 @@
 
 Discovery追求High Recall。不要因为某条线索暂时没有Core级证据、没有单一公司公告或不在固定关注清单中就停止研究。
 
-## Broad Overnight Scan
+## Two-Pass Discovery
 
-同时运行两类扫描：
+重大事件Recall由两条在Theme形成前分开的发现路径负责。不要先形成Theme，再要求同一个搜索过程证明自己没有遗漏。
 
-### Market Radar：从价格出发
+### Pass A：Blind Event Sweep
 
-先看资金行为，再看新闻解释。优先获取可用范围内的：
+必须先执行；此时不得使用当前Theme、A股候选或Market Radar已形成的价格叙事来限定搜索范围。目标是发现隔夜窗口内足以显著改变公司盈利/现金流、行业供需/价格、监管准入、跨境贸易、技术路线或关键客户/Capex预期的新增事件。
+
+至少覆盖三类发现入口：
+
+1. 已排期和突发的重大公司/行业事件：财报、电话会、订单、并购、产品/路线、Capex、供需/价格/库存变化；
+2. 政府/监管/政策Delta：新增规则、禁限、准入、审批、清单、贸易与产业政策变化；
+3. 权威媒体/行业组织的跨行业高材料性扫描，并追到一级/官方来源验证。
+
+政府/监管/政策Delta的发现必须先执行至少一次**blank-slate discovery**：查询只围绕时间窗口和事件类型开放搜索，不得包含任何预设机构名、当前Theme或A股候选。只有开放搜索已经产生具体线索后，才允许用该线索对应的机构、公司或域名做定向追查与一级来源验证。具名主体不得作为Blind Sweep的预选清单、固定起点、市场Universe或完成分母；扫描中出现的新机构、新行业和新主体同等处理。
+
+Blind Event Sweep先产生`Event Leads`。High Materiality事件验证后进入Independent Material Event Ledger；没有价格簇也不能因此删除。未完成上述blank-slate监管发现动作时，不得宣告Pass A完成。
+
+### Pass B：Market Radar
+
+Event Sweep完成后，再独立从市场行为出发：
 
 - 大幅上涨/下跌与盘前盘后异常；
 - 高Dollar Volume、Relative Volume、Abnormal Return；
-- 行业ETF与同行扩散；
-- 同行、上下游、产业代理在相近时间的同步行为。
+- 行业ETF、同行、上下游和产业代理的同步扩散；
+- 当前Event Leads无法解释的异常价格/成交集群。
 
-不能只看涨幅榜，也不要求为了形式完整必须拿到某个固定Top20榜单。数据拿不到时披露缺口，并判断它是否会实质影响“是否可能漏掉重要Theme”。
+Market Radar产生`Market Leads`。不能因为Pass A已经找到几个强事件，就用它们替代价格扫描；也不能因为没有共同新闻就把Strong Cluster直接写成Unresolved后停止。
 
-### Event Radar：从事件出发
+### Merge：两套Leads之后才形成Theme
 
-主动找可能改变产业、公司经营或市场预期的新增信息：
+只有Pass A和Pass B都完成后，才合并Event Leads与Market Leads，做Cluster Decomposition、Driver Hypothesis和Event–Theme Join：
 
-1. 公司一级信源、财报、电话会、SEC或法定披露；
-2. 政府、监管、交易所、正式政策；
-3. 产业协会、价格、供需、缺货、扩产、交期、Capex、订单、认证、技术路线；
-4. 权威媒体用于发现和交叉验证，并追原始来源；
-5. 市场讨论只作线索。
-
-可设置`priority seeds`提高常见高价值节点的召回，例如：AI/云厂商/半导体/存储/光通信龙头及FDA、BIS、DOE、SEMI等关键监管或产业入口。它们只是搜索起点，不是市场Universe，也不形成固定31家公司、13方向之类的硬分母；扫描中出现的新行业必须同等处理。
+- Event强 + 价格确认：优先验证是否为Theme Driver；
+- Event强 + 价格弱/反向：保留Event，研究Event–Price Divergence；
+- 价格强 + Event不明：继续查Industry Trend/Repricing、Continuation和替代解释；
+- 两边都弱：降低优先级。
 
 ### Independent Material Event Ledger
 
-Event Radar维护一个独立事件账本，防止Theme机制变强后反而漏掉重大公司/监管事件。事件进入账本看**材料性**，不要求先有价格集群。优先检查：
-
-- 隔夜窗口内已排期的高影响财报、电话会、监管决定和重大产品/资本开支节点；
-- 对市场/产业有系统影响力的龙头公司出现的新披露、并购、指引、订单、路线变化；
-- FDA/BIS/DOE/SEC等监管政府机构，以及SEMI等与当夜异动行业匹配的组织；
-- 宽市场或权威媒体扫描中新出现、但不在预设seeds里的高材料性事件。
-
-高材料性事件定义：若属实，足以显著改变公司盈利/现金流、行业供需/价格、监管准入、技术路线或关键客户/Capex预期。
-
-每条高材料性事件至少记录：
+Event Radar维护独立事件账本。每条高材料性事件至少记录：
 
 ```text
 Event
@@ -61,36 +63,24 @@ Observed Price Response
 A-share Relevance
 ```
 
-事件账本与Theme Ranking分开：
+事件账本与Theme Ranking分开：有独立价格/同行扩散且Driver成立可成为`Theme Driver`；合理影响多个Theme但共同因果未证实则记`Cross-theme Driver Candidate`并标`supporting/possible`；材料性高但没有形成Top Theme记`Event-only`；主要改变宏观风险环境记`Macro Context`。同一事件已在Theme正文引用，不构成从Material Event Ledger删除它的理由。
 
-- 有独立价格/同行扩散且Driver成立 → 可以成为某个Theme的`Theme Driver`；
-- 同一事件合理影响多个Theme、但无法证明是共同主因 → 记`Cross-theme Driver Candidate`，逐Theme标`supporting/possible`，不得写成confirmed common catalyst；
-- 材料性高但没有形成Top Theme → 记`Event-only`；
-- 主要改变宏观风险环境 → 记`Macro Context`；
-- 只是普通新闻、轻微评级或弱社媒线索 → 不为填表保留。
+## Search Sufficiency 与 Discovery Gate
 
-**同一事件已在Theme正文被引用，不构成从Material Event Ledger删除它的理由。** 账本负责事件完整性，Theme负责市场资金行为；两者允许交叉索引。
+`search_scope`只描述数据可得性：
 
-## Search Sufficiency
-
-目标不是证明“互联网全部扫完”，而是达到足以支持研究结论的搜索充分性。
-
-完整盘前研究至少应具备：
-
-1. 一次宽市场异常扫描；
-2. 一次独立重大事件扫描，同时覆盖已排期高影响事件和扫描中新出现的高材料性事件；
-3. 对每个进入Top Themes的集群做同行/上下游/ETF扩散验证；
-4. 对每个Top Theme追至少一种适配的一级/官方或高质量产业来源；
-5. 检查Material Event Ledger中的高材料性事件是否都完成Role / Linked Themes / Causal Status登记；无论是否已被Theme引用，都不能因“避免重复”而漏掉；
-6. 明确会影响结论的关键数据缺口。
-
-用`search_scope`说明：
-
-- `sufficient`：上述关键检查已完成，缺失项不太可能改变主要Theme判断；
-- `partial`：缺失可能导致漏掉Theme或改变Driver置信度的重要数据；
+- `sufficient`：关键数据检查已完成，缺失项不太可能改变主要Theme判断；
+- `partial`：重要数据缺失，可能漏Theme或改变Driver置信度；
 - `unavailable`：关键市场或事件数据不可取得。
 
-`partial`不等于报告无效；它要求降低相应结论置信度和披露可能漏掉什么。禁止声称“全量”“全部重大事件”除非数据来源确实支持。
+`partial`不等于报告无效；它要求降低相应结论置信度并披露可能漏掉什么。
+
+`discovery_gate`只约束研究顺序，不承担“证明互联网没有遗漏”的任务：
+
+- `passed`：Blind Event Sweep与Market Radar均已实际执行，且当前没有**已知未决**、足以改变Theme Rank或A股映射的High Materiality线索；
+- `blocked`：任一Pass未执行，或仍有上述未决High Materiality线索。
+
+`blocked`时只允许输出已确认事实、`Provisional Themes`、未决高材料性线索和阻塞原因；不得输出Final Theme Ranking、Final Trading Ranking或Core。`passed`不等于“零遗漏”，也不要求固定31家公司、13方向、监管4/4或任何机械分母。禁止声称“全量”“全部重大事件”除非数据来源确实支持。
 
 ## Cluster Decomposition
 
@@ -140,20 +130,7 @@ Driver Validation后做一次双向Join：
 1. **Event → Theme**：每条High Materiality事件是否影响一个或多个Theme？关系是confirmed、supporting、possible还是none？
 2. **Theme → Driver**：每个Top Theme的主要解释来自离散Event、Industry Trend/Repricing、Continuation还是Mixed？不能为了给Theme找新闻而强配事件。
 
-最终报告最多保留3–5条`Material Events`：
-
-```text
-Event:
-Materiality: High | Medium
-Role: Theme Driver | Cross-theme Driver Candidate | Event-only | Macro Context
-Linked Themes:
-Causal Status:
-Primary Evidence:
-Observed Price Response:
-A-share Relevance: direct | indirect | weak/none | needs-check
-```
-
-选择优先级看材料性、跨Theme影响范围和对A股研究价值，不按“一级证据最容易获得”排序。优先保留：①High Materiality且Linked Themes非空的Theme Driver/Cross-theme Driver Candidate；②High Materiality且对A股有直接/间接意义的Event-only；③必要Macro Context。通常3–5条，但第一类不得仅因名额限制被删。事件已在Theme正文被引用仍可在此占一行；正文只需引用，不重复整段论证。
+最终报告通常保留3–5条`Material Events`，字段包括Event、Materiality、Role、Linked Themes、Causal Status、Primary Evidence、Observed Price Response与A-share Relevance。High Materiality且Linked Themes非空的事件不得仅因名额限制被删。事件已在Theme正文被引用仍可在此占一行；正文只需引用，不重复整段论证。
 
 这张表只防漏和表达层级，不参与Theme Rank竞争；不能把报告重新变成“重大新闻榜”，也不能把`possible`关系写成已确认因果。
 
@@ -183,14 +160,7 @@ A-share Relevance: direct | indirect | weak/none | needs-check
 
 ## Event–Price Divergence
 
-重大事件但主体价格反应弱时，分别输出：
-
-1. Observed Facts；
-2. Hypotheses；
-3. Supporting/Counter Evidence；
-4. Confidence。
-
-不得直接写“市场没看懂”或“已经Price-in”。如果弹性可能在供应链，只有完成真实产业链验证后才可提高A股优先级。
+重大事件但主体价格反应弱时，分别输出Observed Facts、Hypotheses、Supporting/Counter Evidence与Confidence。不得直接写“市场没看懂”或“已经Price-in”。如果弹性可能在供应链，只有完成真实产业链验证后才可提高A股优先级。
 
 ## 国内信息边界
 

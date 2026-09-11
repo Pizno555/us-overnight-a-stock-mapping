@@ -1,7 +1,11 @@
 # US Overnight → A股映射雷达
 
-版本：v1.1.2  
+版本：v1.1.3 Two-Pass Baseline R1（Frozen Baseline）  
 用途：研究支持与条件化盘前预案，不代替投资决策，不自动下单。
+
+> v1.1.3 在 v1.1.2 基础上把重大事件Discovery改为Two-Pass：任何Theme形成前先做Blind Event Sweep，再独立做Market Radar；两套Leads合并后才形成Theme。`discovery_gate`只约束两Pass是否执行及是否仍有已知未决High Materiality线索，不证明“零遗漏”，也不恢复固定31家公司、13方向或固定监管分母。
+
+> **冻结边界**：本版本将 Two-Pass + blank-slate discovery 作为最终 Skill 层基准。开放互联网重大事件 Recall 不承诺零遗漏；实际召回仍受搜索执行器、检索排序与当次可得数据影响。后续若研究 Recall，应在独立 Search Executor / Discovery Orchestrator 与真实 live replay 层处理，不再通过增加 Gate、固定机构清单或更多自证字段扩张本 Skill。
 
 ## 这个 Skill 做什么
 
@@ -24,11 +28,11 @@
 
 ---
 
-## 双雷达：同时看“发生了什么”和“资金在交易什么”
+## Two-Pass Discovery：先看“发生了什么”，再独立看“资金在交易什么”
 
 本 Skill 同时运行两套互补雷达。
 
-### Event Radar：从事件出发
+### Pass A — Blind Event Sweep：从事件出发
 
 主动寻找可能改变产业、公司经营或市场预期的新增信息，例如：
 
@@ -42,7 +46,7 @@
 
 Event Radar还维护一个**独立 Material Event Ledger**：高材料性事件无论是否已经被某个Theme引用，都保留独立登记。每条事件标记`Role`、`Linked Themes`和`Causal Status`，用于区分真正Theme Driver、跨主题Driver候选、纯事件和宏观背景；事件账本不会因为一级证据更好拿就抢占Theme Rank，也不会把“可能影响多个Theme”写成已经证明的共同催化。
 
-### Market Radar：从价格出发
+### Pass B — Market Radar：从价格出发
 
 先看资金行为，再寻找解释。重点发现：
 
@@ -53,7 +57,7 @@ Event Radar还维护一个**独立 Material Event Ledger**：高材料性事件�
 
 即使暂时没有找到明确新闻，也不能因为“没有当天公告”就停止研究。
 
-### 两套雷达如何配合
+### 两套Leads如何合并
 
 | 情形 | 含义 | 处理 |
 |---|---|---|
@@ -161,61 +165,44 @@ Event Radar还维护一个**独立 Material Event Ledger**：高材料性事件�
 - `partial`：缺失可能导致漏掉 Theme 或改变 Driver 置信度；
 - `unavailable`：关键市场或事件数据不可取得。
 
-`partial` 不等于报告无效，但必须降低相应结论置信度，并说明可能漏掉什么。
+`partial` 不等于报告无效，但必须降低相应结论置信度，并说明可能漏掉什么。v1.1.3 另用 `discovery_gate` 约束Two-Pass流程边界；两者不得混用。
 
 ---
 
 ## 完整研究流程
 
 ```text
-① Broad Overnight Scan
-事件 + 市场价格/成交异常 + 行业/ETF扩散
+① Blind Event Sweep → Event Leads
 ↓
-② Cluster Decomposition
-把宽泛大类拆成经济机制不同的子集群
+② Market Radar → Market Leads
 ↓
-③ Market Theme / Driver
-为每个重要集群形成具体Driver Hypothesis
+③ Merge + Cluster Decomposition
 ↓
-④ Driver Validation
-Supporting Evidence + Counter Evidence + Alternative Explanations
+④ Market Theme / Driver
 ↓
-④b Event–Theme Join
-高材料性Event记录Role/Linked Themes/Causal Status；Theme反查其Event/Trend/Repricing依据
+⑤ Driver Validation + Event–Theme Join
 ↓
-⑤ Theme Ranking
-先排昨夜市场主线的重要性
+⑤b Discovery Gate
 ↓
 ⑥ A-share Economic Chain Expansion
-先拆经济机制不同的主要节点，再逐节点寻找Candidate
 ↓
 ⑥b Economic Chain Coverage Gate + Omission Challenge
-先给节点状态，再从物理/技术必需依赖与经济价值流/Capex两条独立路径反推遗漏节点，补齐后才允许收敛
 ↓
-⑦ Preliminary Validation → Shortlist → 10步Deep Validation
+⑦ Preliminary Validation → Shortlist → Deep Validation
 ↓
-⑧ L + E/P + Evidence + 同行PK + 反证/推翻条件
+⑧ A-share Prior Pricing → Expectation Gap
 ↓
-⑨ A-share Prior Pricing
-研究上一A股交易日板块与个股如何定价该Theme
+⑨ Fundamental Ranking / Trading Ranking
 ↓
-⑩ Expectation Gap
-海外Driver × 海外价格 × A股既有定价 × 当前新增信息
-↓
-⑪ Fundamental Ranking / Trading Ranking
-产业价值与今日风险收益分开
-↓
-⑫ Core / Watch / Exclude
-↓
-⑬ T_static → Auction Conditions
-最后决定今天是否执行
+⑩ Core / Watch / Exclude → T_static → Auction Conditions
 ```
 
 宏观只作为风险背景，不能替代产业 Driver。
 
-### 两个新的防漏门
+### 三个防漏门
 
 - **Event–Theme Join**：事件和Theme是多对多关系。重大事件已经出现在Theme分析里，不代表可以从事件层消失；但“能解释多个Theme”也不代表已证明共同催化，必须标因果强弱。
+- **Two-Pass Discovery**：任何Theme形成前先做Blind Event Sweep；政府/监管Delta先做至少一次不含预设机构名、当前Theme或A股候选的blank-slate discovery，出现线索后再定向追查；再做Market Radar，从价格/成交/ETF/同行扩散独立发现Market Leads；两套Leads合并后才形成Theme。Discovery Gate只约束“两Pass都执行且无已知未决High Materiality线索”，不证明零遗漏。
 - **Omission Challenge**：Economic Chain Coverage不能只检查模型自己列出的节点。宣布覆盖完成前，要从“物理/技术必需依赖”和“经济价值/Capex流”两条路径独立重建一次产业链；复杂技术系统还要至少用一份架构/BOM/标准/工艺类可靠资料校验，发现遗漏节点就补搜Candidate。
 
 ---
@@ -798,7 +785,7 @@ us-overnight-a-stock-mapping/
 
 | 文件 | 作用 |
 |---|---|
-| `discovery-and-driver.md` | 双雷达、市场集群、子集群拆分、Theme/Driver、搜索充分性、归因退出条件 |
+| `discovery-and-driver.md` | Two-Pass Discovery、市场集群、子集群拆分、Theme/Driver、搜索充分性、归因退出条件 |
 | `a-share-validation.md` | A股产业链展开、Candidate→Shortlist、10步验证、L/E/P/Evidence、同行与反证 |
 | `pricing-and-decision.md` | A股上一交易日定价、Expectation Gap、三种排序、三池、T_static、Auction、6模块输出 |
 | `data-and-metrics-contract.md` | 时间窗口、数据源、缺口降级、价格/成交、MA/RSI/BIAS 等确定性口径 |
@@ -813,39 +800,25 @@ us-overnight-a-stock-mapping/
 python evals/validate_skill.py
 ```
 
-该脚本检查：
+验证分三层，三者不能互相冒充：
 
-- Skill 引用文件是否存在；
-- 已删除旧合同是否仍有悬空引用；
-- Golden / 边界 fixtures 能否通过静态断言；
-- 是否重新出现单一总分；
-- 是否出现 E/P/T_static 混用；
-- 是否再次把 Core 资格和 Auction 层级混淆；
-- 指标脚本能否在 fixture 上运行。
+1. **Static Validator**：检查文件结构、运行时引用、Two-Pass顺序、术语与边界、指标脚本、Reference体积等确定性合同。
+2. **Contract Evaluator**：对 `recorded_fixture` 行为用例检查预写输出是否满足 required / forbidden 断言；它验证规则表达与回归边界，不代表真实 Web Discovery Recall。
+3. **Historical Live / Blind Evaluator**：冻结 Skill 后，用真实模型和真实搜索执行历史日期或未见日期，只把 `prompt` 交给被测模型；Evaluator 再把实际输出与 evaluator-only Ground Truth 比较。此层才允许评价真实事件 Recall。
 
-`evals/cases.jsonl` 保留行为级回归，用于 Codex / 客户端进行真实 model-run。
+其中 `2026-09-11` 的监管事件案例属于第 3 层。静态 validator 只确认该 live benchmark 已正确配置、Ground Truth 未泄漏到 prompt、运行时没有历史答案硬编码；**不得因为 `cases.jsonl` 中预写了期望答案就宣告 Recall PASS**。
 
-Golden Case 的目的不是把某个日期或历史答案硬编码进 Skill，而是用一个真实历史截面验证通用能力，例如：
-
-```text
-强价格集群是否被发现
-→ 是否正确拆子Theme
-→ 是否继续查Driver
-→ 是否按重要经济节点充分展开A股Candidate，而不是找到几只龙头就停
-→ Event Radar高材料性非Theme事件是否仍能保留
-→ 是否保持Theme优先级
-→ 是否检查A股上一交易日定价
-→ 是否形成Expectation Gap
-→ 是否守住Core门槛
-```
+`evals/cases.jsonl` 因此同时包含两类材料：可静态回归的 `recorded_fixture`，以及必须真实执行的 `historical_live_replay_required` benchmark。Golden Case 的目的仍是验证通用能力，不把历史答案写进运行时 Skill。
 
 ---
 
 ## 当前验证边界
 
 - `evals/trigger_cases.json`：保存路由正例、反例和近邻任务；
-- `evals/cases.jsonl`：保存关键行为断言和真实 model-run 用例；
-- `evals/fixtures/`：保存指标、边界和 Golden Case 输入。Golden Case 使用历史市场截面验证通用能力，日期记录在 fixture 正文/元数据中，不作为通用规则。
+- `evals/cases.jsonl`：保存 Contract Evaluator 用例，以及只允许 live evaluator 评分的历史 Recall benchmark；
+- `evals/fixtures/`：保存指标、边界和 Golden Case 输入。Golden Case 使用历史市场截面验证通用能力，日期记录在 fixture 正文/元数据中，不作为通用规则；
+- `discovery_gate=passed` 只表示 Two-Pass 流程边界成立且当前没有**已知未决** High Materiality 线索，不等于重大事件全量覆盖；
+- 历史实跑已经证明，FCC、Oracle 等事件能否被召回会受到实际 Web Search retrieval / ranking 影响，因此不能用 Static Validator 或 Contract Evaluator 代替 live Recall 测试。
 
 这些材料用于回归与防漂移，不代表已经证明实盘收益，也不代表取得长期漏报率、错映射率或独立 provider-runner 统计。
 
@@ -865,6 +838,7 @@ Golden Case 的目的不是把某个日期或历史答案硬编码进 Skill，�
 10. **所有重要方向都要主动寻找反证和推翻条件。**
 11. **Candidate生成以经济节点覆盖为退出条件，不以股票数量或熟悉度为退出条件。**
 12. **Event Radar独立于Theme Ranking保留高材料性事件，但不让新闻榜反客为主。**
+13. **Two-Pass Discovery未通过时不得进入最终Theme Ranking、Trading Ranking或Core。**
 
 ---
 

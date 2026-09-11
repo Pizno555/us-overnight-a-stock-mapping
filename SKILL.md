@@ -2,7 +2,7 @@
 name: us-overnight-a-stock-mapping
 description: 当用户要把最新美国或全球隔夜市场的事件、财报、监管、产业变化或异常价格集群映射到下一A股交易日时，先识别昨夜真正被资金交易的Market Themes和Drivers，再展开A股产业链、验证公司真实性、研究A股上一交易日定价与预期差，最终给出Core/Watch/Exclude和条件式执行预案。无明确海外隔夜锚点的A股复盘、单一消息核验、完整估值或长期产业扫描不由本Skill主导。
 metadata:
-  version: "1.1.2"
+  version: "1.1.3"
   short-description: "隔夜市场主线 → A股预期差与盘前决策"
 ---
 
@@ -32,51 +32,54 @@ metadata:
 
 没有海外锚点的A股全市场复盘、持仓预案、单一消息真假、完整基本面/估值或长期瓶颈扫描，交给相邻Skill。本Skill在复合任务中只完成海外→A股映射部分，不需要额外生成正式handoff协议。
 
-开始前写明：报告生成时间、`Asia/Shanghai`数据截止、最近完成的美国常规交易日、价格数据来源与关键数据缺口。9:25前不得使用尚未形成的A股竞价或盘中数据。
+开始前写明：报告生成时间、`Asia/Shanghai`数据截止、最近完成的美国常规交易日、价格数据来源、`search_scope`、`discovery_gate`与关键数据缺口。9:25前不得使用尚未形成的A股竞价或盘中数据。`discovery_gate=passed`只表示两条独立Discovery Pass已执行且没有已知未决High Materiality线索，不代表“互联网已全部扫完”。
 
 ## 强制研究链
 
 ```text
-① Broad Overnight Scan
-事件 + 市场价格/成交异常 + 行业/ETF扩散
+① Blind Event Sweep
+在任何Theme / Driver / A股候选形成前，独立扫描隔夜重大公司、行业、监管/政府与政策Delta，形成Event Leads
 ↓
-② Cluster Decomposition
-把宽泛大类拆成经济机制不同的子集群
+② Market Radar
+独立从价格、成交、ETF、同行/上下游异常发现Market Leads，不用Event Sweep结果替代价格扫描
 ↓
-③ Market Theme / Driver
+③ Merge + Cluster Decomposition
+合并两套Leads，再把宽泛大类拆成经济机制不同的子集群
+↓
+④ Market Theme / Driver
 为每个重要集群形成具体Driver Hypothesis
 ↓
-④ Driver Validation
-Supporting Evidence + Counter Evidence + Alternative Explanations
+⑤ Driver Validation + Event–Theme Join
+Supporting Evidence + Counter Evidence + Alternative Explanations；高材料性Event登记Role/Linked Themes/Causal Status
 ↓
-④b Event–Theme Join
-高材料性Event独立登记Role/Linked Themes；Theme反查其Event/Trend/Repricing依据，允许多对多但不强行因果
+⑤b Discovery Gate
+只有Blind Event Sweep和Market Radar都实际执行，且不存在已知未决、足以改变Theme Rank或A股映射的High Materiality线索，才可passed
 ↓
-⑤ Theme Ranking
+⑥ Theme Ranking
 先排昨夜市场主线的重要性，不以A股个股Evidence反向改写
 ↓
-⑥ A-share Economic Chain Expansion
+⑦ A-share Economic Chain Expansion
 先列出经济机制不同的主要受益/受损节点，再为每个重要节点找Candidate；不能找到2–5只显眼股票就提前停止
 ↓
-⑥b Economic Chain Coverage Gate + Omission Challenge
+⑦b Economic Chain Coverage Gate + Omission Challenge
 先给节点状态，再从“物理/技术必需依赖”和“经济价值流/Capex”两条独立路径反推是否漏节点；补齐后才进入初筛
 ↓
-⑦ Preliminary Validation → Shortlist → 10步Deep Validation
+⑧ Preliminary Validation → Shortlist → 10步Deep Validation
 ↓
-⑧ L + E/P + Evidence + 同行PK + 反证/推翻条件
+⑨ L + E/P + Evidence + 同行PK + 反证/推翻条件
 ↓
-⑨ A-share Prior Pricing
+⑩ A-share Prior Pricing
 研究上一A股交易日板块与个股如何定价该Theme
 ↓
-⑩ Expectation Gap
+⑪ Expectation Gap
 海外Driver × 海外价格 × A股既有定价 × 当前新增信息
 ↓
-⑪ Fundamental Ranking / Trading Ranking
+⑫ Fundamental Ranking / Trading Ranking
 产业价值与今日风险收益分开
 ↓
-⑫ Core / Watch / Exclude
+⑬ Core / Watch / Exclude
 ↓
-⑬ T_static → Auction Conditions
+⑭ T_static → Auction Conditions
 最后决定今天是否执行
 ```
 
@@ -103,6 +106,17 @@ Event Radar不是Theme Ranking的附庸。重大公司/监管/产业事件即使
 - 这些事件不因一级证据更容易取得就自动升级为Market Theme；Market Theme仍必须由价格/成交/产业扩散和Driver解释支持。
 - 事件若只有公司自身影响且没有合理A股传导，可以保留事实，但A股映射写“弱/无直接映射”。
 - 正常情况下只保留最重要的3–5条；但High Materiality且与Top Theme存在Linked Themes的事件不得因“名额已满”而删除，必要时可超过5条。避免恢复成新闻摘要。
+
+### Two-Pass Discovery：先发现，再归因
+
+重大事件Recall依靠两条在Theme形成前分开的发现路径，而不是Theme形成后的自我证明：
+
+- **Blind Event Sweep**先做，目标是发现足以改变公司经营、行业供需/价格、监管准入、跨境贸易、技术路线或关键Capex的新增事件；搜索不能以当前Theme、A股候选或已知价格主线为起点。
+- 政府/监管/政策Delta必须先执行至少一次**blank-slate discovery**：查询不得包含预设机构名、当前Theme或A股候选；只有开放搜索已经产生线索后，才允许按具体机构、公司或域名做定向追查。具名主体不能替代开放发现扫描，也不是完成分母。
+- **Market Radar**再独立从价格/成交/ETF/同行扩散发现异常集群；即使Event Sweep没有找到共同新闻，也不能停止。
+- 两套Leads合并以后才允许形成Theme / Driver。
+
+`search_scope`只描述数据可得性；`discovery_gate`只约束流程边界：两条Discovery Pass均已实际执行，且没有已知未决、足以改变Theme Rank或A股映射的High Materiality线索时才可`passed`。`blocked`时只能输出已确认事实、Provisional Themes与阻塞项，不得输出Final Theme Ranking、Final Trading Ranking或Core。`passed`不等于保证零遗漏。
 
 ### Catalyst与Market Driver分开
 
@@ -148,7 +162,7 @@ Candidate生成的退出条件不是“已经找到几只熟悉的股票”，�
 
 按任务需要读取以下4个参考：
 
-1. [discovery-and-driver.md](references/discovery-and-driver.md)：双雷达、集群拆分、Driver、搜索充分性与归因退出条件。
+1. [discovery-and-driver.md](references/discovery-and-driver.md)：Two-Pass Discovery、集群拆分、Driver、搜索充分性与归因退出条件。
 2. [a-share-validation.md](references/a-share-validation.md)：A股产业链展开、Candidate/Shortlist、10步验证、L/E/P/Evidence。
 3. [pricing-and-decision.md](references/pricing-and-decision.md)：A股上一交易日定价、预期差、两套排序、三池、T_static与Auction。
 4. [data-and-metrics-contract.md](references/data-and-metrics-contract.md)：时间、行情、数据降级、MA/RSI/BIAS等确定性口径。
@@ -159,6 +173,7 @@ Candidate生成的退出条件不是“已经找到几只熟悉的股票”，�
 
 - Discovery高召回，Validation高精度。
 - Event Radar必须独立保留高材料性事件；已被Theme引用也不等于可以从事件账本消失，跨Theme关联必须标注因果强弱。
+- Discovery必须先执行Blind Event Sweep，再独立执行Market Radar；政府/监管Delta若未先完成一次不含预设机构名、当前Theme或A股候选的blank-slate discovery，不视为Blind Event Sweep完成。两套Leads合并前不得先形成最终Theme。任一Pass未执行，或仍有足以改变Theme Rank/A股映射的未决High Materiality线索时，`discovery_gate=blocked`，不得输出Final Theme Ranking、Final Trading Ranking或Core。
 - Candidate生成必须完成重要经济节点覆盖与Omission Challenge后才允许收敛；“给自己列出的节点全部打勾”不等于覆盖完整，淘汰放在Preliminary Validation。
 - 先排Theme，再在Theme内部选股；禁止把所有跨主题股票放入单一线性总分。
 - 商业化公司使用E1–E5；Biotech使用P1–P5；技术位置只使用T_static，三者不得混用。

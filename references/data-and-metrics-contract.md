@@ -34,10 +34,13 @@ timezone: Asia/Shanghai
 us_session_date:
 price_source:
 search_scope: sufficient | partial | unavailable
+discovery_gate: passed | blocked
 known_data_gaps:
 ```
 
-`search_scope`定义见[discovery-and-driver.md](discovery-and-driver.md)。不再要求固定31家公司、13方向或所有Top20榜全部完成才允许输出研究结论；但关键缺口可能改变Theme发现或Driver判断时必须标`partial`并降低置信度。
+`search_scope`定义见[discovery-and-driver.md](discovery-and-driver.md)，只描述数据可得性；`discovery_gate`只描述Two-Pass Discovery的流程边界。两者正交：数据`partial`但Blind Event Sweep与Market Radar均已执行、且没有已知未决High Materiality线索时可以`passed`；数据看似`sufficient`但任一Pass未执行或仍有上述未决线索时必须`blocked`。
+
+不再要求固定31家公司、13方向或所有Top20榜全部完成才允许输出研究结论；关键缺口可能改变Theme发现或Driver判断时必须标`partial`并降低置信度。`discovery_gate=passed`不代表零遗漏；`blocked`的输出限制见[pricing-and-decision.md](pricing-and-decision.md)。
 
 ## 价格与成交
 

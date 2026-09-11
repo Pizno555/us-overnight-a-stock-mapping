@@ -6,6 +6,10 @@
 
 > A股已经交易了多少？哪里还有预期差？谁基本面最好？谁今天风险收益最好？
 
+## Discovery Gate前置条件
+
+本文件只处理`discovery_gate=passed`后的最终排序与决策。若`discovery_gate=blocked`，只允许输出已确认事实、`Provisional Themes`、未决高材料性线索和阻塞原因；**不得输出Final Theme Ranking、Final Trading Ranking或Core**。`search_scope=partial`本身不构成该禁令，前提是Blind Event Sweep与Market Radar均已执行且没有已知未决High Materiality线索。
+
 ## A-share Prior Pricing：Expectation Gap的必经步骤
 
 对每个Top Theme先研究上一A股交易日的定价，再研究个股。
@@ -183,6 +187,7 @@ Pool
 
 提交前确认：
 
+- `discovery_gate`是否已通过；blocked时是否停止在Provisional层；
 - 是否先回答了“昨夜真正交易什么”；
 - Material Event Ledger中的高材料性事件是否完成Role/Linked Themes/Causal Status登记；已在Theme正文出现的事件是否仍有事件层交叉索引，且possible关系没有被写成confirmed因果；
 - 是否把宽泛集群拆成不同产业机制；

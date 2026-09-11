@@ -1,4 +1,4 @@
 interface:
   display_name: "US Overnight → A股映射雷达"
   short_description: "识别隔夜真实市场主线、A股预期差与盘前候选"
-  default_prompt: "使用 $us-overnight-a-stock-mapping 扫描昨夜海外市场，先识别并排序真正的Market Themes与Drivers，再完成A股产业链验证、上一交易日定价、预期差和Core/Watch/Exclude分层。"
+  default_prompt: "使用 $us-overnight-a-stock-mapping 扫描昨夜海外市场：先在任何Theme形成前执行Blind Event Sweep；其中政府/监管Delta先至少做一次不含预设机构名、当前Theme或A股候选的blank-slate discovery，出现线索后再定向追查；再从价格/成交/ETF/同行扩散执行Market Radar；合并两套Leads后才形成并排序Market Themes与Drivers。只有两条Discovery Pass都完成且无已知未决High Materiality线索时discovery_gate才可passed，再完成A股产业链验证、上一交易日定价、预期差和Core/Watch/Exclude分层。"
